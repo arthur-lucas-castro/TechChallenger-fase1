@@ -45,8 +45,8 @@ namespace Repositorios.Base
 
             var sql = $@"
             INSERT INTO {_tableName} ({columns})
-            VALUES ({values});
-            SELECT CAST(SCOPE_IDENTITY() as int);
+            VALUES ({values})
+            RETURNING id;
         ";
 
             return await connection.ExecuteScalarAsync<int>(sql, entity);

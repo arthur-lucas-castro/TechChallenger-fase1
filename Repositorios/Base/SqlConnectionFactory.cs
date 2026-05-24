@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.SqlClient;
+using Npgsql;
 using Microsoft.Extensions.Configuration;
 using Repositorios.Base.Interface;
 using System.Data;
@@ -12,10 +12,10 @@ namespace Repositorios.Base
         public SqlConnectionFactory(IConfiguration configuration)
         {
             //TODO? Obter via vault
-            _connectionString = configuration.GetConnectionString("Default");
+            _connectionString = configuration.GetConnectionString("Default")!;
         }
 
         public IDbConnection CreateConnection()
-            => new SqlConnection(_connectionString);
+            => new NpgsqlConnection(_connectionString);
     }
 }
