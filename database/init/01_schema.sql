@@ -1,76 +1,82 @@
-CREATE TYPE tipo_pessoa AS ENUM ('F', 'J');
+CREATE TYPE TipoPessoa AS ENUM ('F', 'J');
 
-CREATE TABLE cliente (
-    id               SERIAL PRIMARY KEY,
-    nome             VARCHAR(50)  NOT NULL,
-    sobrenome        VARCHAR(50)  NOT NULL,
-    telefone         VARCHAR(11)  NOT NULL,
-    email            VARCHAR(50)  NOT NULL,
-    numero_documento VARCHAR(14)  NOT NULL,
-    tipo_pessoa      tipo_pessoa  NOT NULL
+CREATE TABLE Cliente (
+    Id               SERIAL PRIMARY KEY,
+    Nome             VARCHAR(50)  NOT NULL,
+    Sobrenome        VARCHAR(50)  NOT NULL,
+    Telefone         VARCHAR(11)  NOT NULL,
+    Email            VARCHAR(50)  NOT NULL,
+    NumeroDocumento  VARCHAR(14)  NOT NULL,
+    TipoPessoa       TipoPessoa   NOT NULL
 );
 
-CREATE TABLE veiculo (
-    id         SERIAL PRIMARY KEY,
-    modelo     VARCHAR(50) NOT NULL,
-    placa      VARCHAR(7)  NOT NULL,
-    marca      VARCHAR(50) NOT NULL,
-    ano        INTEGER     NOT NULL,
-    cliente_id INTEGER     NOT NULL REFERENCES cliente(id)
+CREATE TABLE Veiculo (
+    Id      SERIAL PRIMARY KEY,
+    Modelo  VARCHAR(50) NOT NULL,
+    Placa   VARCHAR(7)  NOT NULL UNIQUE,
+    Marca   VARCHAR(50) NOT NULL,
+    Ano     INTEGER     NOT NULL
 );
 
-CREATE TABLE tipo_servico (
-    id                        SERIAL PRIMARY KEY,
-    nome                      VARCHAR(50)    NOT NULL,
-    preco_venda               DECIMAL(10, 2) NOT NULL,
-    tempo_estimado_em_minutos INTEGER        NOT NULL
+CREATE TABLE ClienteVeiculo (
+    ClienteId  INTEGER NOT NULL REFERENCES Cliente(Id),
+    VeiculoId  INTEGER NOT NULL REFERENCES Veiculo(Id),
+    PRIMARY KEY (ClienteId, VeiculoId)
 );
 
-CREATE TABLE funcionario (
-    id   SERIAL PRIMARY KEY,
-    nome VARCHAR(50) NOT NULL
+CREATE TABLE TipoServico (
+    Id                       SERIAL PRIMARY KEY,
+    Nome                     VARCHAR(50)    NOT NULL,
+    PrecoVenda               DECIMAL(10, 2) NOT NULL,
+    TempoEstimadoEmMinutos   INTEGER        NOT NULL
 );
 
-CREATE TABLE insumo (
-    id          SERIAL PRIMARY KEY,
-    nome        VARCHAR(50)    NOT NULL,
-    descricao   VARCHAR(50)    NOT NULL,
-    custo       DECIMAL(10, 2) NOT NULL,
-    preco_venda DECIMAL(10, 2) NOT NULL
+CREATE TABLE Funcionario (
+    Id   SERIAL PRIMARY KEY,
+    Nome VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE ordem_servico (
-    id                    SERIAL PRIMARY KEY,
-    veiculo_id            INTEGER     NOT NULL REFERENCES veiculo(id),
-    responsavel_id        INTEGER     NOT NULL REFERENCES funcionario(id),
-    status                VARCHAR(10) NOT NULL,
-    data_ultima_alteracao TIMESTAMP,
-    data_criacao          TIMESTAMP   NOT NULL,
-    data_finalizacao      TIMESTAMP
+CREATE TABLE Insumo (
+    Id          SERIAL PRIMARY KEY,
+    Nome        VARCHAR(50)    NOT NULL,
+    Descricao   VARCHAR(50)    NOT NULL,
+    Custo       DECIMAL(10, 2) NOT NULL,
+    PrecoVenda  DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE ordem_servico_item (
-    id               SERIAL PRIMARY KEY,
-    ordem_servico_id INTEGER        NOT NULL REFERENCES ordem_servico(id),
-    tipo_servico_id  INTEGER        NOT NULL REFERENCES tipo_servico(id),
-    quantidade       INTEGER        NOT NULL,
-    preco            DECIMAL(10, 2) NOT NULL
+CREATE TABLE OrdemServico (
+    Id                   SERIAL PRIMARY KEY,
+    VeiculoId            INTEGER     NOT NULL REFERENCES Veiculo(Id),
+    ClienteId            INTEGER     NOT NULL REFERENCES Cliente(Id),
+    ResponsavelId        INTEGER     NOT NULL REFERENCES Funcionario(Id),
+    Status               VARCHAR(10) NOT NULL,
+    DataUltimaAlteracao  TIMESTAMP,
+    DataCriacao          TIMESTAMP   NOT NULL,
+    DataFinalizacao      TIMESTAMP
 );
 
-CREATE TABLE ordem_servico_insumo (
-    id               SERIAL PRIMARY KEY,
-    ordem_servico_id INTEGER NOT NULL REFERENCES ordem_servico(id),
-    insumo_id        INTEGER NOT NULL REFERENCES insumo(id),
-    quantidade       INTEGER NOT NULL
+CREATE TABLE OrdemServicoItem (
+    Id               SERIAL PRIMARY KEY,
+    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
+    TipoServicoId    INTEGER        NOT NULL REFERENCES TipoServico(Id),
+    Quantidade       INTEGER        NOT NULL,
+    Preco            DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE orcamento (
-    id               SERIAL PRIMARY KEY,
-    ordem_servico_id INTEGER        NOT NULL REFERENCES ordem_servico(id),
-    vendedor_id      INTEGER        NOT NULL REFERENCES funcionario(id),
-    preco_total      DECIMAL(10, 2) NOT NULL,
-    status           VARCHAR(10)    NOT NULL,
-    data_criacao     TIMESTAMP      NOT NULL,
-    data_envio       TIMESTAMP,
-    data_aprovacao   TIMESTAMP
+CREATE TABLE OrdemServicoInsumo (
+    Id               SERIAL PRIMARY KEY,
+    OrdemServicoId   INTEGER NOT NULL REFERENCES OrdemServico(Id),
+    InsumoId         INTEGER NOT NULL REFERENCES Insumo(Id),
+    Quantidade       INTEGER NOT NULL
+);
+
+CREATE TABLE Orcamento (
+    Id               SERIAL PRIMARY KEY,
+    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
+    VendedorId       INTEGER        NOT NULL REFERENCES Funcionario(Id),
+    PrecoTotal       DECIMAL(10, 2) NOT NULL,
+    Status           VARCHAR(10)    NOT NULL,
+    DataCriacao      TIMESTAMP      NOT NULL,
+    DataEnvio        TIMESTAMP,
+    DataAprovacao    TIMESTAMP
 );
