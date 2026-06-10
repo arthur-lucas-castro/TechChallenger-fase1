@@ -22,6 +22,14 @@ namespace Presentation.TechChallenger_fase1.Controllers
             return Ok(clientes);
         }
 
+        [HttpGet("{documentNumber}")]
+
+        public async Task<IActionResult> GetByDocumentNumber(string documentNumber)
+        {
+            var clientes = await _service.ObterPorNumeroDocumentoAsync(documentNumber);
+            return Ok(clientes);
+        }
+
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {

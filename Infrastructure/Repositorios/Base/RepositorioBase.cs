@@ -1,12 +1,11 @@
 ﻿using Infrastructure.Repositorios.Base.Interface;
 using Dapper;
-using Infrastructure.Repositorios.Base;
 
 namespace Infrastructure.Repositorios.Base
 {
     public abstract class RepositorioBase<TEntidade> where TEntidade : class
     {
-        private readonly IDbConnectionFactory _connectionFactory;
+        protected readonly IDbConnectionFactory _connectionFactory;
         protected readonly string _tableName;
 
         protected RepositorioBase(IDbConnectionFactory connectionFactory)

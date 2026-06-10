@@ -9,5 +9,7 @@ namespace Domain.Interfaces
         Task<int> InsertAsync(Cliente cliente);
         Task<bool> UpdateAsync(Cliente cliente);
         Task<bool> DeleteAsync(int id);
+
+        Task<Cliente?> ObterPorNumeroDocumentoAsync(string numeroDocumento);
     }
 }

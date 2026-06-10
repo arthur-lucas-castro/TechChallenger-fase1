@@ -2,7 +2,6 @@ using Application.Servicos.DTOs;
 using Application.Servicos.Interfaces;
 using Domain.Entidades;
 using Domain.Interfaces;
-using Infrastructure.Repositorios;
 
 namespace Application.Servicos
 {
@@ -63,5 +62,11 @@ namespace Application.Servicos
             NumeroDocumento = dto.NumeroDocumento,
             TipoPessoa      = dto.TipoPessoa
         };
+
+        public async Task<ClienteResponseDTO?> ObterPorNumeroDocumentoAsync(string numeroDocumento)
+        {
+            var cliente = await _repositorio.ObterPorNumeroDocumentoAsync(numeroDocumento);
+            return cliente is null ? null : MapearParaDTO(cliente);
+        }
     }
 }
