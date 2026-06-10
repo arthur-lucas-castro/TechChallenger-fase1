@@ -1,7 +1,7 @@
-﻿using Repositorios.Base.Interface;
+﻿using Infrastructure.Repositorios.Base.Interface;
 using System.Data;
 
-namespace Repositorios.Base
+namespace Infrastructure.Repositorios.Base
 {
     public abstract class ContextoBancoBase
     {
@@ -25,3 +25,4 @@ namespace Repositorios.Base
         }
     }
 }
+

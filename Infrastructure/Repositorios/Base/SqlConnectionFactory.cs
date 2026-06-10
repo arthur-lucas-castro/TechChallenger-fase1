@@ -1,9 +1,9 @@
-using Npgsql;
+﻿using Npgsql;
 using Microsoft.Extensions.Configuration;
-using Repositorios.Base.Interface;
+using Infrastructure.Repositorios.Base.Interface;
 using System.Data;
 
-namespace Repositorios.Base
+namespace Infrastructure.Repositorios.Base
 {
     public class SqlConnectionFactory : IDbConnectionFactory
     {
@@ -19,3 +19,4 @@ namespace Repositorios.Base
             => new NpgsqlConnection(_connectionString);
     }
 }
+

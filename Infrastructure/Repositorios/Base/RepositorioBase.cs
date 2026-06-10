@@ -1,8 +1,8 @@
-﻿using Repositorios.Base.Interface;
+﻿using Infrastructure.Repositorios.Base.Interface;
 using Dapper;
-using Repositorios.Base;
+using Infrastructure.Repositorios.Base;
 
-namespace Repositorios.Base
+namespace Infrastructure.Repositorios.Base
 {
     public abstract class RepositorioBase<TEntidade> where TEntidade : class
     {
@@ -83,3 +83,4 @@ namespace Repositorios.Base
         }
     }
 }
+

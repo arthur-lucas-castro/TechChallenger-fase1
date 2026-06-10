@@ -1,6 +1,6 @@
-using Repositorios;
-using Repositorios.Base;
-using Repositorios.Base.Interface;
+﻿using Infrastructure.Repositorios;
+using Infrastructure.Repositorios.Base;
+using Infrastructure.Repositorios.Base.Interface;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,3 +25,4 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+

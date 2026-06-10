@@ -1,4 +1,4 @@
-namespace TechChallenger_fase1
+﻿namespace Presentation.TechChallenger_fase1
 {
     public class WeatherForecast
     {
@@ -11,3 +11,4 @@ namespace TechChallenger_fase1
         public string? Summary { get; set; }
     }
 }
+

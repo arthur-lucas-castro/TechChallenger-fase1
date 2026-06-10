@@ -1,13 +1,13 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.13.35931.197
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenger-fase1", "TechChallenger-fase1\TechChallenger-fase1.csproj", "{DAD7724A-771E-4F16-82C1-3291B84AADC7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TechChallenger-fase1", "Presentation\TechChallenger-fase1\TechChallenger-fase1.csproj", "{DAD7724A-771E-4F16-82C1-3291B84AADC7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositorios", "Repositorios\Repositorios.csproj", "{B93C02BF-47E2-422D-AE1F-83FAF2049249}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Repositorios", "Infrastructure\Repositorios\Repositorios.csproj", "{B93C02BF-47E2-422D-AE1F-83FAF2049249}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entidades", "Entidades\Entidades.csproj", "{F3B0F109-FE0D-4639-8159-1C0923C5094F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Entidades", "Domain\Entidades\Entidades.csproj", "{F3B0F109-FE0D-4639-8159-1C0923C5094F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 EndProject
@@ -17,13 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{A0ABA2
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{62E3F770-A6DC-4A76-ACB9-AAAA8ED6DD02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Interfaces\Interfaces.csproj", "{3B5CF054-AEFC-4301-9A57-5C344210E3CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Interfaces", "Domain\Interfaces\Interfaces.csproj", "{3B5CF054-AEFC-4301-9A57-5C344210E3CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjetosDeValor", "ObjetosDeValor\ObjetosDeValor.csproj", "{3537358F-F3CB-4B8F-8BAE-3C2281A8D66F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ObjetosDeValor", "Domain\ObjetosDeValor\ObjetosDeValor.csproj", "{3537358F-F3CB-4B8F-8BAE-3C2281A8D66F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitOfWork", "UnitOfWork\UnitOfWork.csproj", "{B5ABB422-8884-4463-8472-B42CD39A8DAB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitOfWork", "Infrastructure\UnitOfWork\UnitOfWork.csproj", "{B5ABB422-8884-4463-8472-B42CD39A8DAB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servicos", "Servicos\Servicos.csproj", "{5027B717-063C-46B1-B4DD-70807CD8AA0A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Servicos", "Application\Servicos\Servicos.csproj", "{5027B717-063C-46B1-B4DD-70807CD8AA0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

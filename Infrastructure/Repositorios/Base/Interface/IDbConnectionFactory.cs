@@ -1,9 +1,10 @@
 ﻿using System.Data;
 
-namespace Repositorios.Base.Interface
+namespace Infrastructure.Repositorios.Base.Interface
 {
     public interface IDbConnectionFactory
     {
         IDbConnection CreateConnection();
     }
 }
+

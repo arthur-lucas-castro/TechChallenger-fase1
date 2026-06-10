@@ -1,6 +1,6 @@
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace TechChallenger_fase1.Controllers
+namespace Presentation.TechChallenger_fase1.Controllers
 {
     [ApiController]
     [Route("[controller]")]
@@ -31,3 +31,4 @@ namespace TechChallenger_fase1.Controllers
         }
     }
 }
+
