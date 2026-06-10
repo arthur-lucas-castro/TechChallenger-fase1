@@ -20,6 +20,8 @@ builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVeiculoRepositorio, VeiculoRepositorio>();
 builder.Services.AddScoped<IVeiculoService, VeiculoService>();
+builder.Services.AddScoped<IItemServicoRepositorio, ItemServicoRepositorio>();
+builder.Services.AddScoped<IItemServicoService, ItemServicoService>();
 
 var app = builder.Build();
 

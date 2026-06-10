@@ -22,7 +22,7 @@ CREATE TABLE ClienteVeiculos (
     PRIMARY KEY (ClienteId, VeiculoId)
 );
 
-CREATE TABLE TipoServicos (
+CREATE TABLE ItemServicos (
     Id                       SERIAL PRIMARY KEY,
     Nome                     VARCHAR(50)    NOT NULL,
     PrecoVenda               DECIMAL(10, 2) NOT NULL,
@@ -56,7 +56,7 @@ CREATE TABLE OrdemServicos (
 CREATE TABLE OrdemServicoItems (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServicos(Id),
-    TipoServicoId    INTEGER        NOT NULL REFERENCES TipoServicos(Id),
+    ItemServicoId    INTEGER        NOT NULL REFERENCES ItemServicos(Id),
     Quantidade       INTEGER        NOT NULL,
     Preco            DECIMAL(10, 2) NOT NULL
 );
