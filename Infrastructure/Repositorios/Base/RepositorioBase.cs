@@ -15,7 +15,7 @@ namespace Infrastructure.Repositorios.Base
             _tableName = typeof(TEntidade).Name + "s"; // convenção simples
         }
 
-        public async Task<TEntidade> GetByIdAsync(int id)
+        public async Task<TEntidade?> GetByIdAsync(int id)
         {
             using var connection = _connectionFactory.CreateConnection();
 

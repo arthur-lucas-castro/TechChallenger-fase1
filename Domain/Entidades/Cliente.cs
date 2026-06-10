@@ -11,6 +11,17 @@ namespace Domain.Entidades
         public Email Email { get; set; } = null!;
         public Documento NumeroDocumento { get; set; } = null!;
         public TipoPessoa TipoPessoa { get; set; }
+
+        public Cliente() { }
+        public Cliente(string nome, string sobrenome, Telefone telefone, Email email, Documento numeroDocumento, TipoPessoa tipoPessoa)
+        {
+            Nome = nome;
+            Sobrenome = sobrenome;
+            Telefone = telefone;
+            Email = email;
+            NumeroDocumento = numeroDocumento;
+            TipoPessoa = tipoPessoa;
+        }
     }
 }
 

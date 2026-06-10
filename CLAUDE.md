@@ -53,11 +53,36 @@ TechChallenger-fase1/
 
 ### Padrões Arquiteturais
 
+**Regra de camadas — OBRIGATÓRIO:**
+- **Controller → Service → Repository**: o fluxo de dependência deve sempre seguir essa ordem.
+- **Controllers nunca acessam repositórios diretamente.** Toda lógica de negócio passa pela camada de serviço.
+- **Controllers nunca conhecem entidades de domínio.** A comunicação entre Controller e Application é feita exclusivamente via DTOs.
+- **Sempre use interfaces com injeção de dependência.** Nunca injete implementações concretas de serviços ou repositórios diretamente — injete a interface (`IClienteService`, `IClienteRepositorio`, etc.).
+
+**Fluxo obrigatório por camada:**
+```
+Presentation (Controller)
+    ↕ DTOs (ClienteRequestDTO / ClienteResponseDTO)
+Application (IServiço → Serviço)
+    ↕ Entidades de domínio
+Infrastructure (IRepositorio → Repositorio)
+    ↕ Entidades de domínio
+Domain (Entidade)
+```
+
+**Localização dos artefatos:**
+- DTOs ficam em `Application/Servicos/DTOs/` — ex.: `ClienteRequestDTO`, `ClienteResponseDTO`
+- Interfaces de **repositório** ficam em `Domain/Interfaces/` — ex.: `IClienteRepositorio`
+- Interfaces de **serviço** ficam em `Application/Servicos/Interfaces/` — ex.: `IClienteService`
+- O mapeamento entre DTO e Entidade é responsabilidade do **Serviço**, nunca do Controller
+- Registros no DI sempre na forma: `AddScoped<IClienteService, ClienteService>()`
+
 **Padrão Repository Genérico**: `RepositorioBase<TEntidade>` fornece operações CRUD (GetById, GetAll, Insert, Update, Delete) para qualquer entidade usando reflexão com Dapper. Os nomes de tabela são derivados como `typeof(TEntidade).Name + "s"` (ex.: `Teste` → `Testes`), que o PostgreSQL resolve sem diferenciação de maiúsculas para corresponder aos nomes em minúsculo no schema SQL, como `testes`.
 
 **Injeção de Dependência (DI)**: O `Program.cs` registra:
 - `IDbConnectionFactory` → `SqlConnectionFactory` (pool de conexões)
-- `TesteRepositorio` (repositórios específicos registrados como scoped)
+- `IClienteRepositorio` → `ClienteRepositorio` (padrão para repositórios)
+- `IClienteService` → `ClienteService` (padrão para serviços)
 
 **Acesso a Dados**: Usa Dapper como micro-ORM com queries SQL construídas via reflexão nas propriedades das entidades.
 
@@ -134,58 +159,122 @@ Para adicionar novas tabelas ou modificar o schema:
 
 ## Adicionando Novas Entidades e Endpoints
 
-### 1. Criar a Entidade (projeto Entidades)
+### 1. Criar a Entidade (`Domain/Entidades/`)
 ```csharp
-// Entidades/SuaEntidade.cs
 public class SuaEntidade : EntidadeBase<SuaEntidade>
 {
-    public int Id { get; set; }
     public string Nome { get; set; } = string.Empty;
 }
 ```
 
-### 2. Criar a Tabela
+### 2. Criar a Tabela (`database/init/`)
 ```sql
--- database/init/02_suaentidade.sql
-CREATE TABLE suaentidades (
-    id    SERIAL PRIMARY KEY,
-    nome  VARCHAR(100) NOT NULL
+CREATE TABLE SuaEntidade (
+    Id    SERIAL PRIMARY KEY,
+    Nome  VARCHAR(100) NOT NULL
 );
 ```
 
-### 3. Criar o Repositório (projeto Repositorios)
+### 3. Criar a interface e o repositório (`Domain/Interfaces/` e `Infrastructure/Repositorios/`)
 ```csharp
-// Repositorios/SuaEntidadeRepositorio.cs
-public class SuaEntidadeRepositorio : RepositorioBase<SuaEntidade>
+// Domain/Interfaces/ISuaEntidadeRepositorio.cs
+public interface ISuaEntidadeRepositorio
+{
+    Task<SuaEntidade?> GetByIdAsync(int id);
+    Task<IEnumerable<SuaEntidade>> GetAllAsync();
+    Task<int> InsertAsync(SuaEntidade entidade);
+    Task<bool> UpdateAsync(SuaEntidade entidade);
+    Task<bool> DeleteAsync(int id);
+}
+
+// Infrastructure/Repositorios/SuaEntidadeRepositorio.cs
+public class SuaEntidadeRepositorio : RepositorioBase<SuaEntidade>, ISuaEntidadeRepositorio
 {
     public SuaEntidadeRepositorio(IDbConnectionFactory connectionFactory)
         : base(connectionFactory) { }
 }
 ```
 
-### 4. Registrar na DI (Program.cs)
+### 4. Criar a interface e o serviço (`Domain/Interfaces/` e `Application/Servicos/`)
 ```csharp
-builder.Services.AddScoped<SuaEntidadeRepositorio>();
+// Domain/Interfaces/ISuaEntidadeService.cs
+public interface ISuaEntidadeService
+{
+    Task<SuaEntidade?> ObterPorIdAsync(int id);
+    Task<IEnumerable<SuaEntidade>> ObterTodosAsync();
+    Task<int> CriarAsync(SuaEntidade entidade);
+    Task<bool> AtualizarAsync(int id, SuaEntidade entidade);
+    Task<bool> ExcluirAsync(int id);
+}
+
+// Application/Servicos/SuaEntidadeService.cs
+public class SuaEntidadeService : ISuaEntidadeService
+{
+    private readonly ISuaEntidadeRepositorio _repositorio;
+
+    public SuaEntidadeService(ISuaEntidadeRepositorio repositorio)
+    {
+        _repositorio = repositorio;
+    }
+
+    public Task<SuaEntidade?> ObterPorIdAsync(int id) => _repositorio.GetByIdAsync(id);
+    public Task<IEnumerable<SuaEntidade>> ObterTodosAsync() => _repositorio.GetAllAsync();
+    public Task<int> CriarAsync(SuaEntidade entidade) => _repositorio.InsertAsync(entidade);
+    public async Task<bool> AtualizarAsync(int id, SuaEntidade entidade)
+    {
+        entidade.Id = id;
+        return await _repositorio.UpdateAsync(entidade);
+    }
+    public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
+}
 ```
 
-### 5. Criar o Controller (TechChallenger-fase1/Controllers)
+### 5. Registrar na DI (`Program.cs`)
+```csharp
+builder.Services.AddScoped<ISuaEntidadeRepositorio, SuaEntidadeRepositorio>();
+builder.Services.AddScoped<ISuaEntidadeService, SuaEntidadeService>();
+```
+
+### 6. Criar o Controller (`Presentation/TechChallenger-fase1/Controllers/`)
 ```csharp
 [ApiController]
 [Route("[controller]")]
 public class SuaEntidadeController : ControllerBase
 {
-    private readonly SuaEntidadeRepositorio _repo;
-    
-    public SuaEntidadeController(SuaEntidadeRepositorio repo) => _repo = repo;
-    
+    private readonly ISuaEntidadeService _service;
+
+    public SuaEntidadeController(ISuaEntidadeService service) => _service = service;
+
     [HttpGet]
-    public async Task<IActionResult> GetAll() => Ok(await _repo.GetAllAsync());
-    
+    public async Task<IActionResult> GetAll() => Ok(await _service.ObterTodosAsync());
+
+    [HttpGet("{id:int}")]
+    public async Task<IActionResult> GetById(int id)
+    {
+        var entidade = await _service.ObterPorIdAsync(id);
+        if (entidade is null) return NotFound();
+        return Ok(entidade);
+    }
+
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] SuaEntidade entidade)
     {
-        var id = await _repo.InsertAsync(entidade);
-        return CreatedAtAction(nameof(GetAll), new { id });
+        var id = await _service.CriarAsync(entidade);
+        return CreatedAtAction(nameof(GetById), new { id }, new { id });
+    }
+
+    [HttpPut("{id:int}")]
+    public async Task<IActionResult> Update(int id, [FromBody] SuaEntidade entidade)
+    {
+        if (!await _service.AtualizarAsync(id, entidade)) return NotFound();
+        return Ok(entidade);
+    }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        if (!await _service.ExcluirAsync(id)) return NotFound();
+        return NoContent();
     }
 }
 ```

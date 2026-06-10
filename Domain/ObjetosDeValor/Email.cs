@@ -7,7 +7,7 @@
         public Email(string valor)
         {
             if (string.IsNullOrWhiteSpace(valor) || !valor.Contains('@') || !valor.Contains('.'))
-                throw new ArgumentException("E-mail invÃ¡lido.", nameof(valor));
+                throw new ArgumentException("E-mail inválido.", nameof(valor));
 
             Valor = valor.Trim().ToLowerInvariant();
         }
