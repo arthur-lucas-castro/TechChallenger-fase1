@@ -1,0 +1,12 @@
+namespace Cliente.Domain
+{
+    public interface IClienteRepositorio
+    {
+        Task<Cliente?> GetByIdAsync(int id);
+        Task<IEnumerable<Cliente>> GetAllAsync();
+        Task<int> InsertAsync(Cliente cliente);
+        Task<bool> UpdateAsync(Cliente cliente);
+        Task<bool> DeleteAsync(int id);
+        Task<Cliente?> ObterPorNumeroDocumentoAsync(string numeroDocumento);
+    }
+}

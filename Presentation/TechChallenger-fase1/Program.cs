@@ -1,10 +1,14 @@
-using Application.Servicos;
-using Infrastructure.Repositorios.TypeHandlers;
-using Application.Servicos.Interfaces;
-using Domain.Interfaces;
-using Infrastructure.Repositorios;
-using Infrastructure.Repositorios.Base;
-using Infrastructure.Repositorios.Base.Interface;
+using Compartilhado.Infrastructure.TypeHandlers;
+using Compartilhado.Infrastructure.Base;
+using Compartilhado.Infrastructure.Base.Interface;
+using Cliente.Domain;
+using Cliente.Application;
+using Cliente.Application.Interfaces;
+using Cliente.Infrastructure;
+using Estoque.Domain;
+using Estoque.Application;
+using Estoque.Application.Interfaces;
+using Estoque.Infrastructure;
 
 DapperTypeHandlers.Registrar();
 
@@ -16,10 +20,12 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
+
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVeiculoRepositorio, VeiculoRepositorio>();
 builder.Services.AddScoped<IVeiculoService, VeiculoService>();
+
 builder.Services.AddScoped<IItemServicoRepositorio, ItemServicoRepositorio>();
 builder.Services.AddScoped<IItemServicoService, ItemServicoService>();
 
@@ -32,9 +38,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.Run();

@@ -4,7 +4,7 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Presentation.TechChallenger_fase1</RootNamespace>
+    <RootNamespace>TechChallenger_fase1</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,9 +12,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\Servicos\Servicos.csproj" />
-    <ProjectReference Include="..\..\Domain\Interfaces\Interfaces.csproj" />
-    <ProjectReference Include="..\..\Infrastructure\Repositorios\Repositorios.csproj" />
+    <ProjectReference Include="..\..\Compartilhado\Infrastructure\Compartilhado.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Cliente\Controllers\Cliente.Controllers.csproj" />
+    <ProjectReference Include="..\..\Cliente\Infrastructure\Cliente.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Estoque\Controllers\Estoque.Controllers.csproj" />
+    <ProjectReference Include="..\..\Estoque\Infrastructure\Estoque.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\OrdemServico\Domain\OrdemServico.Domain.csproj" />
   </ItemGroup>
 
 </Project>
