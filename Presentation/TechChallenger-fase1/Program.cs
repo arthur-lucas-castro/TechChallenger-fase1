@@ -1,14 +1,14 @@
-using Compartilhado.Infrastructure.TypeHandlers;
-using Compartilhado.Infrastructure.Base;
-using Compartilhado.Infrastructure.Base.Interface;
-using Cliente.Domain;
-using Cliente.Application;
-using Cliente.Application.Interfaces;
-using Cliente.Infrastructure;
-using Estoque.Domain;
-using Estoque.Application;
-using Estoque.Application.Interfaces;
-using Estoque.Infrastructure;
+using Compartilhado.Infrastructure.Repositories.TypeHandlers;
+using Compartilhado.Infrastructure.Repositories;
+using Compartilhado.Infrastructure.Repositories.Interface;
+using Cliente.Domain.Interfaces;
+using Cliente.Application.Services;
+using Cliente.Application.Services.Interfaces;
+using Cliente.Infrastructure.Repositories;
+using Estoque.Domain.Interfaces;
+using Estoque.Application.Services;
+using Estoque.Application.Services.Interfaces;
+using Estoque.Infrastructure.Repositories;
 
 DapperTypeHandlers.Registrar();
 

@@ -1,4 +1,4 @@
-using Compartilhado.Domain.ObjetosDeValor;
+using Compartilhado.Domain.ValueObjects;
 
 namespace Cliente.Application.DTOs
 {
