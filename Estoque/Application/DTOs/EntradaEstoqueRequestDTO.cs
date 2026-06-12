@@ -1,0 +1,9 @@
+namespace Estoque.Application.DTOs
+{
+    public class EntradaEstoqueRequestDTO
+    {
+        public int PecaId { get; set; }
+        public int Quantidade { get; set; }
+        public decimal PrecoCusto { get; set; }
+    }
+}
