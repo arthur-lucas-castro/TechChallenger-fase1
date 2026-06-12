@@ -3,7 +3,7 @@ using Compartilhado.Domain.ValueObjects;
 
 namespace Estoque.Domain.Entities
 {
-    public class Insumo : EntidadeBase<Insumo>
+    public class Peca : EntidadeBase<Peca>, IAggregateRoot
     {
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;

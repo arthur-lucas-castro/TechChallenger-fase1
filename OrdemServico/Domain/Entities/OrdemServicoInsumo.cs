@@ -5,7 +5,7 @@ namespace OrdemServico.Domain.Entities
     public class OrdemServicoInsumo : EntidadeBase<OrdemServicoInsumo>
     {
         public int OrdemServicoId { get; set; }
-        public int InsumoId { get; set; }
+        public int PecaId { get; set; }
         public int Quantidade { get; set; }
     }
 }

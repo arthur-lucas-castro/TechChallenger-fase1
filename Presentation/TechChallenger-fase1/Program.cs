@@ -1,6 +1,7 @@
 using Compartilhado.Infrastructure.Repositories.TypeHandlers;
 using Compartilhado.Infrastructure.Repositories;
 using Compartilhado.Infrastructure.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Interfaces;
 using Cliente.Application.Services;
 using Cliente.Application.Services.Interfaces;
@@ -20,6 +21,9 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
 
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IClienteService, ClienteService>();

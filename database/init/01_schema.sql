@@ -34,7 +34,7 @@ CREATE TABLE Funcionarios (
     Nome VARCHAR(50) NOT NULL
 );
 
-CREATE TABLE Insumos (
+CREATE TABLE Pecas (
     Id          SERIAL PRIMARY KEY,
     Nome        VARCHAR(50)    NOT NULL,
     Descricao   VARCHAR(50)    NOT NULL,
@@ -64,7 +64,7 @@ CREATE TABLE OrdemServicoItems (
 CREATE TABLE OrdemServicoInsumos (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER NOT NULL REFERENCES OrdemServicos(Id),
-    InsumoId         INTEGER NOT NULL REFERENCES Insumos(Id),
+    PecaId           INTEGER NOT NULL REFERENCES Pecas(Id),
     Quantidade       INTEGER NOT NULL
 );
 
