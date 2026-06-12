@@ -4,6 +4,7 @@ using Estoque.Domain.Entities;
 using OrdemServico.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using OrdemServicoEntidade = OrdemServico.Domain.Entities.OrdemServico;
+using EstoqueEntidade = Estoque.Domain.Entities.Estoque;
 
 namespace Compartilhado.Infrastructure.Repositories
 {
@@ -21,6 +22,7 @@ namespace Compartilhado.Infrastructure.Repositories
         public DbSet<OrdemServicoItem> OrdemServicoItems { get; set; }
         public DbSet<OrdemServicoInsumo> OrdemServicoInsumos { get; set; }
         public DbSet<Orcamento> Orcamentos { get; set; }
+        public DbSet<EstoqueEntidade> Estoques { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -86,6 +88,13 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.Property(x => x.Status)
                     .HasConversion<string>()
                     .HasMaxLength(20);
+            });
+
+            modelBuilder.Entity<EstoqueEntidade>(b =>
+            {
+                b.Property(x => x.PrecoCustoMedio)
+                    .HasConversion(v => v.Valor, v => new Dinheiro(v))
+                    .HasColumnType("numeric(10,2)");
             });
         }
     }

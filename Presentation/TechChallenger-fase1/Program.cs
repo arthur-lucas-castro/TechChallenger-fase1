@@ -33,6 +33,9 @@ builder.Services.AddScoped<IVeiculoService, VeiculoService>();
 builder.Services.AddScoped<IItemServicoRepositorio, ItemServicoRepositorio>();
 builder.Services.AddScoped<IItemServicoService, ItemServicoService>();
 
+builder.Services.AddScoped<IEstoqueRepositorio, EstoqueRepositorio>();
+builder.Services.AddScoped<IEstoqueService, EstoqueService>();
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())

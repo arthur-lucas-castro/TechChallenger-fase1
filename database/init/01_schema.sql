@@ -42,6 +42,14 @@ CREATE TABLE Pecas (
     PrecoVenda  DECIMAL(10, 2) NOT NULL
 );
 
+CREATE TABLE Estoques (
+    Id               SERIAL PRIMARY KEY,
+    PecaId           INTEGER        NOT NULL REFERENCES Pecas(Id),
+    QuantidadeAtual  INTEGER        NOT NULL DEFAULT 0,
+    QuantidadeMinima INTEGER        NOT NULL,
+    PrecoCustoMedio  DECIMAL(10, 2) NOT NULL
+);
+
 CREATE TABLE OrdemServicos (
     Id                   SERIAL PRIMARY KEY,
     VeiculoId            INTEGER     NOT NULL REFERENCES Veiculos(Id),
