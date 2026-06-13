@@ -7,6 +7,8 @@ namespace Estoque.Domain.Interfaces
     {
         Task<EstoqueEntidade?> GetByIdAsync(int id);
         Task<IEnumerable<EstoqueEntidade>> GetAllAsync();
+        Task<IEnumerable<EstoqueEntidade>> GetAllComPecaAsync();
+        Task<IEnumerable<PecaComEstoqueResult>> GetPecasComEstoqueAsync();
         Task<IEnumerable<EstoqueEntidade>> GetByExpressionAsync(Expression<Func<EstoqueEntidade, bool>> predicate);
         Task<int> InsertAsync(EstoqueEntidade estoque);
         Task<bool> UpdateAsync(EstoqueEntidade estoque);

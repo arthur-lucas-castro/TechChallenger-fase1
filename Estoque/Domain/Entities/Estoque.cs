@@ -9,5 +9,7 @@ namespace Estoque.Domain.Entities
         public int QuantidadeAtual { get; set; }
         public int QuantidadeMinima { get; set; }
         public Dinheiro PrecoCustoMedio { get; set; } = null!;
+
+        public Peca? Peca { get; set; }
     }
 }

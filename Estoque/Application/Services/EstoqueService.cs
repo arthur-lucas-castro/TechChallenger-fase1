@@ -11,6 +11,22 @@ namespace Estoque.Application.Services
 
         public EstoqueService(IEstoqueRepositorio repositorio) => _repositorio = repositorio;
 
+        public async Task<IEnumerable<EstoqueComPecaResponseDTO>> ObterTodosAsync()
+        {
+            var resultado = await _repositorio.GetPecasComEstoqueAsync();
+            return resultado.Select(r => new EstoqueComPecaResponseDTO
+            {
+                PecaId           = r.PecaId,
+                NomePeca         = r.Nome,
+                DescricaoPeca    = r.Descricao,
+                PrecoVendaPeca   = r.PrecoVenda,
+                EstoqueId        = r.EstoqueId,
+                QuantidadeAtual  = r.QuantidadeAtual,
+                QuantidadeMinima = r.QuantidadeMinima,
+                PrecoCustoMedio  = r.PrecoCustoMedio
+            });
+        }
+
         public async Task<EstoqueResponseDTO> AdicionarProdutoAsync(EntradaEstoqueRequestDTO dto)
         {
             var registros = await _repositorio.GetByExpressionAsync(e => e.PecaId == dto.PecaId);
@@ -20,10 +36,10 @@ namespace Estoque.Application.Services
             {
                 estoque = new EstoqueEntidade
                 {
-                    PecaId          = dto.PecaId,
-                    QuantidadeAtual = dto.Quantidade,
+                    PecaId           = dto.PecaId,
+                    QuantidadeAtual  = dto.Quantidade,
                     QuantidadeMinima = 0,
-                    PrecoCustoMedio = dto.PrecoCusto
+                    PrecoCustoMedio  = dto.PrecoCusto
                 };
                 estoque.Id = await _repositorio.InsertAsync(estoque);
             }
@@ -38,16 +54,14 @@ namespace Estoque.Application.Services
                 await _repositorio.UpdateAsync(estoque);
             }
 
-            return MapearParaDTO(estoque);
+            return new EstoqueResponseDTO
+            {
+                Id               = estoque.Id,
+                PecaId           = estoque.PecaId,
+                QuantidadeAtual  = estoque.QuantidadeAtual,
+                QuantidadeMinima = estoque.QuantidadeMinima,
+                PrecoCustoMedio  = estoque.PrecoCustoMedio
+            };
         }
-
-        private static EstoqueResponseDTO MapearParaDTO(EstoqueEntidade e) => new()
-        {
-            Id              = e.Id,
-            PecaId          = e.PecaId,
-            QuantidadeAtual = e.QuantidadeAtual,
-            QuantidadeMinima = e.QuantidadeMinima,
-            PrecoCustoMedio = e.PrecoCustoMedio
-        };
     }
 }

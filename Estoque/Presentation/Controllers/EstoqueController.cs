@@ -12,6 +12,10 @@ namespace Estoque.Presentation.Controllers
 
         public EstoqueController(IEstoqueService service) => _service = service;
 
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
+            => Ok(await _service.ObterTodosAsync());
+
         [HttpPost("entrada")]
         public async Task<IActionResult> AdicionarProduto([FromBody] EntradaEstoqueRequestDTO dto)
         {

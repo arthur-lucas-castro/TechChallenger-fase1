@@ -11,7 +11,7 @@ namespace Compartilhado.Infrastructure.Repositories
         protected RepositorioBase(IDbConnectionFactory connectionFactory)
         {
             _connectionFactory = connectionFactory;
-            _tableName = typeof(TEntidade).Name + "s";
+            _tableName = typeof(TEntidade).Name;
         }
 
         public async Task<TEntidade?> GetByIdAsync(int id)

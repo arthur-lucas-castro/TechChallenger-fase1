@@ -12,17 +12,17 @@ namespace Compartilhado.Infrastructure.Repositories
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-        public DbSet<Cliente.Domain.Entities.Cliente> Clientes { get; set; }
-        public DbSet<Veiculo> Veiculos { get; set; }
-        public DbSet<ClienteVeiculo> ClienteVeiculos { get; set; }
-        public DbSet<ItemServico> ItemServicos { get; set; }
-        public DbSet<Peca> Pecas { get; set; }
-        public DbSet<Funcionario> Funcionarios { get; set; }
-        public DbSet<OrdemServicoEntidade> OrdemServicos { get; set; }
-        public DbSet<OrdemServicoItem> OrdemServicoItems { get; set; }
-        public DbSet<OrdemServicoInsumo> OrdemServicoInsumos { get; set; }
-        public DbSet<Orcamento> Orcamentos { get; set; }
-        public DbSet<EstoqueEntidade> Estoques { get; set; }
+        public DbSet<Cliente.Domain.Entities.Cliente> Cliente { get; set; }
+        public DbSet<Veiculo> Veiculo { get; set; }
+        public DbSet<ClienteVeiculo> ClienteVeiculo { get; set; }
+        public DbSet<ItemServico> ItemServico { get; set; }
+        public DbSet<Peca> Peca { get; set; }
+        public DbSet<Funcionario> Funcionario { get; set; }
+        public DbSet<OrdemServicoEntidade> OrdemServico { get; set; }
+        public DbSet<OrdemServicoItem> OrdemServicoItem { get; set; }
+        public DbSet<OrdemServicoInsumo> OrdemServicoInsumo { get; set; }
+        public DbSet<Orcamento> Orcamento { get; set; }
+        public DbSet<EstoqueEntidade> Estoque { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -95,6 +95,9 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.Property(x => x.PrecoCustoMedio)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
                     .HasColumnType("numeric(10,2)");
+                b.HasOne(x => x.Peca)
+                    .WithMany()
+                    .HasForeignKey(x => x.PecaId);
             });
         }
     }

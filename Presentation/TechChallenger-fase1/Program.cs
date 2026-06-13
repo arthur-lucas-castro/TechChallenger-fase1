@@ -23,7 +23,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
+           .UseLowerCaseNamingConvention());
 
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
@@ -35,6 +36,9 @@ builder.Services.AddScoped<IItemServicoService, ItemServicoService>();
 
 builder.Services.AddScoped<IEstoqueRepositorio, EstoqueRepositorio>();
 builder.Services.AddScoped<IEstoqueService, EstoqueService>();
+
+builder.Services.AddScoped<IPecaRepositorio, PecaRepositorio>();
+builder.Services.AddScoped<IPecaService, PecaService>();
 
 var app = builder.Build();
 
