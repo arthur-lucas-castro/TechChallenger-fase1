@@ -11,5 +11,10 @@ namespace Estoque.Domain.Interfaces
         Task<int> InsertAsync(Peca peca);
         Task<bool> UpdateAsync(Peca peca);
         Task<bool> DeleteAsync(int id);
+
+        Task<Peca?> GetByIdComEstoqueAsync(int pecaId);
+        Task<IEnumerable<Peca>> GetAllComEstoqueAsync();
+        Task<int> InsertProdutoEstoqueAsync(ProdutoEstoque produtoEstoque);
+        Task<bool> UpdateProdutoEstoqueAsync(ProdutoEstoque produtoEstoque);
     }
 }

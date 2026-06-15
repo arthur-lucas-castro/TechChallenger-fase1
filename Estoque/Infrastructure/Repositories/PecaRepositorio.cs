@@ -1,11 +1,40 @@
 using Compartilhado.Infrastructure.Repositories;
 using Estoque.Domain.Entities;
 using Estoque.Domain.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace Estoque.Infrastructure.Repositories
 {
     public class PecaRepositorio : BaseRepository<Peca>, IPecaRepositorio
     {
-        public PecaRepositorio(AppDbContext context) : base(context) { }
+        private readonly DbSet<ProdutoEstoque> _produtoEstoqueSet;
+
+        public PecaRepositorio(AppDbContext context) : base(context)
+        {
+            _produtoEstoqueSet = context.Set<ProdutoEstoque>();
+        }
+
+        public async Task<Peca?> GetByIdComEstoqueAsync(int pecaId)
+            => await _context.Set<Peca>()
+                .Include(p => p.ProdutoEstoque)
+                .FirstOrDefaultAsync(p => p.Id == pecaId);
+
+        public async Task<IEnumerable<Peca>> GetAllComEstoqueAsync()
+            => await _context.Set<Peca>()
+                .Include(p => p.ProdutoEstoque)
+                .ToListAsync();
+
+        public async Task<int> InsertProdutoEstoqueAsync(ProdutoEstoque produtoEstoque)
+        {
+            await _produtoEstoqueSet.AddAsync(produtoEstoque);
+            await _context.SaveChangesAsync();
+            return produtoEstoque.Id;
+        }
+
+        public async Task<bool> UpdateProdutoEstoqueAsync(ProdutoEstoque produtoEstoque)
+        {
+            _produtoEstoqueSet.Update(produtoEstoque);
+            return await _context.SaveChangesAsync() > 0;
+        }
     }
 }

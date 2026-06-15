@@ -1,14 +1,17 @@
 using Compartilhado.Infrastructure.Repositories.TypeHandlers;
 using Compartilhado.Infrastructure.Repositories;
 using Compartilhado.Infrastructure.Repositories.Interface;
+using Compartilhado.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Interfaces;
 using Cliente.Application.Services;
 using Cliente.Application.Services.Interfaces;
 using Cliente.Infrastructure.Repositories;
 using Estoque.Domain.Interfaces;
+using Estoque.Domain.Entities.Events;
 using Estoque.Application.Services;
 using Estoque.Application.Services.Interfaces;
+using Estoque.Application.Services.Events;
 using Estoque.Infrastructure.Repositories;
 
 DapperTypeHandlers.Registrar();
@@ -34,8 +37,8 @@ builder.Services.AddScoped<IVeiculoService, VeiculoService>();
 builder.Services.AddScoped<IItemServicoRepositorio, ItemServicoRepositorio>();
 builder.Services.AddScoped<IItemServicoService, ItemServicoService>();
 
-builder.Services.AddScoped<IEstoqueRepositorio, EstoqueRepositorio>();
-builder.Services.AddScoped<IEstoqueService, EstoqueService>();
+builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
+builder.Services.AddScoped<IDomainEventHandler<EstoqueBaixaRealizadaEvent>, EstoqueBaixaRealizadaHandler>();
 
 builder.Services.AddScoped<IPecaRepositorio, PecaRepositorio>();
 builder.Services.AddScoped<IPecaService, PecaService>();

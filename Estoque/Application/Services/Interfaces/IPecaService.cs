@@ -9,5 +9,9 @@ namespace Estoque.Application.Services.Interfaces
         Task<int> CriarAsync(PecaRequestDTO dto);
         Task<bool> AtualizarAsync(int id, PecaRequestDTO dto);
         Task<bool> ExcluirAsync(int id);
+
+        Task<IEnumerable<EstoqueComPecaResponseDTO>> ObterEstoqueTodosAsync();
+        Task<EstoqueResponseDTO> AdicionarEstoqueAsync(EntradaEstoqueRequestDTO dto);
+        Task<EstoqueResponseDTO?> DarBaixaAsync(BaixaEstoqueRequestDTO dto);
     }
 }

@@ -42,7 +42,7 @@ CREATE TABLE Peca (
     PrecoVenda  DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE Estoque (
+CREATE TABLE ProdutoEstoque (
     Id               SERIAL PRIMARY KEY,
     PecaId           INTEGER        NOT NULL REFERENCES Peca(Id),
     QuantidadeAtual  INTEGER        NOT NULL DEFAULT 0,

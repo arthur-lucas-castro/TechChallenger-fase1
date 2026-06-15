@@ -8,19 +8,42 @@ namespace Estoque.Presentation.Controllers
     [Route("[controller]")]
     public class EstoqueController : ControllerBase
     {
-        private readonly IEstoqueService _service;
+        private readonly IPecaService _service;
 
-        public EstoqueController(IEstoqueService service) => _service = service;
+        public EstoqueController(IPecaService service) => _service = service;
 
         [HttpGet]
         public async Task<IActionResult> GetAll()
-            => Ok(await _service.ObterTodosAsync());
+            => Ok(await _service.ObterEstoqueTodosAsync());
 
         [HttpPost("entrada")]
         public async Task<IActionResult> AdicionarProduto([FromBody] EntradaEstoqueRequestDTO dto)
         {
-            var resultado = await _service.AdicionarProdutoAsync(dto);
-            return Ok(resultado);
+            try
+            {
+                var resultado = await _service.AdicionarEstoqueAsync(dto);
+                return Ok(resultado);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost("baixa")]
+        public async Task<IActionResult> DarBaixa([FromBody] BaixaEstoqueRequestDTO dto)
+        {
+            try
+            {
+                var resultado = await _service.DarBaixaAsync(dto);
+                if (resultado is null)
+                    return NotFound($"Estoque não encontrado para a peça {dto.PecaId}.");
+                return Ok(resultado);
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
