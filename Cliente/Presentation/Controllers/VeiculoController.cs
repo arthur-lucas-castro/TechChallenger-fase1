@@ -23,6 +23,14 @@ namespace Cliente.Presentation.Controllers
             return Ok(veiculo);
         }
 
+        [HttpGet("placa/{placa}")]
+        public async Task<IActionResult> GetByPlaca(string placa)
+        {
+            var veiculo = await _service.ObterPorPlacaAsync(placa);
+            if (veiculo is null) return NotFound();
+            return Ok(veiculo);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] VeiculoRequestDTO dto)
         {

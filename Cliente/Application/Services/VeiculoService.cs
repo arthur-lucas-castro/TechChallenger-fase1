@@ -32,6 +32,12 @@ namespace Cliente.Application.Services
 
         public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
 
+        public async Task<VeiculoResponseDTO?> ObterPorPlacaAsync(string placa)
+        {
+            var v = await _repositorio.GetByPlacaAsync(placa);
+            return v is null ? null : MapearParaDTO(v);
+        }
+
         private static VeiculoResponseDTO MapearParaDTO(Veiculo v) => new()
         {
             Id = v.Id, Modelo = v.Modelo, Placa = v.Placa, Marca = v.Marca, Ano = v.Ano

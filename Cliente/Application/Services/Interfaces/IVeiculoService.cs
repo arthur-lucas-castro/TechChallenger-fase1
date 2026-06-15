@@ -9,5 +9,6 @@ namespace Cliente.Application.Services.Interfaces
         Task<int> CriarAsync(VeiculoRequestDTO dto);
         Task<bool> AtualizarAsync(int id, VeiculoRequestDTO dto);
         Task<bool> ExcluirAsync(int id);
+        Task<VeiculoResponseDTO?> ObterPorPlacaAsync(string placa);
     }
 }

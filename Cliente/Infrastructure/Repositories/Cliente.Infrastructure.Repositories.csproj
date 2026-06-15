@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Entities\Cliente.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Cliente.Domain.ValueObjects\Cliente.Domain.ValueObjects.csproj" />
     <ProjectReference Include="..\..\Domain\Interfaces\Cliente.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Infrastructure\Repositories\Compartilhado.Infrastructure.Repositories.csproj" />
   </ItemGroup>

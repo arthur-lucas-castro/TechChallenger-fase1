@@ -1,9 +1,10 @@
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
+using Cliente.Domain.ValueObjects;
 
 namespace Cliente.Domain.Entities
 {
-    public class Cliente : EntidadeBase<Cliente>
+    public class Cliente : EntidadeBase<Cliente>, IAggregateRoot
     {
         public string Nome { get; set; } = string.Empty;
         public string Sobrenome { get; set; } = string.Empty;

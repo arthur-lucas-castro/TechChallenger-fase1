@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Cliente.Domain.ValueObjects\Cliente.Domain.ValueObjects.csproj" />
   </ItemGroup>
 </Project>

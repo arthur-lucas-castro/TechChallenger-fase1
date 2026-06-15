@@ -1,4 +1,3 @@
-using Compartilhado.Infrastructure.Repositories.TypeHandlers;
 using Compartilhado.Infrastructure.Repositories;
 using Compartilhado.Infrastructure.Repositories.Interface;
 using Compartilhado.Domain.Entities;
@@ -14,7 +13,6 @@ using Estoque.Application.Services.Interfaces;
 using Estoque.Application.Services.Events;
 using Estoque.Infrastructure.Repositories;
 
-DapperTypeHandlers.Registrar();
 
 var builder = WebApplication.CreateBuilder(args);
 

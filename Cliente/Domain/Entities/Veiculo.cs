@@ -1,9 +1,9 @@
+using Cliente.Domain.ValueObjects;
 using Compartilhado.Domain.Entities;
-using Compartilhado.Domain.ValueObjects;
 
 namespace Cliente.Domain.Entities
 {
-    public class Veiculo : EntidadeBase<Veiculo>
+    public class Veiculo : EntidadeBase<Veiculo>, IAggregateRoot
     {
         public string Modelo { get; set; } = string.Empty;
         public Placa Placa { get; set; } = null!;

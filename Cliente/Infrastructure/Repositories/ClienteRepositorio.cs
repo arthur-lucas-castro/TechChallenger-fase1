@@ -1,21 +1,19 @@
-using Dapper;
 using Cliente.Domain.Interfaces;
+using Cliente.Domain.ValueObjects;
 using Compartilhado.Infrastructure.Repositories;
-using Compartilhado.Infrastructure.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 using ClienteEntity = Cliente.Domain.Entities.Cliente;
 
 namespace Cliente.Infrastructure.Repositories
 {
-    public class ClienteRepositorio : RepositorioBase<ClienteEntity>, IClienteRepositorio
+    public class ClienteRepositorio : BaseRepository<ClienteEntity>, IClienteRepositorio
     {
-        public ClienteRepositorio(IDbConnectionFactory connectionFactory) : base(connectionFactory) { }
+        public ClienteRepositorio(AppDbContext context) : base(context) { }
 
         public async Task<ClienteEntity?> ObterPorNumeroDocumentoAsync(string numeroDocumento)
         {
-            using var connection = _connectionFactory.CreateConnection();
-            return await connection.QueryFirstOrDefaultAsync<ClienteEntity>(
-                $"SELECT * FROM {_tableName} WHERE NumeroDocumento = @NumeroDocumento",
-                new { NumeroDocumento = numeroDocumento });
+            Documento doc = numeroDocumento;
+            return await _dbSet.FirstOrDefaultAsync(c => c.NumeroDocumento == doc);
         }
     }
 }

@@ -9,5 +9,6 @@ namespace Cliente.Domain.Interfaces
         Task<int> InsertAsync(Veiculo veiculo);
         Task<bool> UpdateAsync(Veiculo veiculo);
         Task<bool> DeleteAsync(int id);
+        Task<Veiculo?> GetByPlacaAsync(string placa);
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Entities;
+using Cliente.Domain.ValueObjects;
 using Estoque.Domain.Entities;
 using OrdemServico.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
