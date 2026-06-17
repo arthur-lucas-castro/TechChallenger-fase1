@@ -1,5 +1,6 @@
 using System.Linq.Expressions;
 using Estoque.Domain.Entities;
+using Estoque.Domain.ValueObjects;
 
 namespace Estoque.Domain.Interfaces
 {
@@ -14,7 +15,7 @@ namespace Estoque.Domain.Interfaces
 
         Task<Peca?> GetByIdComEstoqueAsync(int pecaId);
         Task<IEnumerable<Peca>> GetAllComEstoqueAsync();
-        Task<int> InsertProdutoEstoqueAsync(ProdutoEstoque produtoEstoque);
+        Task InsertProdutoEstoqueAsync(ProdutoEstoque produtoEstoque);
         Task<bool> UpdateProdutoEstoqueAsync(ProdutoEstoque produtoEstoque);
     }
 }

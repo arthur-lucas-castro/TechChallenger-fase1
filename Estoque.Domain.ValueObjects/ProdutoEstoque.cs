@@ -1,11 +1,10 @@
-using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
-using Estoque.Domain.Entities.Events;
 
-namespace Estoque.Domain.Entities
+namespace Estoque.Domain.ValueObjects
 {
-    public class ProdutoEstoque : EntidadeBase<ProdutoEstoque>
+    public class ProdutoEstoque 
     {
+        public int Id { get; set; }
         public int PecaId { get; set; }
         public int QuantidadeAtual { get; set; }
         public int QuantidadeMinima { get; set; }

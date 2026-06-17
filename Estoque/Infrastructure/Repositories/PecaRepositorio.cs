@@ -1,6 +1,7 @@
 using Compartilhado.Infrastructure.Repositories;
 using Estoque.Domain.Entities;
 using Estoque.Domain.Interfaces;
+using Estoque.Domain.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 
 namespace Estoque.Infrastructure.Repositories
@@ -24,11 +25,11 @@ namespace Estoque.Infrastructure.Repositories
                 .Include(p => p.ProdutoEstoque)
                 .ToListAsync();
 
-        public async Task<int> InsertProdutoEstoqueAsync(ProdutoEstoque produtoEstoque)
+        public async Task InsertProdutoEstoqueAsync(ProdutoEstoque produtoEstoque)
         {
             await _produtoEstoqueSet.AddAsync(produtoEstoque);
             await _context.SaveChangesAsync();
-            return produtoEstoque.Id;
+            return;
         }
 
         public async Task<bool> UpdateProdutoEstoqueAsync(ProdutoEstoque produtoEstoque)

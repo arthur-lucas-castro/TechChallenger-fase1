@@ -1,6 +1,7 @@
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using Estoque.Domain.Entities.Events;
+using Estoque.Domain.ValueObjects;
 
 namespace Estoque.Domain.Entities
 {

@@ -3,6 +3,7 @@ using Estoque.Application.DTOs;
 using Estoque.Application.Services.Interfaces;
 using Estoque.Domain.Entities;
 using Estoque.Domain.Interfaces;
+using Estoque.Domain.ValueObjects;
 
 namespace Estoque.Application.Services
 {
@@ -62,7 +63,7 @@ namespace Estoque.Application.Services
             peca.AdicionarEstoque(dto.Quantidade, dto.PrecoCusto);
 
             if (peca.ProdutoEstoque!.Id == 0)
-                peca.ProdutoEstoque.Id = await _repositorio.InsertProdutoEstoqueAsync(peca.ProdutoEstoque);
+                await _repositorio.InsertProdutoEstoqueAsync(peca.ProdutoEstoque);
             else
                 await _repositorio.UpdateProdutoEstoqueAsync(peca.ProdutoEstoque);
 
@@ -78,8 +79,8 @@ namespace Estoque.Application.Services
             var estoque = peca.ProdutoEstoque!;
 
             await _repositorio.UpdateProdutoEstoqueAsync(estoque);
-            await _dispatcher.DispatchAsync(estoque.GetDomainEvents());
-            estoque.ClearDomainEvents();
+            await _dispatcher.DispatchAsync(peca.GetDomainEvents());
+            peca.ClearDomainEvents();
 
             return MapearEstoqueParaDTO(estoque);
         }

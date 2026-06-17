@@ -1,5 +1,4 @@
 using Compartilhado.Infrastructure.Repositories;
-using Compartilhado.Infrastructure.Repositories.Interface;
 using Compartilhado.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Interfaces;
@@ -21,8 +20,6 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IDbConnectionFactory, SqlConnectionFactory>();
-
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
            .UseLowerCaseNamingConvention());
@@ -32,8 +29,8 @@ builder.Services.AddScoped<IClienteService, ClienteService>();
 builder.Services.AddScoped<IVeiculoRepositorio, VeiculoRepositorio>();
 builder.Services.AddScoped<IVeiculoService, VeiculoService>();
 
-builder.Services.AddScoped<IItemServicoRepositorio, ItemServicoRepositorio>();
-builder.Services.AddScoped<IItemServicoService, ItemServicoService>();
+builder.Services.AddScoped<IServicoRepositorio, ServicoRepositorio>();
+builder.Services.AddScoped<IServicoService, ServicoService>();
 
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 builder.Services.AddScoped<IDomainEventHandler<EstoqueBaixaRealizadaEvent>, EstoqueBaixaRealizadaHandler>();

@@ -7,5 +7,6 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Estoque.Domain.ValueObjects\Estoque.Domain.ValueObjects.csproj" />
   </ItemGroup>
 </Project>
