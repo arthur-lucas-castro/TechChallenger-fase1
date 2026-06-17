@@ -6,11 +6,11 @@ namespace Estoque.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ItemServicoController : ControllerBase
+    public class ServicoController : ControllerBase
     {
-        private readonly IItemServicoService _service;
+        private readonly IServicoService _service;
 
-        public ItemServicoController(IItemServicoService service) => _service = service;
+        public ServicoController(IServicoService service) => _service = service;
 
         [HttpGet]
         public async Task<IActionResult> GetAll() => Ok(await _service.ObterTodosAsync());
@@ -18,20 +18,20 @@ namespace Estoque.Presentation.Controllers
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var item = await _service.ObterPorIdAsync(id);
-            if (item is null) return NotFound();
-            return Ok(item);
+            var servico = await _service.ObterPorIdAsync(id);
+            if (servico is null) return NotFound();
+            return Ok(servico);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] ItemServicoRequestDTO dto)
+        public async Task<IActionResult> Create([FromBody] ServicoRequestDTO dto)
         {
             var id = await _service.CriarAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
         }
 
         [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] ItemServicoRequestDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] ServicoRequestDTO dto)
         {
             if (!await _service.AtualizarAsync(id, dto)) return NotFound();
             return Ok(dto);

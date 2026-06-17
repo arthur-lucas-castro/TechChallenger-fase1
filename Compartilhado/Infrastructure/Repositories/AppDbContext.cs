@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Entities;
 using Cliente.Domain.ValueObjects;
 using Estoque.Domain.Entities;
+using Estoque.Domain.ValueObjects;
 using OrdemServico.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using OrdemServicoEntidade = OrdemServico.Domain.Entities.OrdemServico;
@@ -15,7 +16,7 @@ namespace Compartilhado.Infrastructure.Repositories
         public DbSet<Cliente.Domain.Entities.Cliente> Cliente { get; set; }
         public DbSet<Veiculo> Veiculo { get; set; }
         public DbSet<ClienteVeiculo> ClienteVeiculo { get; set; }
-        public DbSet<ItemServico> ItemServico { get; set; }
+        public DbSet<Servico> Servico { get; set; }
         public DbSet<Peca> Peca { get; set; }
         public DbSet<Funcionario> Funcionario { get; set; }
         public DbSet<OrdemServicoEntidade> OrdemServico { get; set; }
@@ -49,7 +50,7 @@ namespace Compartilhado.Infrastructure.Repositories
                     .HasMaxLength(7);
             });
 
-            modelBuilder.Entity<ItemServico>(b =>
+            modelBuilder.Entity<Servico>(b =>
             {
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
