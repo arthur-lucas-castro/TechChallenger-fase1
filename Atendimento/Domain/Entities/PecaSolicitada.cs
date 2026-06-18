@@ -1,8 +1,8 @@
 using Compartilhado.Domain.Entities;
 
-namespace OrdemServico.Domain.Entities
+namespace Atendimento.Domain.Entities
 {
-    public class OrdemServicoInsumo : EntidadeBase<OrdemServicoInsumo>
+    public class PecaSolicitada : EntidadeBase<PecaSolicitada>
     {
         public int OrdemServicoId { get; set; }
         public int PecaId { get; set; }

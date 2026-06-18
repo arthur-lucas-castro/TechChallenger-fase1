@@ -3,9 +3,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>OrdemServico.Domain.Entities</RootNamespace>
+    <RootNamespace>Atendimento.Domain.Interfaces</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
+    <ProjectReference Include="..\Entities\Atendimento.Domain.Entities.csproj" />
   </ItemGroup>
 </Project>

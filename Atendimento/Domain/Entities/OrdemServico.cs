@@ -1,9 +1,9 @@
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 
-namespace OrdemServico.Domain.Entities
+namespace Atendimento.Domain.Entities
 {
-    public class OrdemServico : EntidadeBase<OrdemServico>
+    public class OrdemServico : EntidadeBase<OrdemServico>, IAggregateRoot
     {
         public int VeiculoId { get; set; }
         public int ClienteId { get; set; }

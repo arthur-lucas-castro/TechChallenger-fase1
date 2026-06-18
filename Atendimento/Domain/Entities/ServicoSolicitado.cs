@@ -1,9 +1,9 @@
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 
-namespace OrdemServico.Domain.Entities
+namespace Atendimento.Domain.Entities
 {
-    public class OrdemServicoItem : EntidadeBase<OrdemServicoItem>
+    public class ServicoSolicitado : EntidadeBase<ServicoSolicitado>
     {
         public int OrdemServicoId { get; set; }
         public int ServicoId { get; set; }

@@ -3,9 +3,9 @@ using Cliente.Domain.Entities;
 using Cliente.Domain.ValueObjects;
 using Estoque.Domain.Entities;
 using Estoque.Domain.ValueObjects;
-using OrdemServico.Domain.Entities;
+using Atendimento.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
-using OrdemServicoEntidade = OrdemServico.Domain.Entities.OrdemServico;
+using AtendimentoOrdemServico = Atendimento.Domain.Entities.OrdemServico;
 
 namespace Compartilhado.Infrastructure.Repositories
 {
@@ -15,21 +15,15 @@ namespace Compartilhado.Infrastructure.Repositories
 
         public DbSet<Cliente.Domain.Entities.Cliente> Cliente { get; set; }
         public DbSet<Veiculo> Veiculo { get; set; }
-        public DbSet<ClienteVeiculo> ClienteVeiculo { get; set; }
         public DbSet<Servico> Servico { get; set; }
         public DbSet<Peca> Peca { get; set; }
-        public DbSet<Funcionario> Funcionario { get; set; }
-        public DbSet<OrdemServicoEntidade> OrdemServico { get; set; }
-        public DbSet<OrdemServicoItem> OrdemServicoItem { get; set; }
-        public DbSet<OrdemServicoInsumo> OrdemServicoInsumo { get; set; }
-        public DbSet<Orcamento> Orcamento { get; set; }
+        public DbSet<AtendimentoOrdemServico> OrdemServico { get; set; }
+        public DbSet<ServicoSolicitado> ServicoSolicitado { get; set; }
+        public DbSet<PecaSolicitada> PecaSolicitada { get; set; }
         public DbSet<ProdutoEstoque> Estoque { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<ClienteVeiculo>()
-                .HasKey(x => new { x.ClienteId, x.VeiculoId });
-
             modelBuilder.Entity<Cliente.Domain.Entities.Cliente>(b =>
             {
                 b.Property(x => x.Telefone)
@@ -67,29 +61,20 @@ namespace Compartilhado.Infrastructure.Repositories
                     .HasColumnType("numeric(10,2)");
             });
 
-            modelBuilder.Entity<OrdemServicoEntidade>(b =>
+            modelBuilder.Entity<AtendimentoOrdemServico>(b =>
             {
                 b.Property(x => x.Status)
                     .HasConversion<string>()
                     .HasMaxLength(20);
             });
 
-            modelBuilder.Entity<OrdemServicoItem>(b =>
+            modelBuilder.Entity<ServicoSolicitado>(b =>
             {
                 b.Property(x => x.Preco)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
                     .HasColumnType("numeric(10,2)");
             });
 
-            modelBuilder.Entity<Orcamento>(b =>
-            {
-                b.Property(x => x.PrecoTotal)
-                    .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
-                b.Property(x => x.Status)
-                    .HasConversion<string>()
-                    .HasMaxLength(20);
-            });
 
             modelBuilder.Entity<ProdutoEstoque>(b =>
             {

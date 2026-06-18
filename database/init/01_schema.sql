@@ -61,7 +61,7 @@ CREATE TABLE OrdemServico (
     DataFinalizacao      TIMESTAMP
 );
 
-CREATE TABLE OrdemServicoItem (
+CREATE TABLE ServicoSolicitado (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
     ServicoId        INTEGER        NOT NULL REFERENCES Servico(Id),
@@ -69,7 +69,7 @@ CREATE TABLE OrdemServicoItem (
     Preco            DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE OrdemServicoInsumo (
+CREATE TABLE PecaSolicitada (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER NOT NULL REFERENCES OrdemServico(Id),
     PecaId           INTEGER NOT NULL REFERENCES Peca(Id),

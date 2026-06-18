@@ -3,12 +3,11 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Cliente.Infrastructure.Repositories</RootNamespace>
+    <RootNamespace>Atendimento.Infrastructure.Repositories</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\Entities\Cliente.Domain.Entities.csproj" />
-    <ProjectReference Include="..\..\Domain\ValueObjects\Cliente.Domain.ValueObjects.csproj" />
-    <ProjectReference Include="..\..\Domain\Interfaces\Cliente.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Domain\Entities\Atendimento.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\Domain\Interfaces\Atendimento.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Infrastructure\Repositories\Compartilhado.Infrastructure.Repositories.csproj" />
   </ItemGroup>
 </Project>
