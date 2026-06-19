@@ -22,6 +22,7 @@ namespace Compartilhado.Infrastructure.Repositories
         public DbSet<PecaSolicitada> PecaSolicitada { get; set; }
         public DbSet<ProdutoEstoque> Estoque { get; set; }
         public DbSet<Orcamento> Orcamento { get; set; }
+        public DbSet<ServicoExecucao> ServicoExecucao { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -91,6 +92,16 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
                     .HasColumnType("numeric(10,2)");
+                b.HasOne(x => x.ServicoExecucao)
+                    .WithOne()
+                    .HasForeignKey<ServicoExecucao>(e => e.ServicoSolicitadoId);
+            });
+
+            modelBuilder.Entity<ServicoExecucao>(b =>
+            {
+                b.Property(x => x.Status)
+                    .HasConversion<string>()
+                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<PecaSolicitada>(b =>

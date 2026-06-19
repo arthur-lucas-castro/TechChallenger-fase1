@@ -9,5 +9,6 @@ namespace Atendimento.Domain.Entities
         public int ServicoId { get; set; }
         public int Quantidade { get; set; }
         public Dinheiro PrecoVenda { get; set; } = null!;
+        public ServicoExecucao? ServicoExecucao { get; set; }
     }
 }

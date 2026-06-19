@@ -78,6 +78,7 @@ CREATE TABLE ServicoSolicitado (
     PrecoVenda       DECIMAL(10, 2) NOT NULL
 );
 
+
 CREATE TABLE PecaSolicitada (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
@@ -85,6 +86,14 @@ CREATE TABLE PecaSolicitada (
     Quantidade       INTEGER        NOT NULL,
     Nome             VARCHAR(100)   NOT NULL,
     PrecoVenda       DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE ServicoExecucao (
+    Id                   SERIAL PRIMARY KEY,
+    ServicoSolicitadoId  INTEGER      NOT NULL REFERENCES ServicoSolicitado(Id),
+    Status               VARCHAR(20)  NOT NULL,
+    DataInicio           TIMESTAMP,
+    DataFinalizacao      TIMESTAMP
 );
 
 CREATE TABLE Orcamento (

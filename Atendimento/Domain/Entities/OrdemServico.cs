@@ -51,6 +51,26 @@ namespace Atendimento.Domain.Entities
             AlterarStatus(StatusOrdemServico.Entregue);
         }
 
+        public void AlterarStatusServicoExecucao(int servicoSolicitadoId, StatusServicoExecucao novoStatus)
+        {
+            var servicoSolicitado = ServicosSolicitados.FirstOrDefault(s => s.Id == servicoSolicitadoId)
+                ?? throw new InvalidOperationException($"Serviço solicitado {servicoSolicitadoId} não encontrado na ordem.");
+
+            servicoSolicitado.ServicoExecucao ??= new ServicoExecucao
+            {
+                ServicoSolicitadoId = servicoSolicitadoId,
+                Status = StatusServicoExecucao.Pendente
+            };
+
+            servicoSolicitado.ServicoExecucao.Status = novoStatus;
+
+            if (novoStatus == StatusServicoExecucao.EmExecucao)
+                servicoSolicitado.ServicoExecucao.DataInicio ??= DateTime.UtcNow;
+
+            if (novoStatus == StatusServicoExecucao.Executado)
+                servicoSolicitado.ServicoExecucao.DataFinalizacao ??= DateTime.UtcNow;
+        }
+
         public void AdicionarServico(int servicoId, int quantidade, Dinheiro precoVenda)
         {
             ServicosSolicitados.Add(new ServicoSolicitado

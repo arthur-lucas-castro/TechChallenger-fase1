@@ -4,6 +4,7 @@ using Atendimento.Domain.Entities;
 using Atendimento.Domain.Interfaces;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
+using StatusServicoExecucao = Compartilhado.Domain.ValueObjects.StatusServicoExecucao;
 using Estoque.Application.Services.Interfaces;
 using Estoque.Application.DTOs;
 
@@ -107,6 +108,15 @@ namespace Atendimento.Application.Services
             var ordem = await _repositorio.GetByIdComPecasAsync(ordemServicoId);
             if (ordem is null) return false;
             if (!ordem.RemoverPeca(pecaId)) return false;
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> AlterarStatusServicoExecucaoAsync(int ordemServicoId, int servicoSolicitadoId, AlterarStatusServicoExecucaoDTO dto)
+        {
+            var os = await _repositorio.GetByIdComServicosEExecucaoAsync(ordemServicoId);
+            if (os is null) return false;
+
+            os.AlterarStatusServicoExecucao(servicoSolicitadoId, Enum.Parse<StatusServicoExecucao>(dto.Status));
             return await _repositorio.CommitAsync();
         }
 

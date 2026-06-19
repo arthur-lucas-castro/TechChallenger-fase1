@@ -12,6 +12,7 @@ namespace Atendimento.Domain.Interfaces
         Task<OrdemServico?> GetByIdComServicosAsync(int id);
         Task<OrdemServico?> GetByIdComPecasAsync(int id);
         Task<OrdemServico?> GetByIdComItensAsync(int id);
+        Task<OrdemServico?> GetByIdComServicosEExecucaoAsync(int id);
         Task<bool> CommitAsync();
     }
 }

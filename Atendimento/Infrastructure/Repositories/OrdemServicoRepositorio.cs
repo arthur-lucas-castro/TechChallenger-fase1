@@ -25,6 +25,12 @@ namespace Atendimento.Infrastructure.Repositories
                 .Include(o => o.PecasSolicitadas)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
+        public async Task<OrdemServico?> GetByIdComServicosEExecucaoAsync(int id)
+            => await _context.Set<OrdemServico>()
+                .Include(o => o.ServicosSolicitados)
+                    .ThenInclude(s => s.ServicoExecucao)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
         public async Task<bool> CommitAsync()
             => await _context.SaveChangesAsync() > 0;
     }

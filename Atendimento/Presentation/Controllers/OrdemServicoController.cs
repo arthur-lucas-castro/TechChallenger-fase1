@@ -36,6 +36,20 @@ namespace Atendimento.Presentation.Controllers
             return Ok(dto);
         }
 
+        [HttpPatch("{id:int}/servicos/{servicoSolicitadoId:int}/execucao")]
+        public async Task<IActionResult> AlterarStatusServicoExecucao(int id, int servicoSolicitadoId, [FromBody] AlterarStatusServicoExecucaoDTO dto)
+        {
+            try
+            {
+                if (!await _service.AlterarStatusServicoExecucaoAsync(id, servicoSolicitadoId, dto)) return NotFound();
+                return NoContent();
+            }
+            catch (InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpPatch("{id:int}/status")]
         public async Task<IActionResult> AlterarStatus(int id, [FromBody] AlterarStatusOrdemServicoDTO dto)
         {
