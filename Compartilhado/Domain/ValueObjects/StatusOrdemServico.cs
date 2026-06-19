@@ -1,4 +1,12 @@
 namespace Compartilhado.Domain.ValueObjects
 {
-    public enum StatusOrdemServico { Aberta, EmExecucao, Concluida, Cancelada }
+    public enum StatusOrdemServico
+    {
+        Recebida,
+        EmDiagnostico,
+        AguardandoAprovacao,
+        EmExecucao,
+        Finalizada,
+        Entregue
+    }
 }

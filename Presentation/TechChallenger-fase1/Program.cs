@@ -11,7 +11,15 @@ using Estoque.Application.Services;
 using Estoque.Application.Services.Interfaces;
 using Estoque.Application.Services.Events;
 using Estoque.Infrastructure.Repositories;
+using Atendimento.Domain.Interfaces;
+using Atendimento.Application.Services;
+using Atendimento.Application.Services.Interfaces;
+using Atendimento.Infrastructure.Repositories;
+using Npgsql;
+using Compartilhado.Domain.ValueObjects;
 
+
+AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,8 +28,12 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Default")!);
+dataSourceBuilder.MapEnum<StatusOrdemServico>("status_ordem_servico");
+var dataSource = dataSourceBuilder.Build();
+
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("Default"))
+    options.UseNpgsql(dataSource)
            .UseLowerCaseNamingConvention());
 
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
@@ -37,6 +49,9 @@ builder.Services.AddScoped<IDomainEventHandler<EstoqueBaixaRealizadaEvent>, Esto
 
 builder.Services.AddScoped<IPecaRepositorio, PecaRepositorio>();
 builder.Services.AddScoped<IPecaService, PecaService>();
+
+builder.Services.AddScoped<IOrdemServicoRepositorio, OrdemServicoRepositorio>();
+builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 
 var app = builder.Build();
 

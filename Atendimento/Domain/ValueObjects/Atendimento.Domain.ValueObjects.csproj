@@ -3,14 +3,10 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <RootNamespace>Atendimento.Application.Services</RootNamespace>
+    <RootNamespace>Atendimento.Domain.ValueObjects</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Domain\Entities\Atendimento.Domain.Entities.csproj" />
-    <ProjectReference Include="..\..\Domain\Interfaces\Atendimento.Domain.Interfaces.csproj" />
-    <ProjectReference Include="..\DTOs\Atendimento.Application.DTOs.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\ValueObjects\Compartilhado.Domain.ValueObjects.csproj" />
-    <ProjectReference Include="..\..\..\Estoque\Application\Services\Estoque.Application.Services.csproj" />
   </ItemGroup>
 </Project>

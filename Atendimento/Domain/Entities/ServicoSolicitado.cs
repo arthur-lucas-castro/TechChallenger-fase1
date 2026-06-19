@@ -8,6 +8,6 @@ namespace Atendimento.Domain.Entities
         public int OrdemServicoId { get; set; }
         public int ServicoId { get; set; }
         public int Quantidade { get; set; }
-        public Dinheiro Preco { get; set; } = null!;
+        public Dinheiro PrecoVenda { get; set; } = null!;
     }
 }

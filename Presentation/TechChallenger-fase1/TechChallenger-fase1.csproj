@@ -12,6 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Atendimento\Presentation\Controllers\Atendimento.Presentation.Controllers.csproj" />
+    <ProjectReference Include="..\..\Atendimento\Application\Services\Atendimento.Application.Services.csproj" />
+    <ProjectReference Include="..\..\Atendimento\Domain\Interfaces\Atendimento.Domain.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Atendimento\Infrastructure\Repositories\Atendimento.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Infrastructure\Repositories\Compartilhado.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Cliente\Presentation\Controllers\Cliente.Presentation.Controllers.csproj" />
     <ProjectReference Include="..\..\Cliente\Infrastructure\Repositories\Cliente.Infrastructure.Repositories.csproj" />

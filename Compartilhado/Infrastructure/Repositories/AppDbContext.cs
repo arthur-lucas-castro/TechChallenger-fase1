@@ -24,6 +24,7 @@ namespace Compartilhado.Infrastructure.Repositories
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasPostgresEnum<StatusOrdemServico>("status_ordem_servico");
             modelBuilder.Entity<Cliente.Domain.Entities.Cliente>(b =>
             {
                 b.Property(x => x.Telefone)
@@ -63,14 +64,24 @@ namespace Compartilhado.Infrastructure.Repositories
 
             modelBuilder.Entity<AtendimentoOrdemServico>(b =>
             {
-                b.Property(x => x.Status)
-                    .HasConversion<string>()
-                    .HasMaxLength(20);
+                b.HasMany(x => x.ServicosSolicitados)
+                    .WithOne()
+                    .HasForeignKey(s => s.OrdemServicoId);
+                b.HasMany(x => x.PecasSolicitadas)
+                    .WithOne()
+                    .HasForeignKey(p => p.OrdemServicoId);
             });
 
             modelBuilder.Entity<ServicoSolicitado>(b =>
             {
-                b.Property(x => x.Preco)
+                b.Property(x => x.PrecoVenda)
+                    .HasConversion(v => v.Valor, v => new Dinheiro(v))
+                    .HasColumnType("numeric(10,2)");
+            });
+
+            modelBuilder.Entity<PecaSolicitada>(b =>
+            {
+                b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
                     .HasColumnType("numeric(10,2)");
             });

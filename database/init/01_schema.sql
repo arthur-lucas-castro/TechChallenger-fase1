@@ -50,12 +50,21 @@ CREATE TABLE ProdutoEstoque (
     PrecoCustoMedio  DECIMAL(10, 2) NOT NULL
 );
 
+CREATE TYPE status_ordem_servico AS ENUM (
+    'recebida',
+    'em_diagnostico',
+    'aguardando_aprovacao',
+    'em_execucao',
+    'finalizada',
+    'entregue'
+);
+
 CREATE TABLE OrdemServico (
     Id                   SERIAL PRIMARY KEY,
     VeiculoId            INTEGER     NOT NULL REFERENCES Veiculo(Id),
     ClienteId            INTEGER     NOT NULL REFERENCES Cliente(Id),
     ResponsavelId        INTEGER     NOT NULL REFERENCES Funcionario(Id),
-    Status               VARCHAR(10) NOT NULL,
+    Status               status_ordem_servico NOT NULL,
     DataUltimaAlteracao  TIMESTAMP,
     DataCriacao          TIMESTAMP   NOT NULL,
     DataFinalizacao      TIMESTAMP
@@ -66,20 +75,21 @@ CREATE TABLE ServicoSolicitado (
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
     ServicoId        INTEGER        NOT NULL REFERENCES Servico(Id),
     Quantidade       INTEGER        NOT NULL,
-    Preco            DECIMAL(10, 2) NOT NULL
+    PrecoVenda       DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE PecaSolicitada (
     Id               SERIAL PRIMARY KEY,
-    OrdemServicoId   INTEGER NOT NULL REFERENCES OrdemServico(Id),
-    PecaId           INTEGER NOT NULL REFERENCES Peca(Id),
-    Quantidade       INTEGER NOT NULL
+    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
+    PecaId           INTEGER        NOT NULL REFERENCES Peca(Id),
+    Quantidade       INTEGER        NOT NULL,
+    Nome             VARCHAR(100)   NOT NULL,
+    PrecoVenda       DECIMAL(10, 2) NOT NULL
 );
 
 CREATE TABLE Orcamento (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
-    VendedorId       INTEGER        NOT NULL REFERENCES Funcionario(Id),
     PrecoTotal       DECIMAL(10, 2) NOT NULL,
     Status           VARCHAR(10)    NOT NULL,
     DataCriacao      TIMESTAMP      NOT NULL,
