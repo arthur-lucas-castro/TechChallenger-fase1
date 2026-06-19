@@ -2,6 +2,7 @@ using Atendimento.Application.DTOs;
 using Atendimento.Application.Services.Interfaces;
 using Atendimento.Domain.Entities;
 using Atendimento.Domain.Interfaces;
+using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using Estoque.Application.Services.Interfaces;
 using Estoque.Application.DTOs;
@@ -13,12 +14,14 @@ namespace Atendimento.Application.Services
         private readonly IOrdemServicoRepositorio _repositorio;
         private readonly IServicoService _servicoService;
         private readonly IPecaService _pecaService;
+        private readonly IDomainEventDispatcher _dispatcher;
 
-        public OrdemServicoService(IOrdemServicoRepositorio repositorio, IServicoService servicoService, IPecaService pecaService)
+        public OrdemServicoService(IOrdemServicoRepositorio repositorio, IServicoService servicoService, IPecaService pecaService, IDomainEventDispatcher dispatcher)
         {
             _repositorio = repositorio;
             _servicoService = servicoService;
             _pecaService = pecaService;
+            _dispatcher = dispatcher;
         }
 
         public async Task<OrdemServicoResponseDTO?> ObterPorIdAsync(int id)
@@ -109,11 +112,34 @@ namespace Atendimento.Application.Services
 
         public async Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDTO dto)
         {
-            var os = await _repositorio.GetByIdAsync(id);
+            var os = await _repositorio.GetByIdComItensAsync(id);
             if (os is null) return false;
 
-            os.AlterarStatus(Enum.Parse<StatusOrdemServico>(dto.Status));
-            return await _repositorio.UpdateAsync(os);
+            AplicarTransicaoStatus(os, Enum.Parse<StatusOrdemServico>(dto.Status));
+
+            var resultado = await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(os.GetDomainEvents());
+            os.ClearDomainEvents();
+            return resultado;
+        }
+
+        private static void AplicarTransicaoStatus(OrdemServico os, StatusOrdemServico status)
+        {
+            switch (status)
+            {
+                case StatusOrdemServico.AguardandoAprovacao: 
+                    os.FinalizarDiagnostico(); 
+                    break;
+                case StatusOrdemServico.Finalizada:          
+                    os.FinalizarOrdem();       
+                    break;
+                case StatusOrdemServico.Entregue:            
+                    os.EntregarVeiculo();      
+                    break;
+                default:                                     
+                    os.AlterarStatus(status);  
+                    break;
+            }
         }
 
         private static OrdemServicoResponseDTO MapearParaDTO(OrdemServico os) => new()

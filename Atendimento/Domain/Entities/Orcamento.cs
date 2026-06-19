@@ -1,7 +1,7 @@
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 
-namespace Atendimento.Domain.ValueObjects
+namespace Atendimento.Domain.Entities
 {
     public class Orcamento : EntidadeBase<Orcamento>
     {

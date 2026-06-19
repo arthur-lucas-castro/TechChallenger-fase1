@@ -21,6 +21,7 @@ namespace Compartilhado.Infrastructure.Repositories
         public DbSet<ServicoSolicitado> ServicoSolicitado { get; set; }
         public DbSet<PecaSolicitada> PecaSolicitada { get; set; }
         public DbSet<ProdutoEstoque> Estoque { get; set; }
+        public DbSet<Orcamento> Orcamento { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -70,6 +71,19 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.HasMany(x => x.PecasSolicitadas)
                     .WithOne()
                     .HasForeignKey(p => p.OrdemServicoId);
+                b.HasOne(x => x.Orcamento)
+                    .WithOne()
+                    .HasForeignKey<Orcamento>(o => o.OrdemServicoId);
+            });
+
+            modelBuilder.Entity<Orcamento>(b =>
+            {
+                b.Property(x => x.PrecoTotal)
+                    .HasConversion(v => v.Valor, v => new Dinheiro(v))
+                    .HasColumnType("numeric(10,2)");
+                b.Property(x => x.Status)
+                    .HasConversion<string>()
+                    .HasMaxLength(20);
             });
 
             modelBuilder.Entity<ServicoSolicitado>(b =>

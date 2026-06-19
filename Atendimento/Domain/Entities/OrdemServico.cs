@@ -14,14 +14,41 @@ namespace Atendimento.Domain.Entities
         public DateTime? DataFinalizacao { get; set; }
         public ICollection<ServicoSolicitado> ServicosSolicitados { get; set; } = [];
         public ICollection<PecaSolicitada> PecasSolicitadas { get; set; } = [];
+        public Orcamento? Orcamento { get; private set; }
 
         public void AlterarStatus(StatusOrdemServico novoStatus)
         {
             Status = novoStatus;
             DataUltimaAlteracao = DateTime.UtcNow;
+        }
 
-            if (novoStatus == StatusOrdemServico.Finalizada || novoStatus == StatusOrdemServico.Entregue)
-                DataFinalizacao ??= DateTime.UtcNow;
+        public void FinalizarDiagnostico()
+        {
+            var totalServicos = ServicosSolicitados.Sum(s => s.PrecoVenda.Valor * s.Quantidade);
+            var totalPecas = PecasSolicitadas.Sum(p => p.PrecoVenda.Valor * p.Quantidade);
+
+            Orcamento = new Orcamento
+            {
+                OrdemServicoId = Id,
+                PrecoTotal = new Dinheiro(totalServicos + totalPecas),
+                Status = StatusOrcamento.Pendente,
+                DataCriacao = DateTime.UtcNow
+            };
+
+            AlterarStatus(StatusOrdemServico.AguardandoAprovacao);
+            AddDomainEvent(new Events.OrdemServicoDiagnosticoFinalizadoEvent(Id, ClienteId, VeiculoId));
+        }
+
+        public void FinalizarOrdem()
+        {
+            DataFinalizacao ??= DateTime.UtcNow;
+            AlterarStatus(StatusOrdemServico.Finalizada);
+        }
+
+        public void EntregarVeiculo()
+        {
+            DataFinalizacao ??= DateTime.UtcNow;
+            AlterarStatus(StatusOrdemServico.Entregue);
         }
 
         public void AdicionarServico(int servicoId, int quantidade, Dinheiro precoVenda)

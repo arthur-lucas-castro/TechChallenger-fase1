@@ -11,6 +11,7 @@ namespace Atendimento.Domain.Interfaces
         Task<bool> DeleteAsync(int id);
         Task<OrdemServico?> GetByIdComServicosAsync(int id);
         Task<OrdemServico?> GetByIdComPecasAsync(int id);
+        Task<OrdemServico?> GetByIdComItensAsync(int id);
         Task<bool> CommitAsync();
     }
 }
