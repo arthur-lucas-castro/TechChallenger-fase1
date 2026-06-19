@@ -43,6 +43,48 @@ namespace Atendimento.Presentation.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id:int}/servicos")]
+        public async Task<IActionResult> AdicionarServico(int id, [FromBody] ServicoSolicitadoRequestDTO dto)
+        {
+            try
+            {
+                if (!await _service.AdicionarServicoAsync(id, dto)) return NotFound();
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}/servicos/{servicoId:int}")]
+        public async Task<IActionResult> RemoverServico(int id, int servicoId)
+        {
+            if (!await _service.RemoverServicoAsync(id, servicoId)) return NotFound();
+            return NoContent();
+        }
+
+        [HttpPost("{id:int}/pecas")]
+        public async Task<IActionResult> AdicionarPeca(int id, [FromBody] PecaSolicitadaRequestDTO dto)
+        {
+            try
+            {
+                if (!await _service.AdicionarPecaAsync(id, dto)) return NotFound();
+                return NoContent();
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{id:int}/pecas/{pecaId:int}")]
+        public async Task<IActionResult> RemoverPeca(int id, int pecaId)
+        {
+            if (!await _service.RemoverPecaAsync(id, pecaId)) return NotFound();
+            return NoContent();
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {

@@ -67,6 +67,46 @@ namespace Atendimento.Application.Services
 
         public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
 
+        public async Task<bool> AdicionarServicoAsync(int ordemServicoId, ServicoSolicitadoRequestDTO dto)
+        {
+            var ordem = await _repositorio.GetByIdComServicosAsync(ordemServicoId);
+            if (ordem is null) return false;
+
+            var servico = await _servicoService.ObterPorIdAsync(dto.ServicoId)
+                ?? throw new KeyNotFoundException($"Serviço com Id {dto.ServicoId} não encontrado.");
+
+            ordem.AdicionarServico(dto.ServicoId, dto.Quantidade, (Dinheiro)servico.PrecoVenda);
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> RemoverServicoAsync(int ordemServicoId, int servicoId)
+        {
+            var ordem = await _repositorio.GetByIdComServicosAsync(ordemServicoId);
+            if (ordem is null) return false;
+            if (!ordem.RemoverServico(servicoId)) return false;
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> AdicionarPecaAsync(int ordemServicoId, PecaSolicitadaRequestDTO dto)
+        {
+            var ordem = await _repositorio.GetByIdComPecasAsync(ordemServicoId);
+            if (ordem is null) return false;
+
+            var peca = await _pecaService.ObterPorIdAsync(dto.PecaId)
+                ?? throw new KeyNotFoundException($"Peça com Id {dto.PecaId} não encontrada.");
+
+            ordem.AdicionarPeca(dto.PecaId, peca.Nome, dto.Quantidade, (Dinheiro)peca.PrecoVenda);
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> RemoverPecaAsync(int ordemServicoId, int pecaId)
+        {
+            var ordem = await _repositorio.GetByIdComPecasAsync(ordemServicoId);
+            if (ordem is null) return false;
+            if (!ordem.RemoverPeca(pecaId)) return false;
+            return await _repositorio.CommitAsync();
+        }
+
         public async Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDTO dto)
         {
             var os = await _repositorio.GetByIdAsync(id);

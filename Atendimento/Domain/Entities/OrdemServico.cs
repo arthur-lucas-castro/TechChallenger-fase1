@@ -34,6 +34,14 @@ namespace Atendimento.Domain.Entities
             });
         }
 
+        public bool RemoverServico(int servicoId)
+        {
+            var servico = ServicosSolicitados.FirstOrDefault(s => s.ServicoId == servicoId);
+            if (servico is null) return false;
+            ServicosSolicitados.Remove(servico);
+            return true;
+        }
+
         public void AdicionarPeca(int pecaId, string nome, int quantidade, Dinheiro precoVenda)
         {
             PecasSolicitadas.Add(new PecaSolicitada
@@ -43,6 +51,14 @@ namespace Atendimento.Domain.Entities
                 Quantidade = quantidade,
                 PrecoVenda = precoVenda
             });
+        }
+
+        public bool RemoverPeca(int pecaId)
+        {
+            var peca = PecasSolicitadas.FirstOrDefault(p => p.PecaId == pecaId);
+            if (peca is null) return false;
+            PecasSolicitadas.Remove(peca);
+            return true;
         }
     }
 }

@@ -9,5 +9,8 @@ namespace Atendimento.Domain.Interfaces
         Task<int> InsertAsync(OrdemServico ordemServico);
         Task<bool> UpdateAsync(OrdemServico ordemServico);
         Task<bool> DeleteAsync(int id);
+        Task<OrdemServico?> GetByIdComServicosAsync(int id);
+        Task<OrdemServico?> GetByIdComPecasAsync(int id);
+        Task<bool> CommitAsync();
     }
 }
