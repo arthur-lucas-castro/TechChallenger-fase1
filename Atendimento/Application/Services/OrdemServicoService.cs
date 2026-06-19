@@ -32,7 +32,7 @@ namespace Atendimento.Application.Services
         }
 
         public async Task<IEnumerable<OrdemServicoResponseDTO>> ObterTodosAsync()
-            => (await _repositorio.GetAllAsync()).Select(MapearParaDTO);
+            => (await _repositorio.GetAllComClienteEVeiculoAsync()).Select(MapearParaDTO);
 
         public async Task<int> CriarAsync(OrdemServicoRequestDTO dto)
         {
@@ -156,7 +156,13 @@ namespace Atendimento.Application.Services
         {
             Id = ((Compartilhado.Domain.Entities.EntidadeBase<OrdemServico>)os).Id,
             VeiculoId = os.VeiculoId,
+            ModeloVeiculo = os.Veiculo?.Modelo,
+            MarcaVeiculo = os.Veiculo?.Marca,
+            AnoVeiculo = os.Veiculo?.Ano,
+            PlacaVeiculo = os.Veiculo?.Placa,
             ClienteId = os.ClienteId,
+            NomeCliente = os.Cliente?.Nome,
+            SobrenomeCliente = os.Cliente?.Sobrenome,
             ResponsavelId = os.ResponsavelId,
             Status = os.Status.ToString(),
             DataCriacao = os.DataCriacao,

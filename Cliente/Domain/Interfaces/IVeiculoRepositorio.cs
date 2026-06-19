@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Cliente.Domain.Entities;
 
 namespace Cliente.Domain.Interfaces
@@ -6,6 +7,7 @@ namespace Cliente.Domain.Interfaces
     {
         Task<Veiculo?> GetByIdAsync(int id);
         Task<IEnumerable<Veiculo>> GetAllAsync();
+        Task<IEnumerable<Veiculo>> GetByExpressionAsync(Expression<Func<Veiculo, bool>> predicate);
         Task<int> InsertAsync(Veiculo veiculo);
         Task<bool> UpdateAsync(Veiculo veiculo);
         Task<bool> DeleteAsync(int id);
