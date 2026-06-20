@@ -36,6 +36,77 @@ namespace Atendimento.Application.Services
             return os is null ? null : MapearParaDTO(os);
         }
 
+        public async Task<OrdemServicoDetalhadaResponseDTO?> ObterDetalhadoPorIdAsync(int id)
+        {
+            var os = await _repositorio.GetByIdDetalhadoAsync(id);
+            if (os is null) return null;
+
+            var cliente = await _clienteService.ObterPorIdAsync(os.ClienteId);
+            var veiculo = await _veiculoService.ObterPorIdAsync(os.VeiculoId);
+
+            var servicoIds = os.ServicosSolicitados.Select(s => s.ServicoId).Distinct();
+            var nomesServico = new Dictionary<int, string>();
+            foreach (var sid in servicoIds)
+            {
+                var servico = await _servicoService.ObterPorIdAsync(sid);
+                if (servico is not null)
+                    nomesServico[sid] = servico.Nome;
+            }
+
+            return new OrdemServicoDetalhadaResponseDTO
+            {
+                Id = os.Id,
+                Status = os.Status.ToString(),
+                DataCriacao = os.DataCriacao,
+                DataUltimaAlteracao = os.DataUltimaAlteracao,
+                DataFinalizacao = os.DataFinalizacao,
+
+                ClienteId = os.ClienteId,
+                NomeCliente = cliente?.Nome,
+                SobrenomeCliente = cliente?.Sobrenome,
+                TelefoneCliente = cliente?.Telefone,
+                EmailCliente = cliente?.Email,
+                DocumentoCliente = cliente?.NumeroDocumento,
+
+                VeiculoId = os.VeiculoId,
+                ModeloVeiculo = veiculo?.Modelo,
+                MarcaVeiculo = veiculo?.Marca,
+                AnoVeiculo = veiculo?.Ano,
+                PlacaVeiculo = veiculo?.Placa,
+
+                Servicos = os.ServicosSolicitados.Select(s => new ServicoSolicitadoResponseDTO
+                {
+                    Id = s.Id,
+                    ServicoId = s.ServicoId,
+                    NomeServico = nomesServico.GetValueOrDefault(s.ServicoId),
+                    Quantidade = s.Quantidade,
+                    PrecoVenda = s.PrecoVenda.Valor,
+                    StatusExecucao = s.ServicoExecucao?.Status.ToString(),
+                    DataInicioExecucao = s.ServicoExecucao?.DataInicio,
+                    DataFinalizacaoExecucao = s.ServicoExecucao?.DataFinalizacao
+                }).ToList(),
+
+                Pecas = os.PecasSolicitadas.Select(p => new PecaSolicitadaResponseDTO
+                {
+                    Id = p.Id,
+                    PecaId = p.PecaId,
+                    Nome = p.Nome,
+                    Quantidade = p.Quantidade,
+                    PrecoVenda = p.PrecoVenda.Valor
+                }).ToList(),
+
+                Orcamento = os.Orcamento is null ? null : new OrcamentoResponseDTO
+                {
+                    Id = os.Orcamento.Id,
+                    PrecoTotal = os.Orcamento.PrecoTotal.Valor,
+                    Status = os.Orcamento.Status.ToString(),
+                    DataCriacao = os.Orcamento.DataCriacao,
+                    DataEnvio = os.Orcamento.DataEnvio,
+                    DataAprovacao = os.Orcamento.DataAprovacao
+                }
+            };
+        }
+
         public async Task<IEnumerable<OrdemServicoResponseDTO>> ObterTodosAsync()
         {
             var ordens = (await _repositorio.GetAllAsync()).ToList();
@@ -94,7 +165,6 @@ namespace Atendimento.Application.Services
             if (existente is null) return false;
             existente.VeiculoId = dto.VeiculoId;
             existente.ClienteId = dto.ClienteId;
-            existente.ResponsavelId = dto.ResponsavelId;
             existente.Status = Enum.Parse<StatusOrdemServico>(dto.Status);
             existente.DataUltimaAlteracao = DateTime.UtcNow;
             return await _repositorio.UpdateAsync(existente);
@@ -188,7 +258,6 @@ namespace Atendimento.Application.Services
             Id = ((Compartilhado.Domain.Entities.EntidadeBase<OrdemServico>)os).Id,
             VeiculoId = os.VeiculoId,
             ClienteId = os.ClienteId,
-            ResponsavelId = os.ResponsavelId,
             Status = os.Status.ToString(),
             DataCriacao = os.DataCriacao,
             DataUltimaAlteracao = os.DataUltimaAlteracao,
@@ -199,7 +268,6 @@ namespace Atendimento.Application.Services
         {
             VeiculoId = dto.VeiculoId,
             ClienteId = dto.ClienteId,
-            ResponsavelId = dto.ResponsavelId,
             Status = StatusOrdemServico.Recebida,
             DataCriacao = DateTime.UtcNow
         };

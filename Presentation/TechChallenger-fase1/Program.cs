@@ -73,7 +73,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(options =>
     {
         options.SwaggerEndpoint("/swagger/v1/swagger.json", "TechChallenger API v1");
-        options.SwaggerEndpoint("/swagger/crud/swagger.json", "Gestão administrativa");
+        options.SwaggerEndpoint("/swagger/GestaoAdministrativa/swagger.json", "Gestão administrativa");
     });
 }
 

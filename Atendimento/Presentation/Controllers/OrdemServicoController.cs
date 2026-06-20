@@ -19,7 +19,7 @@ namespace Atendimento.Presentation.Controllers
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetById(int id)
         {
-            var os = await _service.ObterPorIdAsync(id);
+            var os = await _service.ObterDetalhadoPorIdAsync(id);
             if (os is null) return NotFound();
             return Ok(os);
         }

@@ -5,6 +5,7 @@ namespace Atendimento.Application.Services.Interfaces
     public interface IOrdemServicoService
     {
         Task<OrdemServicoResponseDTO?> ObterPorIdAsync(int id);
+        Task<OrdemServicoDetalhadaResponseDTO?> ObterDetalhadoPorIdAsync(int id);
         Task<IEnumerable<OrdemServicoResponseDTO>> ObterTodosAsync();
         Task<int> CriarAsync(OrdemServicoRequestDTO dto);
         Task<bool> AtualizarAsync(int id, OrdemServicoRequestDTO dto);

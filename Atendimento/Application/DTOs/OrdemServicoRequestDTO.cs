@@ -4,7 +4,6 @@ namespace Atendimento.Application.DTOs
     {
         public int VeiculoId { get; set; }
         public int ClienteId { get; set; }
-        public int ResponsavelId { get; set; }
         public string Status { get; set; } = string.Empty;
         public List<ServicoSolicitadoRequestDTO> Servicos { get; set; } = [];
         public List<PecaSolicitadaRequestDTO> Pecas { get; set; } = [];

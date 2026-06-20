@@ -29,11 +29,6 @@ CREATE TABLE Servico (
     TempoEstimadoEmMinutos   INTEGER        NOT NULL
 );
 
-CREATE TABLE Funcionario (
-    Id   SERIAL PRIMARY KEY,
-    Nome VARCHAR(50) NOT NULL
-);
-
 CREATE TABLE Peca (
     Id          SERIAL PRIMARY KEY,
     Nome        VARCHAR(50)    NOT NULL,
@@ -63,7 +58,6 @@ CREATE TABLE OrdemServico (
     Id                   SERIAL PRIMARY KEY,
     VeiculoId            INTEGER     NOT NULL REFERENCES Veiculo(Id),
     ClienteId            INTEGER     NOT NULL REFERENCES Cliente(Id),
-    ResponsavelId        INTEGER     NOT NULL REFERENCES Funcionario(Id),
     Status               status_ordem_servico NOT NULL,
     DataUltimaAlteracao  TIMESTAMP,
     DataCriacao          TIMESTAMP   NOT NULL,
