@@ -28,7 +28,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "TechChallenger API", Version = "v1" });
+    options.SwaggerDoc("GestaoAdministrativa", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Gestão administrativa", Version = "v1" });
+    options.DocInclusionPredicate((docName, apiDesc) =>
+    {
+        var groupName = apiDesc.GroupName ?? "v1";
+        return groupName == docName;
+    });
+});
 
 var dataSourceBuilder = new NpgsqlDataSourceBuilder(builder.Configuration.GetConnectionString("Default")!);
 dataSourceBuilder.MapEnum<StatusOrdemServico>("status_ordem_servico");
@@ -61,7 +70,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "TechChallenger API v1");
+        options.SwaggerEndpoint("/swagger/crud/swagger.json", "Gestão administrativa");
+    });
 }
 
 app.UseHttpsRedirection();

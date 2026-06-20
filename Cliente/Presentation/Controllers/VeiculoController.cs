@@ -13,9 +13,11 @@ namespace Cliente.Presentation.Controllers
         public VeiculoController(IVeiculoService service) => _service = service;
 
         [HttpGet]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetAll() => Ok(await _service.ObterTodosAsync());
 
         [HttpGet("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetById(int id)
         {
             var veiculo = await _service.ObterPorIdAsync(id);
@@ -32,6 +34,7 @@ namespace Cliente.Presentation.Controllers
         }
 
         [HttpPost]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Create([FromBody] VeiculoRequestDTO dto)
         {
             var id = await _service.CriarAsync(dto);
@@ -39,6 +42,7 @@ namespace Cliente.Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Update(int id, [FromBody] VeiculoRequestDTO dto)
         {
             if (!await _service.AtualizarAsync(id, dto)) return NotFound();
@@ -46,6 +50,7 @@ namespace Cliente.Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _service.ExcluirAsync(id)) return NotFound();

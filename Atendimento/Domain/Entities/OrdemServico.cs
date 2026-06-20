@@ -15,8 +15,6 @@ namespace Atendimento.Domain.Entities
         public ICollection<ServicoSolicitado> ServicosSolicitados { get; set; } = [];
         public ICollection<PecaSolicitada> PecasSolicitadas { get; set; } = [];
         public Orcamento? Orcamento { get; private set; }
-        public Cliente? Cliente { get; set; }
-        public Veiculo? Veiculo { get; set; }
 
         public void AlterarStatus(StatusOrdemServico novoStatus)
         {

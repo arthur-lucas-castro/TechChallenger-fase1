@@ -7,6 +7,7 @@ using Compartilhado.Domain.ValueObjects;
 using StatusServicoExecucao = Compartilhado.Domain.ValueObjects.StatusServicoExecucao;
 using Estoque.Application.Services.Interfaces;
 using Estoque.Application.DTOs;
+using Cliente.Application.Services.Interfaces;
 
 namespace Atendimento.Application.Services
 {
@@ -16,13 +17,17 @@ namespace Atendimento.Application.Services
         private readonly IServicoService _servicoService;
         private readonly IPecaService _pecaService;
         private readonly IDomainEventDispatcher _dispatcher;
+        private readonly IClienteService _clienteService;
+        private readonly IVeiculoService _veiculoService;
 
-        public OrdemServicoService(IOrdemServicoRepositorio repositorio, IServicoService servicoService, IPecaService pecaService, IDomainEventDispatcher dispatcher)
+        public OrdemServicoService(IOrdemServicoRepositorio repositorio, IServicoService servicoService, IPecaService pecaService, IDomainEventDispatcher dispatcher, IClienteService clienteService, IVeiculoService veiculoService)
         {
             _repositorio = repositorio;
             _servicoService = servicoService;
             _pecaService = pecaService;
             _dispatcher = dispatcher;
+            _clienteService = clienteService;
+            _veiculoService = veiculoService;
         }
 
         public async Task<OrdemServicoResponseDTO?> ObterPorIdAsync(int id)
@@ -32,7 +37,33 @@ namespace Atendimento.Application.Services
         }
 
         public async Task<IEnumerable<OrdemServicoResponseDTO>> ObterTodosAsync()
-            => (await _repositorio.GetAllComClienteEVeiculoAsync()).Select(MapearParaDTO);
+        {
+            var ordens = (await _repositorio.GetAllAsync()).ToList();
+
+            var clienteIds = ordens.Select(o => o.ClienteId).Distinct();
+            var clientes = (await _clienteService.ObterPorIdsAsync(clienteIds)).ToDictionary(c => c.Id);
+
+            var veiculoIds = ordens.Select(o => o.VeiculoId).Distinct();
+            var veiculos = (await _veiculoService.ObterPorIdsAsync(veiculoIds)).ToDictionary(v => v.Id);
+
+            return ordens.Select(o =>
+            {
+                var dto = MapearParaDTO(o);
+                if (clientes.TryGetValue(o.ClienteId, out var c))
+                {
+                    dto.NomeCliente = c.Nome;
+                    dto.SobrenomeCliente = c.Sobrenome;
+                }
+                if (veiculos.TryGetValue(o.VeiculoId, out var v))
+                {
+                    dto.ModeloVeiculo = v.Modelo;
+                    dto.MarcaVeiculo = v.Marca;
+                    dto.AnoVeiculo = v.Ano;
+                    dto.PlacaVeiculo = v.Placa;
+                }
+                return dto;
+            });
+        }
 
         public async Task<int> CriarAsync(OrdemServicoRequestDTO dto)
         {
@@ -156,13 +187,7 @@ namespace Atendimento.Application.Services
         {
             Id = ((Compartilhado.Domain.Entities.EntidadeBase<OrdemServico>)os).Id,
             VeiculoId = os.VeiculoId,
-            ModeloVeiculo = os.Veiculo?.Modelo,
-            MarcaVeiculo = os.Veiculo?.Marca,
-            AnoVeiculo = os.Veiculo?.Ano,
-            PlacaVeiculo = os.Veiculo?.Placa,
             ClienteId = os.ClienteId,
-            NomeCliente = os.Cliente?.Nome,
-            SobrenomeCliente = os.Cliente?.Sobrenome,
             ResponsavelId = os.ResponsavelId,
             Status = os.Status.ToString(),
             DataCriacao = os.DataCriacao,

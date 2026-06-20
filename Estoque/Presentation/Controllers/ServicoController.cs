@@ -13,9 +13,11 @@ namespace Estoque.Presentation.Controllers
         public ServicoController(IServicoService service) => _service = service;
 
         [HttpGet]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetAll() => Ok(await _service.ObterTodosAsync());
 
         [HttpGet("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetById(int id)
         {
             var servico = await _service.ObterPorIdAsync(id);
@@ -24,6 +26,7 @@ namespace Estoque.Presentation.Controllers
         }
 
         [HttpPost]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Create([FromBody] ServicoRequestDTO dto)
         {
             var id = await _service.CriarAsync(dto);
@@ -31,6 +34,7 @@ namespace Estoque.Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Update(int id, [FromBody] ServicoRequestDTO dto)
         {
             if (!await _service.AtualizarAsync(id, dto)) return NotFound();
@@ -38,6 +42,7 @@ namespace Estoque.Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Delete(int id)
         {
             if (!await _service.ExcluirAsync(id)) return NotFound();

@@ -12,9 +12,11 @@ namespace Atendimento.Presentation.Controllers
         public OrdemServicoController(IOrdemServicoService service) => _service = service;
 
         [HttpGet]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetAll() => Ok(await _service.ObterTodosAsync());
 
         [HttpGet("{id:int}")]
+        [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> GetById(int id)
         {
             var os = await _service.ObterPorIdAsync(id);

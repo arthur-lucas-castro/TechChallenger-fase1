@@ -75,8 +75,6 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.HasOne(x => x.Orcamento)
                     .WithOne()
                     .HasForeignKey<Orcamento>(o => o.OrdemServicoId);
-                b.Ignore(x => x.Cliente);
-                b.Ignore(x => x.Veiculo);
             });
 
             modelBuilder.Entity<Orcamento>(b =>

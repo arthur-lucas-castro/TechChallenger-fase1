@@ -6,7 +6,6 @@ namespace Atendimento.Domain.Interfaces
     {
         Task<OrdemServico?> GetByIdAsync(int id);
         Task<IEnumerable<OrdemServico>> GetAllAsync();
-        Task<IEnumerable<OrdemServico>> GetAllComClienteEVeiculoAsync();
         Task<int> InsertAsync(OrdemServico ordemServico);
         Task<bool> UpdateAsync(OrdemServico ordemServico);
         Task<bool> DeleteAsync(int id);

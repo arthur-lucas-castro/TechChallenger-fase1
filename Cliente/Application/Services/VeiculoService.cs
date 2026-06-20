@@ -20,6 +20,9 @@ namespace Cliente.Application.Services
         public async Task<IEnumerable<VeiculoResponseDTO>> ObterTodosAsync()
             => (await _repositorio.GetAllAsync()).Select(MapearParaDTO);
 
+        public async Task<IEnumerable<VeiculoResponseDTO>> ObterPorIdsAsync(IEnumerable<int> ids)
+            => (await _repositorio.GetByExpressionAsync(v => ids.Contains(v.Id))).Select(MapearParaDTO);
+
         public Task<int> CriarAsync(VeiculoRequestDTO dto)
             => _repositorio.InsertAsync(MapearParaEntidade(dto));
 
