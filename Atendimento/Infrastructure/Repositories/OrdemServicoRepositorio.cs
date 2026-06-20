@@ -23,6 +23,7 @@ namespace Atendimento.Infrastructure.Repositories
             => await _context.Set<OrdemServico>()
                 .Include(o => o.ServicosSolicitados)
                 .Include(o => o.PecasSolicitadas)
+                .Include(o => o.Orcamento)
                 .FirstOrDefaultAsync(o => o.Id == id);
 
         public async Task<OrdemServico?> GetByIdComServicosEExecucaoAsync(int id)

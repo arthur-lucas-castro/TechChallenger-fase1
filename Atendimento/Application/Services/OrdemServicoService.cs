@@ -8,6 +8,7 @@ using StatusServicoExecucao = Compartilhado.Domain.ValueObjects.StatusServicoExe
 using Estoque.Application.Services.Interfaces;
 using Estoque.Application.DTOs;
 using Cliente.Application.Services.Interfaces;
+using Compartilhado.Domain.Entities.Exceptions;
 
 namespace Atendimento.Application.Services
 {
@@ -238,18 +239,23 @@ namespace Atendimento.Application.Services
         {
             switch (status)
             {
-                case StatusOrdemServico.AguardandoAprovacao: 
-                    os.FinalizarDiagnostico(); 
+                case StatusOrdemServico.EmDiagnostico:
+                    os.IniciarDiagnostico();
                     break;
-                case StatusOrdemServico.Finalizada:          
-                    os.FinalizarOrdem();       
+                case StatusOrdemServico.AguardandoAprovacao:
+                    os.FinalizarDiagnostico();
                     break;
-                case StatusOrdemServico.Entregue:            
-                    os.EntregarVeiculo();      
+                case StatusOrdemServico.EmExecucao:
+                    os.IniciarExecucao();
                     break;
-                default:                                     
-                    os.AlterarStatus(status);  
+                case StatusOrdemServico.Finalizada:
+                    os.FinalizarOrdem();
                     break;
+                case StatusOrdemServico.Entregue:
+                    os.EntregarVeiculo();
+                    break;
+                default:
+                    throw new DomainException($"Transição para o status '{status}' não é permitida.");
             }
         }
 
