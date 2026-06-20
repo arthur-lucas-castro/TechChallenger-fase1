@@ -35,7 +35,9 @@ namespace Atendimento.Domain.Entities
             };
 
             AlterarStatus(StatusOrdemServico.AguardandoAprovacao);
-            AddDomainEvent(new Events.OrdemServicoDiagnosticoFinalizadoEvent(Id, ClienteId, VeiculoId));
+            AddDomainEvent(new Events.OrdemServicoDiagnosticoFinalizadoEvent(
+                Id, ClienteId, VeiculoId,
+                Orcamento.Id, Orcamento.PrecoTotal, Orcamento.DataCriacao));
         }
 
         public void FinalizarOrdem()

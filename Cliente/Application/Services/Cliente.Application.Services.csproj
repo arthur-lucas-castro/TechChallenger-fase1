@@ -6,8 +6,13 @@
     <RootNamespace>Cliente.Application.Services</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\..\Domain\Entities\Cliente.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Interfaces\Cliente.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\DTOs\Cliente.Application.DTOs.csproj" />
+    <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Atendimento\Domain\Entities\Atendimento.Domain.Entities.csproj" />
   </ItemGroup>
 </Project>

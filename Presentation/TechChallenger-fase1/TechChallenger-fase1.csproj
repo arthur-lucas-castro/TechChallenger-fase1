@@ -21,6 +21,7 @@
     <ProjectReference Include="..\..\Cliente\Infrastructure\Repositories\Cliente.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Estoque\Presentation\Controllers\Estoque.Presentation.Controllers.csproj" />
     <ProjectReference Include="..\..\Estoque\Infrastructure\Repositories\Estoque.Infrastructure.Repositories.csproj" />
+    <ProjectReference Include="..\..\Compartilhado\Presentation\Compartilhado.Presentation.csproj" />
   </ItemGroup>
 
 </Project>
