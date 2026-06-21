@@ -16,5 +16,9 @@ namespace Atendimento.Application.Services.Interfaces
         Task<bool> AdicionarPecaAsync(int ordemServicoId, PecaSolicitadaRequestDTO dto);
         Task<bool> RemoverPecaAsync(int ordemServicoId, int pecaId);
         Task<bool> AlterarStatusServicoExecucaoAsync(int ordemServicoId, int servicoSolicitadoId, AlterarStatusServicoExecucaoDTO dto);
+        Task<bool> IniciarDiagnosticoAsync(int id);
+        Task<bool> FinalizarDiagnosticoAsync(int id);
+        Task<bool> IniciarServicoAsync(int ordemServicoId, int servicoSolicitadoId);
+        Task<bool> FinalizarServicoAsync(int ordemServicoId, int servicoSolicitadoId);
     }
 }

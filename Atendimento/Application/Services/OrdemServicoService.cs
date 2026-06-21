@@ -8,7 +8,7 @@ using StatusServicoExecucao = Compartilhado.Domain.ValueObjects.StatusServicoExe
 using Estoque.Application.Services.Interfaces;
 using Estoque.Application.DTOs;
 using Cliente.Application.Services.Interfaces;
-using Compartilhado.Domain.Entities.Exceptions;
+using Atendimento.Domain.Excecoes;
 
 namespace Atendimento.Application.Services
 {
@@ -222,6 +222,45 @@ namespace Atendimento.Application.Services
             return await _repositorio.CommitAsync();
         }
 
+        public async Task<bool> IniciarServicoAsync(int ordemServicoId, int servicoSolicitadoId)
+        {
+            var os = await _repositorio.GetByIdComServicosEExecucaoAsync(ordemServicoId);
+            if (os is null) return false;
+
+            os.AlterarStatusServicoExecucao(servicoSolicitadoId, StatusServicoExecucao.EmExecucao);
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> FinalizarServicoAsync(int ordemServicoId, int servicoSolicitadoId)
+        {
+            var os = await _repositorio.GetByIdComServicosEExecucaoAsync(ordemServicoId);
+            if (os is null) return false;
+
+            os.AlterarStatusServicoExecucao(servicoSolicitadoId, StatusServicoExecucao.Executado);
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> IniciarDiagnosticoAsync(int id)
+        {
+            var os = await _repositorio.GetByIdAsync(id);
+            if (os is null) return false;
+
+            os.IniciarDiagnostico();
+            return await _repositorio.CommitAsync();
+        }
+
+        public async Task<bool> FinalizarDiagnosticoAsync(int id)
+        {
+            var os = await _repositorio.GetByIdComItensAsync(id);
+            if (os is null) return false;
+
+            os.FinalizarDiagnostico();
+            var resultado = await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(os.GetDomainEvents());
+            os.ClearDomainEvents();
+            return resultado;
+        }
+
         public async Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDTO dto)
         {
             var os = await _repositorio.GetByIdComItensAsync(id);
@@ -255,7 +294,7 @@ namespace Atendimento.Application.Services
                     os.EntregarVeiculo();
                     break;
                 default:
-                    throw new DomainException($"Transição para o status '{status}' não é permitida.");
+                    throw new TransicaoStatusInvalidaException($"Transição para o status '{status}' não é permitida.");
             }
         }
 

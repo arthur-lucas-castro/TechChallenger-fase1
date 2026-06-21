@@ -374,7 +374,7 @@ public class VeiculoController : ControllerBase
 }
 ```
 
-Exceções de domínio (`KeyNotFoundException`, `InvalidOperationException`) são capturadas no controller e convertidas em `NotFound` ou `BadRequest`.
+**Controllers nunca usam try-catch.** Todas as exceções são tratadas pelo middleware de exceções global. Controllers apenas retornam `NotFound()` quando o serviço retorna `null` ou `false`.
 
 ---
 

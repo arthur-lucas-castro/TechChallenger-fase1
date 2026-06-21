@@ -1,5 +1,5 @@
+using Atendimento.Domain.Excecoes;
 using Compartilhado.Domain.Entities;
-using Compartilhado.Domain.Entities.Exceptions;
 using Compartilhado.Domain.ValueObjects;
 
 namespace Atendimento.Domain.Entities
@@ -25,7 +25,7 @@ namespace Atendimento.Domain.Entities
         public void IniciarDiagnostico()
         {
             if (Status != StatusOrdemServico.Recebida)
-                throw new DomainException($"Não é possível iniciar diagnóstico em uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.Recebida}'.");
+                throw new TransicaoStatusInvalidaException($"Não é possível iniciar diagnóstico em uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.Recebida}'.");
 
             AlterarStatus(StatusOrdemServico.EmDiagnostico);
         }
@@ -33,7 +33,7 @@ namespace Atendimento.Domain.Entities
         public void FinalizarDiagnostico()
         {
             if (Status != StatusOrdemServico.Recebida && Status != StatusOrdemServico.EmDiagnostico)
-                throw new DomainException($"Não é possível finalizar diagnóstico em uma ordem com status '{Status}'. Status esperados: '{StatusOrdemServico.Recebida}' ou '{StatusOrdemServico.EmDiagnostico}'.");
+                throw new TransicaoStatusInvalidaException($"Não é possível finalizar diagnóstico em uma ordem com status '{Status}'. Status esperados: '{StatusOrdemServico.Recebida}' ou '{StatusOrdemServico.EmDiagnostico}'.");
 
             var totalServicos = ServicosSolicitados.Sum(s => s.PrecoVenda.Valor * s.Quantidade);
             var totalPecas = PecasSolicitadas.Sum(p => p.PrecoVenda.Valor * p.Quantidade);
@@ -55,10 +55,10 @@ namespace Atendimento.Domain.Entities
         public void IniciarExecucao()
         {
             if (Status != StatusOrdemServico.AguardandoAprovacao)
-                throw new DomainException($"Não é possível iniciar a execução em uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.AguardandoAprovacao}'.");
+                throw new TransicaoStatusInvalidaException($"Não é possível iniciar a execução em uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.AguardandoAprovacao}'.");
 
             if (Orcamento is null || Orcamento.Status != StatusOrcamento.Aprovado)
-                throw new DomainException("O orçamento deve estar aprovado para iniciar a execução da ordem.");
+                throw new OrcamentoNaoAprovadoException("O orçamento deve estar aprovado para iniciar a execução da ordem.");
 
             AlterarStatus(StatusOrdemServico.EmExecucao);
         }
@@ -66,7 +66,7 @@ namespace Atendimento.Domain.Entities
         public void FinalizarOrdem()
         {
             if (Status != StatusOrdemServico.EmExecucao)
-                throw new DomainException($"Não é possível finalizar uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.EmExecucao}'.");
+                throw new TransicaoStatusInvalidaException($"Não é possível finalizar uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.EmExecucao}'.");
 
             DataFinalizacao ??= DateTime.UtcNow;
             AlterarStatus(StatusOrdemServico.Finalizada);
@@ -75,7 +75,7 @@ namespace Atendimento.Domain.Entities
         public void EntregarVeiculo()
         {
             if (Status != StatusOrdemServico.Finalizada)
-                throw new DomainException($"Não é possível registrar a entrega de uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.Finalizada}'.");
+                throw new TransicaoStatusInvalidaException($"Não é possível registrar a entrega de uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.Finalizada}'.");
 
             DataFinalizacao ??= DateTime.UtcNow;
             AlterarStatus(StatusOrdemServico.Entregue);

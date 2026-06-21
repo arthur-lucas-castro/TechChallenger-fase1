@@ -1,0 +1,377 @@
+{
+  "info": {
+    "name": "TechChallenger Fase 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "Cliente",
+      "item": [
+        {
+          "name": "Listar todos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Cliente"
+          }
+        },
+        {
+          "name": "Buscar por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Cliente/1"
+          }
+        },
+        {
+          "name": "Buscar por documento",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Cliente/12345678900"
+          }
+        },
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Cliente",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João\",\n  \"sobrenome\": \"Silva\",\n  \"telefone\": \"11999999999\",\n  \"email\": \"joao.silva@email.com\",\n  \"numeroDocumento\": \"12345678900\",\n  \"tipoPessoa\": \"F\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/Cliente/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"João\",\n  \"sobrenome\": \"Silva Atualizado\",\n  \"telefone\": \"11988888888\",\n  \"email\": \"joao.novo@email.com\",\n  \"numeroDocumento\": \"12345678900\",\n  \"tipoPessoa\": \"F\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/Cliente/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Veiculo",
+      "item": [
+        {
+          "name": "Listar todos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Veiculo"
+          }
+        },
+        {
+          "name": "Buscar por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Veiculo/1"
+          }
+        },
+        {
+          "name": "Buscar por placa",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Veiculo/placa/ABC1234"
+          }
+        },
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Veiculo",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Civic\",\n  \"placa\": \"ABC1234\",\n  \"marca\": \"Honda\",\n  \"ano\": 2022\n}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/Veiculo/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelo\": \"Civic\",\n  \"placa\": \"ABC1234\",\n  \"marca\": \"Honda\",\n  \"ano\": 2023\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/Veiculo/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Peca",
+      "item": [
+        {
+          "name": "Listar todas",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Peca"
+          }
+        },
+        {
+          "name": "Buscar por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Peca/1"
+          }
+        },
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Peca",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Filtro de óleo\",\n  \"descricao\": \"Filtro de óleo para motores 1.0 a 2.0\",\n  \"custo\": 15.00,\n  \"precoVenda\": 35.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/Peca/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Filtro de óleo premium\",\n  \"descricao\": \"Filtro de óleo para motores 1.0 a 2.0 - linha premium\",\n  \"custo\": 20.00,\n  \"precoVenda\": 45.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/Peca/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Servico",
+      "item": [
+        {
+          "name": "Listar todos",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Servico"
+          }
+        },
+        {
+          "name": "Buscar por ID",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Servico/1"
+          }
+        },
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Servico",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Troca de óleo\",\n  \"precoVenda\": 80.00,\n  \"tempoEstimadoEmMinutos\": 30\n}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/Servico/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Troca de óleo completa\",\n  \"precoVenda\": 95.00,\n  \"tempoEstimadoEmMinutos\": 45\n}"
+            }
+          }
+        },
+        {
+          "name": "Deletar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/Servico/1"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Estoque",
+      "item": [
+        {
+          "name": "Listar todo o estoque",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/Estoque"
+          }
+        },
+        {
+          "name": "Entrada de peça",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Estoque/entrada",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pecaId\": 1,\n  \"quantidade\": 10,\n  \"precoCusto\": 15.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Baixa de peça",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Estoque/baixa",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pecaId\": 1,\n  \"quantidade\": 2\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Ordem de Serviço",
+      "item": [
+        {
+          "name": "Listar todas",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/OrdemServico"
+          }
+        },
+        {
+          "name": "Buscar por ID (detalhada)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/OrdemServico/1"
+          }
+        },
+        {
+          "name": "Criar",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/OrdemServico",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"veiculoId\": 1,\n  \"clienteId\": 1,\n  \"status\": \"Recebida\",\n  \"servicos\": [\n    {\n      \"servicoId\": 1,\n      \"quantidade\": 1\n    }\n  ],\n  \"pecas\": [\n    {\n      \"pecaId\": 1,\n      \"quantidade\": 1\n    }\n  ]\n}"
+            }
+          }
+        },
+        {
+          "name": "Atualizar",
+          "request": {
+            "method": "PUT",
+            "url": "{{baseUrl}}/OrdemServico/1",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"veiculoId\": 1,\n  \"clienteId\": 1,\n  \"status\": \"EmDiagnostico\",\n  \"servicos\": [\n    {\n      \"servicoId\": 1,\n      \"quantidade\": 1\n    }\n  ],\n  \"pecas\": []\n}"
+            }
+          }
+        },
+        {
+          "name": "Alterar status",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/OrdemServico/1/status",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"EmExecucao\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Adicionar serviço",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/OrdemServico/1/servicos",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"servicoId\": 2,\n  \"quantidade\": 1\n}"
+            }
+          }
+        },
+        {
+          "name": "Alterar status de execução do serviço",
+          "request": {
+            "method": "PATCH",
+            "url": "{{baseUrl}}/OrdemServico/1/servicos/1/execucao",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"EmExecucao\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Remover serviço",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/OrdemServico/1/servicos/1"
+          }
+        },
+        {
+          "name": "Adicionar peça",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/OrdemServico/1/pecas",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"pecaId\": 2,\n  \"quantidade\": 3\n}"
+            }
+          }
+        },
+        {
+          "name": "Remover peça",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/OrdemServico/1/pecas/1"
+          }
+        },
+        {
+          "name": "Deletar",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/OrdemServico/1"
+          }
+        }
+      ]
+    }
+  ]
+}
