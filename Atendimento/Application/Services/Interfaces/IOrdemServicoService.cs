@@ -8,7 +8,6 @@ namespace Atendimento.Application.Services.Interfaces
         Task<OrdemServicoDetalhadaResponseDTO?> ObterDetalhadoPorIdAsync(int id);
         Task<IEnumerable<OrdemServicoResponseDTO>> ObterTodosAsync();
         Task<int> CriarAsync(OrdemServicoRequestDTO dto);
-        Task<bool> AtualizarAsync(int id, OrdemServicoRequestDTO dto);
         Task<bool> ExcluirAsync(int id);
         Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDTO dto);
         Task<bool> AdicionarServicoAsync(int ordemServicoId, ServicoSolicitadoRequestDTO dto);

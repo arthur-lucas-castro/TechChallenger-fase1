@@ -20,5 +20,10 @@ namespace Cliente.Domain.Entities
             Nome = nome; Sobrenome = sobrenome; Telefone = telefone;
             Email = email; NumeroDocumento = numeroDocumento; TipoPessoa = tipoPessoa;
         }
+
+        public void ResponderOrcamento(int ordemServicoId, bool aprovado)
+        {
+            AddDomainEvent(new Events.OrcamentoRespondidoEvent(Id, ordemServicoId, aprovado));
+        }
     }
 }

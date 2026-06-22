@@ -11,5 +11,6 @@ namespace Cliente.Application.Services.Interfaces
         Task<int> CriarAsync(ClienteRequestDTO dto);
         Task<bool> AtualizarAsync(int id, ClienteRequestDTO dto);
         Task<bool> ExcluirAsync(int id);
+        Task<bool> ResponderOrcamentoAsync(int clienteId, int ordemServicoId, ResponderOrcamentoDTO dto);
     }
 }

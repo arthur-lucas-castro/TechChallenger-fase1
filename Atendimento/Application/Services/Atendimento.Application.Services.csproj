@@ -7,6 +7,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\Cliente\Application\Services\Cliente.Application.Services.csproj" />
+    <ProjectReference Include="..\..\..\Cliente\Domain\Entities\Cliente.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Entities\Atendimento.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Interfaces\Atendimento.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\DTOs\Atendimento.Application.DTOs.csproj" />

@@ -1,6 +1,7 @@
 using Cliente.Application.DTOs;
 using Cliente.Application.Services.Interfaces;
 using Cliente.Domain.Interfaces;
+using Compartilhado.Domain.Entities;
 using ClienteEntity = Cliente.Domain.Entities.Cliente;
 
 namespace Cliente.Application.Services
@@ -8,8 +9,13 @@ namespace Cliente.Application.Services
     public class ClienteService : IClienteService
     {
         private readonly IClienteRepositorio _repositorio;
+        private readonly IDomainEventDispatcher _dispatcher;
 
-        public ClienteService(IClienteRepositorio repositorio) => _repositorio = repositorio;
+        public ClienteService(IClienteRepositorio repositorio, IDomainEventDispatcher dispatcher)
+        {
+            _repositorio = repositorio;
+            _dispatcher = dispatcher;
+        }
 
         public async Task<ClienteResponseDTO?> ObterPorIdAsync(int id)
         {
@@ -39,6 +45,17 @@ namespace Cliente.Application.Services
         {
             var c = await _repositorio.ObterPorNumeroDocumentoAsync(numeroDocumento);
             return c is null ? null : MapearParaDTO(c);
+        }
+
+        public async Task<bool> ResponderOrcamentoAsync(int clienteId, int ordemServicoId, ResponderOrcamentoDTO dto)
+        {
+            var cliente = await _repositorio.GetByIdAsync(clienteId);
+            if (cliente is null) return false;
+
+            cliente.ResponderOrcamento(ordemServicoId, dto.Aprovado);
+            await _dispatcher.DispatchAsync(cliente.GetDomainEvents());
+            cliente.ClearDomainEvents();
+            return true;
         }
 
         private static ClienteResponseDTO MapearParaDTO(ClienteEntity c) => new()

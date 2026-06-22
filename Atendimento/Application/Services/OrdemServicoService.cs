@@ -160,17 +160,6 @@ namespace Atendimento.Application.Services
             return await _repositorio.InsertAsync(ordemServico);
         }
 
-        public async Task<bool> AtualizarAsync(int id, OrdemServicoRequestDTO dto)
-        {
-            var existente = await _repositorio.GetByIdAsync(id);
-            if (existente is null) return false;
-            existente.VeiculoId = dto.VeiculoId;
-            existente.ClienteId = dto.ClienteId;
-            existente.Status = Enum.Parse<StatusOrdemServico>(dto.Status);
-            existente.DataUltimaAlteracao = DateTime.UtcNow;
-            return await _repositorio.UpdateAsync(existente);
-        }
-
         public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
 
         public async Task<bool> AdicionarServicoAsync(int ordemServicoId, ServicoSolicitadoRequestDTO dto)
@@ -300,7 +289,7 @@ namespace Atendimento.Application.Services
 
         private static OrdemServicoResponseDTO MapearParaDTO(OrdemServico os) => new()
         {
-            Id = ((Compartilhado.Domain.Entities.EntidadeBase<OrdemServico>)os).Id,
+            Id = os.Id,
             VeiculoId = os.VeiculoId,
             ClienteId = os.ClienteId,
             Status = os.Status.ToString(),

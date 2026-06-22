@@ -12,11 +12,14 @@ namespace Atendimento.Domain.Entities
         public DateTime? DataUltimaAlteracao { get; set; }
         public DateTime DataCriacao { get; set; }
         public DateTime? DataFinalizacao { get; set; }
-        public ICollection<ServicoSolicitado> ServicosSolicitados { get; set; } = [];
-        public ICollection<PecaSolicitada> PecasSolicitadas { get; set; } = [];
+        private readonly List<ServicoSolicitado> _servicosSolicitados = [];
+        private readonly List<PecaSolicitada> _pecasSolicitadas = [];
+        public IReadOnlyCollection<ServicoSolicitado> ServicosSolicitados => _servicosSolicitados.AsReadOnly();
+        public IReadOnlyCollection<PecaSolicitada> PecasSolicitadas => _pecasSolicitadas.AsReadOnly();
+
         public Orcamento? Orcamento { get; private set; }
 
-        private void AlterarStatus(StatusOrdemServico novoStatus)
+        private void TransicionarPara(StatusOrdemServico novoStatus)
         {
             Status = novoStatus;
             DataUltimaAlteracao = DateTime.UtcNow;
@@ -27,7 +30,7 @@ namespace Atendimento.Domain.Entities
             if (Status != StatusOrdemServico.Recebida)
                 throw new TransicaoStatusInvalidaException($"Não é possível iniciar diagnóstico em uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.Recebida}'.");
 
-            AlterarStatus(StatusOrdemServico.EmDiagnostico);
+            TransicionarPara(StatusOrdemServico.EmDiagnostico);
         }
 
         public void FinalizarDiagnostico()
@@ -46,7 +49,7 @@ namespace Atendimento.Domain.Entities
                 DataCriacao = DateTime.UtcNow
             };
 
-            AlterarStatus(StatusOrdemServico.AguardandoAprovacao);
+            TransicionarPara(StatusOrdemServico.AguardandoAprovacao);
             AddDomainEvent(new Events.OrdemServicoDiagnosticoFinalizadoEvent(
                 Id, ClienteId, VeiculoId,
                 Orcamento.Id, Orcamento.PrecoTotal, Orcamento.DataCriacao));
@@ -60,7 +63,7 @@ namespace Atendimento.Domain.Entities
             if (Orcamento is null || Orcamento.Status != StatusOrcamento.Aprovado)
                 throw new OrcamentoNaoAprovadoException("O orçamento deve estar aprovado para iniciar a execução da ordem.");
 
-            AlterarStatus(StatusOrdemServico.EmExecucao);
+            TransicionarPara(StatusOrdemServico.EmExecucao);
         }
 
         public void FinalizarOrdem()
@@ -69,7 +72,7 @@ namespace Atendimento.Domain.Entities
                 throw new TransicaoStatusInvalidaException($"Não é possível finalizar uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.EmExecucao}'.");
 
             DataFinalizacao ??= DateTime.UtcNow;
-            AlterarStatus(StatusOrdemServico.Finalizada);
+            TransicionarPara(StatusOrdemServico.Finalizada);
         }
 
         public void EntregarVeiculo()
@@ -78,7 +81,32 @@ namespace Atendimento.Domain.Entities
                 throw new TransicaoStatusInvalidaException($"Não é possível registrar a entrega de uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.Finalizada}'.");
 
             DataFinalizacao ??= DateTime.UtcNow;
-            AlterarStatus(StatusOrdemServico.Entregue);
+            TransicionarPara(StatusOrdemServico.Entregue);
+        }
+
+        public void AprovarOrcamento()
+        {
+            if (Status != StatusOrdemServico.AguardandoAprovacao)
+                throw new TransicaoStatusInvalidaException($"Não é possível aprovar o orçamento de uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.AguardandoAprovacao}'.");
+
+            if (Orcamento is null)
+                throw new InvalidOperationException("A ordem de serviço não possui orçamento.");
+
+            Orcamento.Aprovar();
+            TransicionarPara(StatusOrdemServico.EmExecucao);
+            AddDomainEvent(new Events.OrcamentoAprovadoEvent(Id, ClienteId, Orcamento.Id, Orcamento.PrecoTotal.Valor));
+        }
+
+        public void RecusarOrcamento()
+        {
+            if (Status != StatusOrdemServico.AguardandoAprovacao)
+                throw new TransicaoStatusInvalidaException($"Não é possível recusar o orçamento de uma ordem com status '{Status}'. Status esperado: '{StatusOrdemServico.AguardandoAprovacao}'.");
+
+            if (Orcamento is null)
+                throw new InvalidOperationException("A ordem de serviço não possui orçamento.");
+
+            Orcamento.Recusar();
+            AddDomainEvent(new Events.OrcamentoRecusadoEvent(Id, ClienteId, Orcamento.Id));
         }
 
         public void AlterarStatusServicoExecucao(int servicoSolicitadoId, StatusServicoExecucao novoStatus)
@@ -103,7 +131,7 @@ namespace Atendimento.Domain.Entities
 
         public void AdicionarServico(int servicoId, int quantidade, Dinheiro precoVenda)
         {
-            ServicosSolicitados.Add(new ServicoSolicitado
+            _servicosSolicitados.Add(new ServicoSolicitado
             {
                 ServicoId = servicoId,
                 Quantidade = quantidade,
@@ -115,13 +143,13 @@ namespace Atendimento.Domain.Entities
         {
             var servico = ServicosSolicitados.FirstOrDefault(s => s.ServicoId == servicoId);
             if (servico is null) return false;
-            ServicosSolicitados.Remove(servico);
+            _servicosSolicitados.Remove(servico);
             return true;
         }
 
         public void AdicionarPeca(int pecaId, string nome, int quantidade, Dinheiro precoVenda)
         {
-            PecasSolicitadas.Add(new PecaSolicitada
+            _pecasSolicitadas.Add(new PecaSolicitada
             {
                 PecaId = pecaId,
                 Nome = nome,
@@ -132,9 +160,9 @@ namespace Atendimento.Domain.Entities
 
         public bool RemoverPeca(int pecaId)
         {
-            var peca = PecasSolicitadas.FirstOrDefault(p => p.PecaId == pecaId);
+            var peca = _pecasSolicitadas.FirstOrDefault(p => p.PecaId == pecaId);
             if (peca is null) return false;
-            PecasSolicitadas.Remove(peca);
+            _pecasSolicitadas.Remove(peca);
             return true;
         }
     }

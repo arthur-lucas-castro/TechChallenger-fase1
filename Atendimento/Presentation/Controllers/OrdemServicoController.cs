@@ -31,13 +31,6 @@ namespace Atendimento.Presentation.Controllers
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
         }
 
-        [HttpPut("{id:int}")]
-        public async Task<IActionResult> Update(int id, [FromBody] OrdemServicoRequestDTO dto)
-        {
-            if (!await _service.AtualizarAsync(id, dto)) return NotFound();
-            return Ok(dto);
-        }
-
         [HttpPost("{id:int}/servicos")]
         public async Task<IActionResult> AdicionarServico(int id, [FromBody] ServicoSolicitadoRequestDTO dto)
         {

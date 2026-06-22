@@ -1,3 +1,4 @@
+using Atendimento.Domain.Excecoes;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 
@@ -11,5 +12,22 @@ namespace Atendimento.Domain.Entities
         public DateTime DataCriacao { get; set; }
         public DateTime? DataEnvio { get; set; }
         public DateTime? DataAprovacao { get; set; }
+
+        public void Aprovar()
+        {
+            if (Status != StatusOrcamento.Pendente && Status != StatusOrcamento.Enviado)
+                throw new TransicaoStatusInvalidaException($"Não é possível aprovar um orçamento com status '{Status}'.");
+
+            Status = StatusOrcamento.Aprovado;
+            DataAprovacao = DateTime.UtcNow;
+        }
+
+        public void Recusar()
+        {
+            if (Status != StatusOrcamento.Pendente && Status != StatusOrcamento.Enviado)
+                throw new TransicaoStatusInvalidaException($"Não é possível recusar um orçamento com status '{Status}'.");
+
+            Status = StatusOrcamento.Recusado;
+        }
     }
 }

@@ -14,8 +14,10 @@ using Estoque.Infrastructure.Repositories;
 using Atendimento.Domain.Interfaces;
 using Atendimento.Application.Services;
 using Atendimento.Application.Services.Interfaces;
+using Atendimento.Application.Services.Events;
 using Cliente.Application.Services.Events;
 using Atendimento.Domain.Entities.Events;
+using Cliente.Domain.Entities.Events;
 using Atendimento.Infrastructure.Repositories;
 using Npgsql;
 using Compartilhado.Domain.ValueObjects;
@@ -64,6 +66,7 @@ builder.Services.AddScoped<IPecaService, PecaService>();
 builder.Services.AddScoped<IOrdemServicoRepositorio, OrdemServicoRepositorio>();
 builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 builder.Services.AddScoped<IDomainEventHandler<OrdemServicoDiagnosticoFinalizadoEvent>, DiagnosticoFinalizadoHandler>();
+builder.Services.AddScoped<IDomainEventHandler<OrcamentoRespondidoEvent>, OrcamentoRespondidoHandler>();
 
 var app = builder.Build();
 

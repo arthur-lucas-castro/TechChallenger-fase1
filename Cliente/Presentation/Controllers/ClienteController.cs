@@ -56,5 +56,12 @@ namespace Cliente.Presentation.Controllers
             if (!await _service.ExcluirAsync(id)) return NotFound();
             return NoContent();
         }
+
+        [HttpPost("{clienteId:int}/ordens-servico/{ordemServicoId:int}/responder-orcamento")]
+        public async Task<IActionResult> ResponderOrcamento(int clienteId, int ordemServicoId, [FromBody] ResponderOrcamentoDTO dto)
+        {
+            if (!await _service.ResponderOrcamentoAsync(clienteId, ordemServicoId, dto)) return NotFound();
+            return NoContent();
+        }
     }
 }
