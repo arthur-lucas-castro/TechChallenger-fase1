@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,7 @@
     <ProjectReference Include="..\..\Estoque\Presentation\Controllers\Estoque.Presentation.Controllers.csproj" />
     <ProjectReference Include="..\..\Estoque\Infrastructure\Repositories\Estoque.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Presentation\Compartilhado.Presentation.csproj" />
+    <ProjectReference Include="..\..\Compartilhado\Application\Compartilhado.Application.csproj" />
   </ItemGroup>
 
 </Project>

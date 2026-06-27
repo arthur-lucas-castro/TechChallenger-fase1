@@ -4,6 +4,7 @@ using Cliente.Domain.ValueObjects;
 using Estoque.Domain.Entities;
 using Estoque.Domain.ValueObjects;
 using Atendimento.Domain.Entities;
+using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using AtendimentoOrdemServico = Atendimento.Domain.Entities.OrdemServico;
 
@@ -13,6 +14,7 @@ namespace Compartilhado.Infrastructure.Repositories
     {
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
+        public DbSet<Usuario> Usuario { get; set; }
         public DbSet<Cliente.Domain.Entities.Cliente> Cliente { get; set; }
         public DbSet<Veiculo> Veiculo { get; set; }
         public DbSet<Servico> Servico { get; set; }
@@ -27,6 +29,16 @@ namespace Compartilhado.Infrastructure.Repositories
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasPostgresEnum<StatusOrdemServico>("status_ordem_servico");
+
+            modelBuilder.Entity<Usuario>(b =>
+            {
+                b.Property(x => x.Email).HasMaxLength(100);
+                b.Property(x => x.SenhaHash).HasMaxLength(72);
+                b.Property(x => x.Tipo)
+                    .HasConversion<string>()
+                    .HasMaxLength(20);
+                b.HasIndex(x => x.Email).IsUnique();
+            });
             modelBuilder.Entity<Cliente.Domain.Entities.Cliente>(b =>
             {
                 b.Property(x => x.Telefone)

@@ -99,3 +99,14 @@ CREATE TABLE Orcamento (
     DataEnvio        TIMESTAMP,
     DataAprovacao    TIMESTAMP
 );
+
+CREATE TABLE usuario (
+    id         SERIAL PRIMARY KEY,
+    email      VARCHAR(100) NOT NULL UNIQUE,
+    senhahash  VARCHAR(72)  NOT NULL,
+    tipo       VARCHAR(20)  NOT NULL
+);
+
+INSERT INTO usuario (email, senhahash, tipo) VALUES
+    ('adm@oficina.com',         '$2a$12$.r/874bZqjmBZNPkYf7el.6c9e6apb39cOUypaELCiKPw78.BSNIK', 'Adm'),
+    ('funcionario@oficina.com', '$2a$12$Rs8rAOD6Edl9DDwliF15f.k2HnHGSjEZGJ8RYLce69cEVNNWI4bwe', 'Funcionario');

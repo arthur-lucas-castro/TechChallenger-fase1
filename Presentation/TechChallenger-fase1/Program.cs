@@ -1,6 +1,13 @@
+using System.Text;
 using Compartilhado.Infrastructure.Repositories;
 using Compartilhado.Domain.Entities;
+using Compartilhado.Domain.Entities.Interfaces;
+using Compartilhado.Application.Services;
+using Compartilhado.Application.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Cliente.Domain.Interfaces;
 using Cliente.Application.Services;
 using Cliente.Application.Services.Interfaces;
@@ -32,12 +39,33 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
-    options.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "TechChallenger API", Version = "v1" });
-    options.SwaggerDoc("GestaoAdministrativa", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Gestão administrativa", Version = "v1" });
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "TechChallenger API", Version = "v1" });
+    options.SwaggerDoc("GestaoAdministrativa", new OpenApiInfo { Title = "Gestão administrativa", Version = "v1" });
     options.DocInclusionPredicate((docName, apiDesc) =>
     {
         var groupName = apiDesc.GroupName ?? "v1";
         return groupName == docName;
+    });
+
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Informe o token JWT no formato: Bearer {token}"
+    };
+    options.AddSecurityDefinition("Bearer", securityScheme);
+    options.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            Array.Empty<string>()
+        }
     });
 });
 
@@ -48,6 +76,26 @@ var dataSource = dataSourceBuilder.Build();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(dataSource)
            .UseLowerCaseNamingConvention());
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(builder.Configuration["Jwt:SecretKey"]!)),
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddScoped<IUsuarioRepositorio, UsuarioRepositorio>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<IClienteRepositorio, ClienteRepositorio>();
 builder.Services.AddScoped<IClienteService, ClienteService>();
@@ -82,6 +130,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseMiddleware<Compartilhado.Presentation.Middlewares.ExceptionMiddleware>();
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
