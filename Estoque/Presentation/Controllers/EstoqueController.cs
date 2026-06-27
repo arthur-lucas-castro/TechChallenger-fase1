@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Estoque.Application.DTOs;
 using Estoque.Application.Services.Interfaces;
@@ -6,6 +7,7 @@ namespace Estoque.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class EstoqueController : ControllerBase
     {
         private readonly IPecaService _service;

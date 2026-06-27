@@ -12,6 +12,35 @@
   ],
   "item": [
     {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Login Adm",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"adm@oficina.com\",\n  \"senha\": \"Adm@12345\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Login Funcionario",
+          "request": {
+            "method": "POST",
+            "url": "{{baseUrl}}/Auth/login",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"funcionario@oficina.com\",\n  \"senha\": \"Func@12345\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Cliente",
       "item": [
         {

@@ -1,11 +1,13 @@
 using Atendimento.Application.DTOs;
 using Atendimento.Application.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atendimento.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class StatusOrdemServicoController : ControllerBase
     {
         private readonly IOrdemServicoService _service;

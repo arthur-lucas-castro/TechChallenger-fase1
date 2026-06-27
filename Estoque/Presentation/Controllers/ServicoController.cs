@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Estoque.Application.DTOs;
 using Estoque.Application.Services.Interfaces;
@@ -6,6 +7,7 @@ namespace Estoque.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class ServicoController : ControllerBase
     {
         private readonly IServicoService _service;
@@ -26,6 +28,7 @@ namespace Estoque.Presentation.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Adm")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Create([FromBody] ServicoRequestDTO dto)
         {
@@ -34,6 +37,7 @@ namespace Estoque.Presentation.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Authorize(Roles = "Adm")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Update(int id, [FromBody] ServicoRequestDTO dto)
         {
@@ -42,6 +46,7 @@ namespace Estoque.Presentation.Controllers
         }
 
         [HttpDelete("{id:int}")]
+        [Authorize(Roles = "Adm")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
         public async Task<IActionResult> Delete(int id)
         {

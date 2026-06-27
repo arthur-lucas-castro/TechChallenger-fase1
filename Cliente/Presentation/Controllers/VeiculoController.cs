@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Cliente.Application.DTOs;
 using Cliente.Application.Services.Interfaces;
@@ -6,6 +7,7 @@ namespace Cliente.Presentation.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize]
     public class VeiculoController : ControllerBase
     {
         private readonly IVeiculoService _service;
