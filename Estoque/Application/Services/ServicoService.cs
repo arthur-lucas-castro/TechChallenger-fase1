@@ -32,6 +32,13 @@ namespace Estoque.Application.Services
 
         public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
 
+        public async Task<IEnumerable<ServicoResponseDTO>> ObterPorIdsAsync(IEnumerable<int> ids)
+        {
+            var idList = ids.ToList();
+            var servicos = await _repositorio.GetByExpressionAsync(s => idList.Contains(s.Id));
+            return servicos.Select(MapearParaDTO);
+        }
+
         private static ServicoResponseDTO MapearParaDTO(Servico s) => new()
         {
             Id = s.Id, Nome = s.Nome, PrecoVenda = s.PrecoVenda,

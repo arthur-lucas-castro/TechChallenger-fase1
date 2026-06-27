@@ -15,5 +15,6 @@ namespace Atendimento.Domain.Interfaces
         Task<OrdemServico?> GetByIdComServicosEExecucaoAsync(int id);
         Task<OrdemServico?> GetByIdDetalhadoAsync(int id);
         Task<bool> CommitAsync();
+        Task<IEnumerable<(int ServicoId, IEnumerable<double> Tempos)>> ObterTemposExecucaoPorServicoAsync();
     }
 }

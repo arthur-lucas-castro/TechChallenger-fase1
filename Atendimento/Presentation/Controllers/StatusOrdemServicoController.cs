@@ -47,5 +47,9 @@ namespace Atendimento.Presentation.Controllers
             if (!await _service.FinalizarServicoAsync(ordemServicoId, servicoSolicitadoId)) return NotFound();
             return NoContent();
         }
+
+        [HttpGet("tempos-servico")]
+        public async Task<IActionResult> GetTemposServico()
+            => Ok(await _service.ObterTemposExecucaoPorServicoAsync());
     }
 }

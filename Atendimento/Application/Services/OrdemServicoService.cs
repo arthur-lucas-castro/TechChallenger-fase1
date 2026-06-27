@@ -162,6 +162,22 @@ namespace Atendimento.Application.Services
 
         public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
 
+        public async Task<IEnumerable<TempoExecucaoServicoResponseDTO>> ObterTemposExecucaoPorServicoAsync()
+        {
+            var dados = (await _repositorio.ObterTemposExecucaoPorServicoAsync()).ToList();
+
+            var ids = dados.Select(d => d.ServicoId);
+            var nomes = (await _servicoService.ObterPorIdsAsync(ids)).ToDictionary(s => s.Id, s => s.Nome);
+
+            return dados.Select(d => new TempoExecucaoServicoResponseDTO
+            {
+                ServicoId           = d.ServicoId,
+                NomeServico         = nomes.GetValueOrDefault(d.ServicoId, string.Empty),
+                TempoMedioEmMinutos = Math.Round(d.Tempos.Average(), 2),
+                PiorTempoEmMinutos  = Math.Round(d.Tempos.Max(), 2)
+            });
+        }
+
         public async Task<bool> AdicionarServicoAsync(int ordemServicoId, ServicoSolicitadoRequestDTO dto)
         {
             var ordem = await _repositorio.GetByIdComServicosAsync(ordemServicoId);

@@ -1,5 +1,6 @@
 using Atendimento.Domain.Entities;
 using Atendimento.Domain.Interfaces;
+using Compartilhado.Domain.ValueObjects;
 using Compartilhado.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
@@ -42,5 +43,24 @@ namespace Atendimento.Infrastructure.Repositories
 
         public async Task<bool> CommitAsync()
             => await _context.SaveChangesAsync() > 0;
+
+        public async Task<IEnumerable<(int ServicoId, IEnumerable<double> Tempos)>> ObterTemposExecucaoPorServicoAsync()
+        {
+            var lista = await _context.Set<ServicoSolicitado>()
+                .Include(ss => ss.ServicoExecucao)
+                .Where(ss => ss.ServicoExecucao != null
+                          && ss.ServicoExecucao.Status == StatusServicoExecucao.Executado
+                          && ss.ServicoExecucao.DataInicio.HasValue
+                          && ss.ServicoExecucao.DataFinalizacao.HasValue)
+                .ToListAsync();
+
+            return lista
+                .GroupBy(ss => ss.ServicoId)
+                .Select(g => (
+                    g.Key,
+                    g.Select(ss => (ss.ServicoExecucao!.DataFinalizacao!.Value
+                                    - ss.ServicoExecucao.DataInicio!.Value).TotalMinutes)
+                ));
+        }
     }
 }

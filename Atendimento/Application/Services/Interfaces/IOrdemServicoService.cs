@@ -19,5 +19,6 @@ namespace Atendimento.Application.Services.Interfaces
         Task<bool> FinalizarDiagnosticoAsync(int id);
         Task<bool> IniciarServicoAsync(int ordemServicoId, int servicoSolicitadoId);
         Task<bool> FinalizarServicoAsync(int ordemServicoId, int servicoSolicitadoId);
+        Task<IEnumerable<TempoExecucaoServicoResponseDTO>> ObterTemposExecucaoPorServicoAsync();
     }
 }
