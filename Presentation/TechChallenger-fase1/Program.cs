@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using Compartilhado.Infrastructure.Repositories;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.Entities.Interfaces;
@@ -18,14 +18,14 @@ using Catalogo.Application.Services;
 using Catalogo.Application.Services.Interfaces;
 using Catalogo.Application.Services.Events;
 using Catalogo.Infrastructure.Repositories;
-using Atendimento.Domain.Interfaces;
-using Atendimento.Application.Services;
-using Atendimento.Application.Services.Interfaces;
-using Atendimento.Application.Services.Events;
+using Operacao.Domain.Interfaces;
+using Operacao.Application.Services;
+using Operacao.Application.Services.Interfaces;
+using Operacao.Application.Services.Events;
 using Cliente.Application.Services.Events;
-using Atendimento.Domain.Entities.Events;
+using Operacao.Domain.Entities.Events;
 using Cliente.Domain.Entities.Events;
-using Atendimento.Infrastructure.Repositories;
+using Operacao.Infrastructure.Repositories;
 using Npgsql;
 using Compartilhado.Domain.ValueObjects;
 

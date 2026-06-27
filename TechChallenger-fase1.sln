@@ -67,7 +67,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cliente.Domain.ValueObjects
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Domain.ValueObjects", "Catalogo\Domain\ValueObjects\Catalogo.Domain.ValueObjects.csproj", "{E1231DF7-4A7E-4A87-B4BE-E9470D499D65}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Atendimento", "Atendimento", "{5D08C4D8-697B-C064-5CFC-152083E65AD7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Operacao", "Operacao", "{5D08C4D8-697B-C064-5CFC-152083E65AD7}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{9A714F60-CC87-F45F-DC4B-E28D6FC72BE5}"
 EndProject
@@ -77,21 +77,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{3B1F5E72-A100-4C0E-B6D8-0C1234567893}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Domain.Entities", "Atendimento\Domain\Entities\Atendimento.Domain.Entities.csproj", "{31EFC213-BB07-452C-B3A4-DD3CFA907CCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Domain.Entities", "Operacao\Domain\Entities\Operacao.Domain.Entities.csproj", "{31EFC213-BB07-452C-B3A4-DD3CFA907CCD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Domain.Interfaces", "Atendimento\Domain\Interfaces\Atendimento.Domain.Interfaces.csproj", "{45C75440-8811-436B-B795-85069DF5335C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Domain.Interfaces", "Operacao\Domain\Interfaces\Operacao.Domain.Interfaces.csproj", "{45C75440-8811-436B-B795-85069DF5335C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Application.DTOs", "Atendimento\Application\DTOs\Atendimento.Application.DTOs.csproj", "{024FF37C-D6A3-4046-BE96-265FFBEF025B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Application.DTOs", "Operacao\Application\DTOs\Operacao.Application.DTOs.csproj", "{024FF37C-D6A3-4046-BE96-265FFBEF025B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Application.Services", "Atendimento\Application\Services\Atendimento.Application.Services.csproj", "{82C3552B-2520-41D7-83F8-7D79C03CCACA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Application.Services", "Operacao\Application\Services\Operacao.Application.Services.csproj", "{82C3552B-2520-41D7-83F8-7D79C03CCACA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Infrastructure.Repositories", "Atendimento\Infrastructure\Repositories\Atendimento.Infrastructure.Repositories.csproj", "{37EDE568-E542-4210-9E6F-623DD38A45CE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Infrastructure.Repositories", "Operacao\Infrastructure\Repositories\Operacao.Infrastructure.Repositories.csproj", "{37EDE568-E542-4210-9E6F-623DD38A45CE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Presentation.Controllers", "Atendimento\Presentation\Controllers\Atendimento.Presentation.Controllers.csproj", "{B4A83D97-0951-4446-AE56-9B318F557B02}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Presentation.Controllers", "Operacao\Presentation\Controllers\Operacao.Presentation.Controllers.csproj", "{B4A83D97-0951-4446-AE56-9B318F557B02}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ValueObjects", "ValueObjects", "{CAD150EA-3AE3-5910-AA17-AE35E424AC2B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Domain.ValueObjects", "Atendimento\Domain\ValueObjects\Atendimento.Domain.ValueObjects.csproj", "{FF3C2119-64B9-42FF-BCAF-DCCD2EE6A42F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Domain.ValueObjects", "Operacao\Domain\ValueObjects\Operacao.Domain.ValueObjects.csproj", "{FF3C2119-64B9-42FF-BCAF-DCCD2EE6A42F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{4B83701A-DDFB-1E3D-A6E3-78BE4A55F00C}"
 EndProject
@@ -99,7 +99,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Compartilhado.Presentation"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Excecoes", "Excecoes", "{04E68C9E-3367-43E9-15E5-56C90B6C13FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Atendimento.Domain.Excecoes", "Atendimento\Domain\Excecoes\Atendimento.Domain.Excecoes.csproj", "{69CC12EC-8F13-4E99-8E74-2282C7BB7BD0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operacao.Domain.Excecoes", "Operacao\Domain\Excecoes\Operacao.Domain.Excecoes.csproj", "{69CC12EC-8F13-4E99-8E74-2282C7BB7BD0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{8E8D9A7C-69E4-4EAB-C11D-E3B8A6602E2F}"
 EndProject

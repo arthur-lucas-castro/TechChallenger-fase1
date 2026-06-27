@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
@@ -13,6 +13,6 @@
     <ProjectReference Include="..\..\Domain\Interfaces\Cliente.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\DTOs\Cliente.Application.DTOs.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
-    <ProjectReference Include="..\..\..\Atendimento\Domain\Entities\Atendimento.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Operacao\Domain\Entities\Operacao.Domain.Entities.csproj" />
   </ItemGroup>
 </Project>

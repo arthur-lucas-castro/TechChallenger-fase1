@@ -12,6 +12,6 @@
     <ProjectReference Include="..\..\Domain\Entities\Catalogo.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Interfaces\Catalogo.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\DTOs\Catalogo.Application.DTOs.csproj" />
-    <ProjectReference Include="..\..\..\Atendimento\Domain\Entities\Atendimento.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Operacao\Domain\Entities\Operacao.Domain.Entities.csproj" />
   </ItemGroup>
 </Project>

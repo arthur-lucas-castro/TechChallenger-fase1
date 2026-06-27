@@ -1,12 +1,11 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Entities;
 using Cliente.Domain.ValueObjects;
 using Catalogo.Domain.Entities;
 using Catalogo.Domain.ValueObjects;
-using Atendimento.Domain.Entities;
+using Operacao.Domain.Entities;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
-using AtendimentoOrdemServico = Atendimento.Domain.Entities.OrdemServico;
 
 namespace Compartilhado.Infrastructure.Repositories
 {
@@ -19,7 +18,7 @@ namespace Compartilhado.Infrastructure.Repositories
         public DbSet<Veiculo> Veiculo { get; set; }
         public DbSet<Servico> Servico { get; set; }
         public DbSet<Peca> Peca { get; set; }
-        public DbSet<AtendimentoOrdemServico> OrdemServico { get; set; }
+        public DbSet<OrdemServico> OrdemServico { get; set; }
         public DbSet<ServicoSolicitado> ServicoSolicitado { get; set; }
         public DbSet<PecaSolicitada> PecaSolicitada { get; set; }
         public DbSet<ProdutoEstoque> Estoque { get; set; }
@@ -76,7 +75,7 @@ namespace Compartilhado.Infrastructure.Repositories
                     .HasColumnType("numeric(10,2)");
             });
 
-            modelBuilder.Entity<AtendimentoOrdemServico>(b =>
+            modelBuilder.Entity<OperacaoOrdemServico>(b =>
             {
                 b.HasMany(x => x.ServicosSolicitados)
                     .WithOne()

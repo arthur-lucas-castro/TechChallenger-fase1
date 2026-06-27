@@ -1,4 +1,4 @@
-﻿using Atendimento.Domain.Entities.Events;
+﻿using Operacao.Domain.Entities.Events;
 using Compartilhado.Domain.Entities;
 using Catalogo.Application.DTOs;
 using Catalogo.Application.Services.Interfaces;

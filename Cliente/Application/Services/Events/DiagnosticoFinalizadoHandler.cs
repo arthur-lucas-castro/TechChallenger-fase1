@@ -1,4 +1,4 @@
-using Atendimento.Domain.Entities.Events;
+﻿using Operacao.Domain.Entities.Events;
 using Cliente.Domain.Interfaces;
 using Compartilhado.Domain.Entities;
 using Microsoft.Extensions.Logging;
