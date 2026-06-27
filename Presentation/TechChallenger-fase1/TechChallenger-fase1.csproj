@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -18,8 +18,8 @@
     <ProjectReference Include="..\..\Operacao\Domain\Interfaces\Operacao.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\..\Operacao\Infrastructure\Repositories\Operacao.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Infrastructure\Repositories\Compartilhado.Infrastructure.Repositories.csproj" />
-    <ProjectReference Include="..\..\Cliente\Presentation\Controllers\Cliente.Presentation.Controllers.csproj" />
-    <ProjectReference Include="..\..\Cliente\Infrastructure\Repositories\Cliente.Infrastructure.Repositories.csproj" />
+    <ProjectReference Include="..\..\Atendimento\Presentation\Controllers\Atendimento.Presentation.Controllers.csproj" />
+    <ProjectReference Include="..\..\Atendimento\Infrastructure\Repositories\Atendimento.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Catalogo\Presentation\Controllers\Catalogo.Presentation.Controllers.csproj" />
     <ProjectReference Include="..\..\Catalogo\Infrastructure\Repositories\Catalogo.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Presentation\Compartilhado.Presentation.csproj" />

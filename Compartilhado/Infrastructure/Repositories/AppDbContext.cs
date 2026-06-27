@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Cliente.Domain.Entities;
-using Cliente.Domain.ValueObjects;
+using Atendimento.Domain.Entities;
+using Atendimento.Domain.ValueObjects;
 using Catalogo.Domain.Entities;
 using Catalogo.Domain.ValueObjects;
 using Operacao.Domain.Entities;
@@ -14,7 +14,7 @@ namespace Compartilhado.Infrastructure.Repositories
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Usuario> Usuario { get; set; }
-        public DbSet<Cliente.Domain.Entities.Cliente> Cliente { get; set; }
+        public DbSet<Atendimento.Domain.Entities.Cliente> Cliente { get; set; }
         public DbSet<Veiculo> Veiculo { get; set; }
         public DbSet<Servico> Servico { get; set; }
         public DbSet<Peca> Peca { get; set; }
@@ -38,7 +38,7 @@ namespace Compartilhado.Infrastructure.Repositories
                     .HasMaxLength(20);
                 b.HasIndex(x => x.Email).IsUnique();
             });
-            modelBuilder.Entity<Cliente.Domain.Entities.Cliente>(b =>
+            modelBuilder.Entity<Atendimento.Domain.Entities.Cliente>(b =>
             {
                 b.Property(x => x.Telefone)
                     .HasConversion(v => v.Valor, v => new Telefone(v));
@@ -75,7 +75,7 @@ namespace Compartilhado.Infrastructure.Repositories
                     .HasColumnType("numeric(10,2)");
             });
 
-            modelBuilder.Entity<OperacaoOrdemServico>(b =>
+            modelBuilder.Entity<OrdemServico>(b =>
             {
                 b.HasMany(x => x.ServicosSolicitados)
                     .WithOne()

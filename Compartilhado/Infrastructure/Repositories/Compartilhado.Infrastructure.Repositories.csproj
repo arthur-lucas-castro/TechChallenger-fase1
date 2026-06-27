@@ -16,8 +16,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
-    <ProjectReference Include="..\..\..\Cliente\Domain\Entities\Cliente.Domain.Entities.csproj" />
-    <ProjectReference Include="..\..\..\Cliente\Domain\ValueObjects\Cliente.Domain.ValueObjects.csproj" />
+    <ProjectReference Include="..\..\..\Atendimento\Domain\Entities\Atendimento.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Atendimento\Domain\ValueObjects\Atendimento.Domain.ValueObjects.csproj" />
     <ProjectReference Include="..\..\..\Catalogo\Domain\Entities\Catalogo.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\..\Operacao\Domain\Entities\Operacao.Domain.Entities.csproj" />
   </ItemGroup>

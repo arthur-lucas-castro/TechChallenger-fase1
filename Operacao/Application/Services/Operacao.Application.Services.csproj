@@ -6,8 +6,8 @@
     <RootNamespace>Operacao.Application.Services</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Cliente\Application\Services\Cliente.Application.Services.csproj" />
-    <ProjectReference Include="..\..\..\Cliente\Domain\Entities\Cliente.Domain.Entities.csproj" />
+    <ProjectReference Include="..\..\..\Atendimento\Application\Services\Atendimento.Application.Services.csproj" />
+    <ProjectReference Include="..\..\..\Atendimento\Domain\Entities\Atendimento.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Entities\Operacao.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\Domain\Interfaces\Operacao.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\DTOs\Operacao.Application.DTOs.csproj" />
