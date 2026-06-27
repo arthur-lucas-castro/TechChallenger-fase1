@@ -41,31 +41,31 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cliente.Presentation.Controllers", "Cliente\Presentation\Controllers\Cliente.Presentation.Controllers.csproj", "{D2D4934C-05C3-4F61-A6F9-1DE671E29F88}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Peça", "Peça", "{50550AE8-2284-912A-C6A6-40AEDFAB45B2}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Catalogo", "Catalogo", "{50550AE8-2284-912A-C6A6-40AEDFAB45B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{29B53AC3-EC7D-CAF4-8B28-101F3AF2F6AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Domain.Entities", "Estoque\Domain\Entities\Estoque.Domain.Entities.csproj", "{9ED13BA6-CF71-4660-9A2B-12D1FA85BF47}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Domain.Entities", "Catalogo\Domain\Entities\Catalogo.Domain.Entities.csproj", "{9ED13BA6-CF71-4660-9A2B-12D1FA85BF47}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Domain.Interfaces", "Estoque\Domain\Interfaces\Estoque.Domain.Interfaces.csproj", "{32B41ADD-9420-4B95-B59F-CAF28E8386D8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Domain.Interfaces", "Catalogo\Domain\Interfaces\Catalogo.Domain.Interfaces.csproj", "{32B41ADD-9420-4B95-B59F-CAF28E8386D8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{4280ACEA-0ED6-4390-B936-0252AA9FD3AC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Application.DTOs", "Estoque\Application\DTOs\Estoque.Application.DTOs.csproj", "{656D12B7-9B05-4790-A914-244389DA6D38}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Application.DTOs", "Catalogo\Application\DTOs\Catalogo.Application.DTOs.csproj", "{656D12B7-9B05-4790-A914-244389DA6D38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Application.Services", "Estoque\Application\Services\Estoque.Application.Services.csproj", "{F0C5F1F6-576E-4322-8580-D337D4157828}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Application.Services", "Catalogo\Application\Services\Catalogo.Application.Services.csproj", "{F0C5F1F6-576E-4322-8580-D337D4157828}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{E1BF81D6-CD4B-8B2A-937A-7DD7D033E347}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Infrastructure.Repositories", "Estoque\Infrastructure\Repositories\Estoque.Infrastructure.Repositories.csproj", "{4F1AB210-3AF8-441F-8CC5-3068D91E8F94}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Infrastructure.Repositories", "Catalogo\Infrastructure\Repositories\Catalogo.Infrastructure.Repositories.csproj", "{4F1AB210-3AF8-441F-8CC5-3068D91E8F94}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{B1B372A4-5C7F-3291-E0F4-2E88671FC2E8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Presentation.Controllers", "Estoque\Presentation\Controllers\Estoque.Presentation.Controllers.csproj", "{796296D6-7C36-4FFA-8455-9CCF12464128}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Presentation.Controllers", "Catalogo\Presentation\Controllers\Catalogo.Presentation.Controllers.csproj", "{796296D6-7C36-4FFA-8455-9CCF12464128}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cliente.Domain.ValueObjects", "Cliente\Domain\ValueObjects\Cliente.Domain.ValueObjects.csproj", "{0CE3765F-E4F3-41CE-B876-50E7061E4245}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Estoque.Domain.ValueObjects", "Estoque\Domain\ValueObjects\Estoque.Domain.ValueObjects.csproj", "{E1231DF7-4A7E-4A87-B4BE-E9470D499D65}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalogo.Domain.ValueObjects", "Catalogo\Domain\ValueObjects\Catalogo.Domain.ValueObjects.csproj", "{E1231DF7-4A7E-4A87-B4BE-E9470D499D65}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Atendimento", "Atendimento", "{5D08C4D8-697B-C064-5CFC-152083E65AD7}"
 EndProject

@@ -1,0 +1,10 @@
+﻿namespace Catalogo.Application.DTOs
+{
+    public class PecaRequestDTO
+    {
+        public string Nome { get; set; } = string.Empty;
+        public string Descricao { get; set; } = string.Empty;
+        public decimal Custo { get; set; }
+        public decimal PrecoVenda { get; set; }
+    }
+}

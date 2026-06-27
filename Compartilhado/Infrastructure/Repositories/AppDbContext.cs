@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Cliente.Domain.Entities;
 using Cliente.Domain.ValueObjects;
-using Estoque.Domain.Entities;
-using Estoque.Domain.ValueObjects;
+using Catalogo.Domain.Entities;
+using Catalogo.Domain.ValueObjects;
 using Atendimento.Domain.Entities;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;

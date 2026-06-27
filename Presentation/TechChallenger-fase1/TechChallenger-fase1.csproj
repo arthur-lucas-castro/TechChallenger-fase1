@@ -20,8 +20,8 @@
     <ProjectReference Include="..\..\Compartilhado\Infrastructure\Repositories\Compartilhado.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Cliente\Presentation\Controllers\Cliente.Presentation.Controllers.csproj" />
     <ProjectReference Include="..\..\Cliente\Infrastructure\Repositories\Cliente.Infrastructure.Repositories.csproj" />
-    <ProjectReference Include="..\..\Estoque\Presentation\Controllers\Estoque.Presentation.Controllers.csproj" />
-    <ProjectReference Include="..\..\Estoque\Infrastructure\Repositories\Estoque.Infrastructure.Repositories.csproj" />
+    <ProjectReference Include="..\..\Catalogo\Presentation\Controllers\Catalogo.Presentation.Controllers.csproj" />
+    <ProjectReference Include="..\..\Catalogo\Infrastructure\Repositories\Catalogo.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Presentation\Compartilhado.Presentation.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Application\Compartilhado.Application.csproj" />
   </ItemGroup>

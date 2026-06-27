@@ -5,8 +5,8 @@ using Atendimento.Domain.Interfaces;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using StatusServicoExecucao = Compartilhado.Domain.ValueObjects.StatusServicoExecucao;
-using Estoque.Application.Services.Interfaces;
-using Estoque.Application.DTOs;
+using Catalogo.Application.Services.Interfaces;
+using Catalogo.Application.DTOs;
 using Cliente.Application.Services.Interfaces;
 using Atendimento.Domain.Excecoes;
 

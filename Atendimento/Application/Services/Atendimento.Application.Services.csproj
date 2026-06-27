@@ -13,7 +13,7 @@
     <ProjectReference Include="..\DTOs\Atendimento.Application.DTOs.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\ValueObjects\Compartilhado.Domain.ValueObjects.csproj" />
-    <ProjectReference Include="..\..\..\Estoque\Application\Services\Estoque.Application.Services.csproj" />
+    <ProjectReference Include="..\..\..\Catalogo\Application\Services\Catalogo.Application.Services.csproj" />
     <ProjectReference Include="..\..\Domain\Excecoes\Atendimento.Domain.Excecoes.csproj" />
   </ItemGroup>
 </Project>
