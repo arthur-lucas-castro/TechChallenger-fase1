@@ -12,34 +12,26 @@ Responda sempre em português do Brasil (pt-BR).
 
 ## Estrutura de Pastas
 
+Todo o código-fonte fica em `src/`. A raiz contém apenas `CLAUDE.md`, `Dockerfile`, `docker-compose.yml` e `database/`.
+
 ```
-TechChallenger-fase1/
+src/
 ├── TechChallenger-fase1.sln
-├── Presentation/
-│   └── TechChallenger-fase1/
-│       ├── Program.cs                        # DI e configuração da aplicação
-│       └── TechChallenger-fase1.csproj
+├── Presentation/TechChallenger-fase1/        # Entry point — Program.cs, DI
 ├── Compartilhado/
-│   ├── Domain/
-│   │   ├── Entities/                         # EntidadeBase<T>, IAggregateRoot, IDomainEvent*
-│   │   └── ValueObjects/                     # Value objects compartilhados (Dinheiro, Email, Telefone, TipoPessoa…)
-│   └── Infrastructure/
-│       └── Repositories/                     # AppDbContext, BaseRepository<T>, DomainEventDispatcher
-├── [BoundedContext]/                         # ex.: Cliente, Estoque, OrdemServico
-│   ├── Domain/
-│   │   ├── Entities/                         # Entidades, aggregate roots, domain events
-│   │   └── Interfaces/                       # IXxxRepositorio
-│   ├── Application/
-│   │   ├── DTOs/                             # XxxRequestDTO, XxxResponseDTO
-│   │   └── Services/
-│   │       ├── Interfaces/                   # IXxxService
-│   │       ├── Events/                       # Handlers de domain events
-│   │       └── XxxService.cs
-│   ├── Infrastructure/
-│   │   └── Repositories/                     # XxxRepositorio : BaseRepository<T>
-│   └── Presentation/
-│       └── Controllers/                      # XxxController
-└── [BoundedContext].Domain.ValueObjects/     # Value objects específicos do contexto (ex.: Cliente.Domain.ValueObjects)
+│   ├── Domain/Entities/                      # EntidadeBase<T>, IAggregateRoot, IDomainEvent*
+│   ├── Domain/ValueObjects/                  # Dinheiro, Email, Telefone, TipoPessoa…
+│   └── Infrastructure/Repositories/         # AppDbContext, BaseRepository<T>, DomainEventDispatcher
+├── [BoundedContext]/                         # Atendimento | Catalogo | Operacao
+│   ├── Domain/Entities/                      # Aggregate roots, domain events (Events/)
+│   ├── Domain/Interfaces/                    # IXxxRepositorio
+│   ├── Domain/ValueObjects/                  # Value objects específicos (projeto separado)
+│   ├── Application/DTOs/                     # XxxRequestDTO, XxxResponseDTO
+│   ├── Application/Services/                 # XxxService, Interfaces/, Events/
+│   ├── Infrastructure/Repositories/          # XxxRepositorio : BaseRepository<T>
+│   └── Presentation/Controllers/             # XxxController
+└── Testes/TestesDeUnidade/
+    └── [BoundedContext].Tests/               # Projetos XUnit por bounded context
 ```
 
 ## Arquitetura e Camadas
@@ -515,17 +507,29 @@ docker-compose down && docker-compose up database
 
 **Convenção EF Core**: todos os nomes de tabela e coluna são gerados em minúsculas via `UseLowerCaseNamingConvention()`. Tabelas com nome diferente do padrão EF usam `.ToTable("nome")` em `OnModelCreating`.
 
-## Comandos de Build e Execução
+## Comandos de Build, Teste e Execução
+
+Todos os comandos `dotnet` devem apontar para dentro de `src/` (onde está a solução).
 
 ```bash
 # Build da solução completa
-dotnet build TechChallenger-fase1.sln
+dotnet build src/TechChallenger-fase1.sln
 
 # Executar a API
-dotnet run --project Presentation/TechChallenger-fase1
+dotnet run --project src/Presentation/TechChallenger-fase1
 
 # Watch mode
-dotnet watch run --project Presentation/TechChallenger-fase1
+dotnet watch run --project src/Presentation/TechChallenger-fase1
+
+# Rodar todos os testes de unidade
+dotnet test src/TechChallenger-fase1.sln --filter "FullyQualifiedName~Tests"
+
+# Rodar testes de um bounded context específico
+dotnet test src/Testes/TestesDeUnidade/Atendimento.Tests/Atendimento.Tests.csproj
+
+# Rodar um único teste pelo nome
+dotnet test src/Testes/TestesDeUnidade/Atendimento.Tests/Atendimento.Tests.csproj \
+  --filter "FullyQualifiedName~NomeDoTeste"
 
 # Apenas banco de dados
 docker-compose up database
@@ -535,6 +539,10 @@ docker-compose up
 ```
 
 Swagger UI disponível em `/swagger` no ambiente de desenvolvimento.
+
+### Projetos de teste
+
+Ficam em `src/Testes/TestesDeUnidade/[BoundedContext].Tests/`. Cada projeto usa **XUnit + Moq**, padrão **AAA**, e referencia apenas os projetos do próprio bounded context (sem acesso à infraestrutura). `GlobalUsings.cs` expõe `global using Xunit;` e `global using Moq;` para todo o projeto de testes.
 
 ## Configuração
 
