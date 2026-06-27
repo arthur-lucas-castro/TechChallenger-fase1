@@ -107,6 +107,7 @@ builder.Services.AddScoped<IServicoService, ServicoService>();
 
 builder.Services.AddScoped<IDomainEventDispatcher, DomainEventDispatcher>();
 builder.Services.AddScoped<IDomainEventHandler<EstoqueBaixaRealizadaEvent>, EstoqueBaixaRealizadaHandler>();
+builder.Services.AddScoped<IDomainEventHandler<EstoqueAbaixoMinimoEvent>, EstoqueAbaixoMinimoHandler>();
 
 builder.Services.AddScoped<IPecaRepositorio, PecaRepositorio>();
 builder.Services.AddScoped<IPecaService, PecaService>();
@@ -115,6 +116,7 @@ builder.Services.AddScoped<IOrdemServicoRepositorio, OrdemServicoRepositorio>();
 builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 builder.Services.AddScoped<IDomainEventHandler<OrdemServicoDiagnosticoFinalizadoEvent>, DiagnosticoFinalizadoHandler>();
 builder.Services.AddScoped<IDomainEventHandler<OrcamentoRespondidoEvent>, OrcamentoRespondidoHandler>();
+builder.Services.AddScoped<IDomainEventHandler<OrdemServicoIniciadaEvent>, OrdemServicoIniciadaHandler>();
 
 var app = builder.Build();
 

@@ -64,6 +64,10 @@ namespace Atendimento.Domain.Entities
                 throw new OrcamentoNaoAprovadoException("O orçamento deve estar aprovado para iniciar a execução da ordem.");
 
             TransicionarPara(StatusOrdemServico.EmExecucao);
+            AddDomainEvent(new Events.OrdemServicoIniciadaEvent(
+                Id,
+                PecasSolicitadas.Select(p => new Events.PecaOrdemServicoItem(p.PecaId, p.Quantidade)).ToList()
+            ));
         }
 
         public void FinalizarOrdem()

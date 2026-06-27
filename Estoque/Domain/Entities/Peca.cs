@@ -48,6 +48,14 @@ namespace Estoque.Domain.Entities
                ProdutoEstoque.QuantidadeAtual,
                ProdutoEstoque.QuantidadeMinima
            ));
+
+            if (ProdutoEstoque.QuantidadeAtual < ProdutoEstoque.QuantidadeMinima)
+                AddDomainEvent(new EstoqueAbaixoMinimoEvent(
+                    this.Id,
+                    this.Nome,
+                    ProdutoEstoque.QuantidadeAtual,
+                    ProdutoEstoque.QuantidadeMinima
+                ));
         }
     }
 }
