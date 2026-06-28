@@ -218,15 +218,6 @@ namespace Operacao.Application.Services
             return await _repositorio.CommitAsync();
         }
 
-        public async Task<bool> AlterarStatusServicoExecucaoAsync(int ordemServicoId, int servicoSolicitadoId, AlterarStatusServicoExecucaoDTO dto)
-        {
-            var os = await _repositorio.GetByIdComServicosEExecucaoAsync(ordemServicoId);
-            if (os is null) return false;
-
-            os.AlterarStatusServicoExecucao(servicoSolicitadoId, Enum.Parse<StatusServicoExecucao>(dto.Status));
-            return await _repositorio.CommitAsync();
-        }
-
         public async Task<bool> IniciarServicoAsync(int ordemServicoId, int servicoSolicitadoId)
         {
             var os = await _repositorio.GetByIdComServicosEExecucaoAsync(ordemServicoId);
