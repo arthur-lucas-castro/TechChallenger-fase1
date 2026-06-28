@@ -843,4 +843,108 @@ public class OrdemServicoServiceTests
         Assert.True(resultado);
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
     }
+
+    // ── AplicarTransicaoStatus — branches faltantes ──────────────────────────
+
+    [Fact]
+    public async Task AlterarStatusAsync_TransicaoParaAguardandoAprovacao_FinalizaDiagnostico()
+    {
+        // Arrange — Recebida → AguardandoAprovacao via FinalizarDiagnostico()
+        var os = CriarOrdemRecebida(1);
+        _repositorioMock.Setup(r => r.GetByIdComItensAsync(1)).ReturnsAsync(os);
+        _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+        ConfigurarDispatcherOk();
+
+        // Act
+        await _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDto { Status = "AguardandoAprovacao" });
+
+        // Assert
+        Assert.Equal(StatusOrdemServico.AguardandoAprovacao, os.Status);
+    }
+
+    [Fact]
+    public async Task AlterarStatusAsync_TransicaoParaEmExecucao_IniciaNaExecucao()
+    {
+        // Arrange — AguardandoAprovacao + orçamento aprovado → EmExecucao via IniciarExecucao()
+        var os = CriarOrdemAguardandoAprovacao(1);
+        os.Orcamento!.Aprovar();   // aprova direto sem passar por AprovarOrcamento()
+        os.ClearDomainEvents();
+        _repositorioMock.Setup(r => r.GetByIdComItensAsync(1)).ReturnsAsync(os);
+        _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+        ConfigurarDispatcherOk();
+
+        // Act
+        await _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDto { Status = "EmExecucao" });
+
+        // Assert
+        Assert.Equal(StatusOrdemServico.EmExecucao, os.Status);
+    }
+
+    [Fact]
+    public async Task AlterarStatusAsync_TransicaoParaFinalizada_FinalizaOrdem()
+    {
+        // Arrange — EmExecucao → Finalizada via FinalizarOrdem()
+        var os = CriarOrdemEmExecucao(1);
+        _repositorioMock.Setup(r => r.GetByIdComItensAsync(1)).ReturnsAsync(os);
+        _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+        ConfigurarDispatcherOk();
+
+        // Act
+        await _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDto { Status = "Finalizada" });
+
+        // Assert
+        Assert.Equal(StatusOrdemServico.Finalizada, os.Status);
+    }
+
+    [Fact]
+    public async Task AlterarStatusAsync_StatusInvalido_LancaTransicaoStatusInvalidaException()
+    {
+        // Arrange — "Recebida" é um enum válido mas não está no switch → default → exception
+        var os = CriarOrdemRecebida(1);
+        _repositorioMock.Setup(r => r.GetByIdComItensAsync(1)).ReturnsAsync(os);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<Operacao.Domain.Excecoes.TransicaoStatusInvalidaException>(() =>
+            _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDto { Status = "Recebida" }));
+    }
+
+    // ── ObterDetalhadoPorIdAsync — branches faltantes ────────────────────────
+
+    [Fact]
+    public async Task ObterDetalhadoPorIdAsync_ComOrcamento_MapeiaDadosDoOrcamento()
+    {
+        // Arrange — ordem em AguardandoAprovacao já possui Orcamento (criado por FinalizarDiagnostico)
+        var os = CriarOrdemAguardandoAprovacao(1);
+        _repositorioMock.Setup(r => r.GetByIdDetalhadoAsync(1)).ReturnsAsync(os);
+        _clienteServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new ClienteResponseDto());
+        _veiculoServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new VeiculoResponseDto());
+
+        // Act
+        var resultado = await _service.ObterDetalhadoPorIdAsync(1);
+
+        // Assert — branch `os.Orcamento is null ? null : new OrcamentoResponseDto` → não-nulo
+        Assert.NotNull(resultado);
+        Assert.NotNull(resultado.Orcamento);
+        Assert.Equal("Pendente", resultado.Orcamento.Status);
+    }
+
+    [Fact]
+    public async Task ObterDetalhadoPorIdAsync_ServicoNaoEncontradoNoCatalogo_NaoAdicionaNomeAoDicionario()
+    {
+        // Arrange — order com serviço, mas catálogo retorna null → branch `if (servico is not null)` = false
+        var os = CriarOrdemRecebida(1);
+        os.AdicionarServico(servicoId: 7, quantidade: 1, new Dinheiro(80m));
+        _repositorioMock.Setup(r => r.GetByIdDetalhadoAsync(1)).ReturnsAsync(os);
+        _clienteServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new ClienteResponseDto());
+        _veiculoServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new VeiculoResponseDto());
+        _servicoServiceMock.Setup(s => s.ObterPorIdAsync(7)).ReturnsAsync((ServicoResponseDto?)null);
+
+        // Act
+        var resultado = await _service.ObterDetalhadoPorIdAsync(1);
+
+        // Assert — nome fica null pois não foi adicionado ao dicionário
+        Assert.NotNull(resultado);
+        Assert.Single(resultado.Servicos);
+        Assert.Null(resultado.Servicos.First().NomeServico);
+    }
 }

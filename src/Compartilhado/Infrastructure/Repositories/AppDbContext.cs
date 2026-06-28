@@ -6,9 +6,11 @@ using Catalogo.Domain.ValueObjects;
 using Operacao.Domain.Entities;
 using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Compartilhado.Infrastructure.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class AppDbContext : DbContext
     {
         private const string NumericDecimal = "numeric(10,2)";
