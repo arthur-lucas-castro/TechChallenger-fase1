@@ -1,11 +1,11 @@
-using Compartilhado.Domain.Entities;
+﻿using Compartilhado.Domain.Entities;
 
 namespace Compartilhado.Tests.Domain.Entities;
 
 public class EntidadeBaseTests
 {
     // Entidade concreta para poder chamar AddDomainEvent (protected)
-    private class TestEntidade : EntidadeBase<TestEntidade>, IAggregateRoot
+    private class TestEntidade : EntidadeBase, IAggregateRoot
     {
         public void PublicarEvento(IDomainEvent evento) => AddDomainEvent(evento);
     }
@@ -48,7 +48,7 @@ public class EntidadeBaseTests
         var eventos = entidade.GetDomainEvents();
 
         // Assert — IReadOnlyCollection não permite mutação direta
-        Assert.IsAssignableFrom<IReadOnlyCollection<IDomainEvent>>(eventos);
+        Assert.IsType<IReadOnlyCollection<IDomainEvent>>(eventos, exactMatch: false);
         Assert.Throws<NotSupportedException>(() => ((IList<IDomainEvent>)eventos).Add(new TestEvent()));
     }
 

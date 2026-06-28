@@ -28,7 +28,7 @@ namespace Operacao.Presentation.Controllers
         }
 
         [HttpPatch("{id:int}/status")]
-        public async Task<IActionResult> AlterarStatus(int id, [FromBody] AlterarStatusOrdemServicoDTO dto)
+        public async Task<IActionResult> AlterarStatus(int id, [FromBody] AlterarStatusOrdemServicoDto dto)
         {
             if (!await _service.AlterarStatusAsync(id, dto)) return NotFound();
             return NoContent();

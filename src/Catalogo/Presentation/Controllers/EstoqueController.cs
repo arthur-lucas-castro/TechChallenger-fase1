@@ -19,7 +19,7 @@ namespace Catalogo.Presentation.Controllers
             => Ok(await _service.ObterEstoqueTodosAsync());
 
         [HttpPost("entrada")]
-        public async Task<IActionResult> AdicionarProduto([FromBody] EntradaEstoqueRequestDTO dto)
+        public async Task<IActionResult> AdicionarProduto([FromBody] EntradaEstoqueRequestDto dto)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace Catalogo.Presentation.Controllers
         }
 
         [HttpPost("baixa")]
-        public async Task<IActionResult> DarBaixa([FromBody] BaixaEstoqueRequestDTO dto)
+        public async Task<IActionResult> DarBaixa([FromBody] BaixaEstoqueRequestDto dto)
         {
             try
             {

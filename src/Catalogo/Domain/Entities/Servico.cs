@@ -3,7 +3,7 @@ using Compartilhado.Domain.ValueObjects;
 
 namespace Catalogo.Domain.Entities
 {
-    public class Servico : EntidadeBase<Servico>, IAggregateRoot
+    public class Servico : EntidadeBase, IAggregateRoot
     {
         public string Nome { get; set; } = string.Empty;
         public Dinheiro PrecoVenda { get; set; } = null!;

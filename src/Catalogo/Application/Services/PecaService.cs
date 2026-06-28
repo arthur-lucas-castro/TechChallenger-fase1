@@ -18,19 +18,19 @@ namespace Catalogo.Application.Services
             _dispatcher  = dispatcher;
         }
 
-        public async Task<PecaResponseDTO?> ObterPorIdAsync(int id)
+        public async Task<PecaResponseDto?> ObterPorIdAsync(int id)
         {
             var peca = await _repositorio.GetByIdAsync(id);
-            return peca is null ? null : MapearParaDTO(peca);
+            return peca is null ? null : MapearParaDto(peca);
         }
 
-        public async Task<IEnumerable<PecaResponseDTO>> ObterTodosAsync()
-            => (await _repositorio.GetAllAsync()).Select(MapearParaDTO);
+        public async Task<IEnumerable<PecaResponseDto>> ObterTodosAsync()
+            => (await _repositorio.GetAllAsync()).Select(MapearParaDto);
 
-        public Task<int> CriarAsync(PecaRequestDTO dto)
+        public Task<int> CriarAsync(PecaRequestDto dto)
             => _repositorio.InsertAsync(MapearParaEntidade(dto));
 
-        public async Task<bool> AtualizarAsync(int id, PecaRequestDTO dto)
+        public async Task<bool> AtualizarAsync(int id, PecaRequestDto dto)
         {
             var peca = MapearParaEntidade(dto);
             peca.Id = id;
@@ -40,10 +40,10 @@ namespace Catalogo.Application.Services
         public Task<bool> ExcluirAsync(int id)
             => _repositorio.DeleteAsync(id);
 
-        public async Task<IEnumerable<EstoqueComPecaResponseDTO>> ObterEstoqueTodosAsync()
+        public async Task<IEnumerable<EstoqueComPecaResponseDto>> ObterEstoqueTodosAsync()
         {
             var pecas = await _repositorio.GetAllComEstoqueAsync();
-            return pecas.Select(p => new EstoqueComPecaResponseDTO
+            return pecas.Select(p => new EstoqueComPecaResponseDto
             {
                 PecaId           = p.Id,
                 NomePeca         = p.Nome,
@@ -55,7 +55,7 @@ namespace Catalogo.Application.Services
             });
         }
 
-        public async Task<EstoqueResponseDTO> AdicionarEstoqueAsync(EntradaEstoqueRequestDTO dto)
+        public async Task<EstoqueResponseDto> AdicionarEstoqueAsync(EntradaEstoqueRequestDto dto)
         {
             var peca = await _repositorio.GetByIdComEstoqueAsync(dto.PecaId)
                 ?? throw new KeyNotFoundException($"Peça {dto.PecaId} não encontrada.");
@@ -67,10 +67,10 @@ namespace Catalogo.Application.Services
             else
                 await _repositorio.UpdateProdutoEstoqueAsync(peca.ProdutoEstoque);
 
-            return MapearEstoqueParaDTO(peca.ProdutoEstoque);
+            return MapearEstoqueParaDto(peca.ProdutoEstoque);
         }
 
-        public async Task<EstoqueResponseDTO?> DarBaixaAsync(BaixaEstoqueRequestDTO dto)
+        public async Task<EstoqueResponseDto?> DarBaixaAsync(BaixaEstoqueRequestDto dto)
         {
             var peca = await _repositorio.GetByIdComEstoqueAsync(dto.PecaId);
             if (peca is null) return null;
@@ -82,10 +82,10 @@ namespace Catalogo.Application.Services
             await _dispatcher.DispatchAsync(peca.GetDomainEvents());
             peca.ClearDomainEvents();
 
-            return MapearEstoqueParaDTO(Estoque);
+            return MapearEstoqueParaDto(Estoque);
         }
 
-        private static PecaResponseDTO MapearParaDTO(Peca p) => new()
+        private static PecaResponseDto MapearParaDto(Peca p) => new()
         {
             Id         = p.Id,
             Nome       = p.Nome,
@@ -94,7 +94,7 @@ namespace Catalogo.Application.Services
             PrecoVenda = p.PrecoVenda
         };
 
-        private static Peca MapearParaEntidade(PecaRequestDTO dto) => new()
+        private static Peca MapearParaEntidade(PecaRequestDto dto) => new()
         {
             Nome       = dto.Nome,
             Descricao  = dto.Descricao,
@@ -102,7 +102,7 @@ namespace Catalogo.Application.Services
             PrecoVenda = dto.PrecoVenda
         };
 
-        private static EstoqueResponseDTO MapearEstoqueParaDTO(ProdutoEstoque e) => new()
+        private static EstoqueResponseDto MapearEstoqueParaDto(ProdutoEstoque e) => new()
         {
             Id               = e.Id,
             PecaId           = e.PecaId,

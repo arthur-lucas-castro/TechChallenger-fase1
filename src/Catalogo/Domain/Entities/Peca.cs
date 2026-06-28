@@ -5,7 +5,7 @@ using Catalogo.Domain.ValueObjects;
 
 namespace Catalogo.Domain.Entities
 {
-    public class Peca : EntidadeBase<Peca>, IAggregateRoot
+    public class Peca : EntidadeBase, IAggregateRoot
     {
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;

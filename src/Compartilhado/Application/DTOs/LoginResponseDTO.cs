@@ -1,6 +1,6 @@
-namespace Compartilhado.Application.DTOs
+﻿namespace Compartilhado.Application.DTOs
 {
-    public class LoginResponseDTO
+    public class LoginResponseDto
     {
         public string Token { get; set; } = string.Empty;
         public DateTime Expiracao { get; set; }

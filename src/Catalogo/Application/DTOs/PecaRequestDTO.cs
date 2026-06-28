@@ -1,6 +1,6 @@
 ﻿namespace Catalogo.Application.DTOs
 {
-    public class PecaRequestDTO
+    public class PecaRequestDto
     {
         public string Nome { get; set; } = string.Empty;
         public string Descricao { get; set; } = string.Empty;

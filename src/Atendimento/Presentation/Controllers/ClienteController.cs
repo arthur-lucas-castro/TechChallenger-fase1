@@ -37,7 +37,7 @@ namespace Atendimento.Presentation.Controllers
 
         [HttpPost]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> Create([FromBody] ClienteRequestDTO dto)
+        public async Task<IActionResult> Create([FromBody] ClienteRequestDto dto)
         {
             var id = await _service.CriarAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
@@ -45,7 +45,7 @@ namespace Atendimento.Presentation.Controllers
 
         [HttpPut("{id:int}")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> Update(int id, [FromBody] ClienteRequestDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] ClienteRequestDto dto)
         {
             if (!await _service.AtualizarAsync(id, dto)) return NotFound();
             return Ok(dto);
@@ -60,7 +60,7 @@ namespace Atendimento.Presentation.Controllers
         }
 
         [HttpPost("{clienteId:int}/ordens-servico/{ordemServicoId:int}/responder-orcamento")]
-        public async Task<IActionResult> ResponderOrcamento(int clienteId, int ordemServicoId, [FromBody] ResponderOrcamentoDTO dto)
+        public async Task<IActionResult> ResponderOrcamento(int clienteId, int ordemServicoId, [FromBody] ResponderOrcamentoDto dto)
         {
             if (!await _service.ResponderOrcamentoAsync(clienteId, ordemServicoId, dto)) return NotFound();
             return NoContent();

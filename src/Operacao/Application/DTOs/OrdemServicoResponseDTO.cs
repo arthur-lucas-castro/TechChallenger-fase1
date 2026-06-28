@@ -1,6 +1,6 @@
 ﻿namespace Operacao.Application.DTOs
 {
-    public class OrdemServicoResponseDTO
+    public class OrdemServicoResponseDto
     {
         public int Id { get; set; }
         public int VeiculoId { get; set; }
@@ -17,7 +17,7 @@
         public DateTime? DataFinalizacao { get; set; }
     }
 
-    public class OrdemServicoDetalhadaResponseDTO
+    public class OrdemServicoDetalhadaResponseDto
     {
         public int Id { get; set; }
         public string Status { get; set; } = string.Empty;
@@ -38,12 +38,12 @@
         public int? AnoVeiculo { get; set; }
         public string? PlacaVeiculo { get; set; }
 
-        public List<ServicoSolicitadoResponseDTO> Servicos { get; set; } = [];
-        public List<PecaSolicitadaResponseDTO> Pecas { get; set; } = [];
-        public OrcamentoResponseDTO? Orcamento { get; set; }
+        public List<ServicoSolicitadoResponseDto> Servicos { get; set; } = [];
+        public List<PecaSolicitadaResponseDto> Pecas { get; set; } = [];
+        public OrcamentoResponseDto? Orcamento { get; set; }
     }
 
-    public class ServicoSolicitadoResponseDTO
+    public class ServicoSolicitadoResponseDto
     {
         public int Id { get; set; }
         public int ServicoId { get; set; }
@@ -55,7 +55,7 @@
         public DateTime? DataFinalizacaoExecucao { get; set; }
     }
 
-    public class PecaSolicitadaResponseDTO
+    public class PecaSolicitadaResponseDto
     {
         public int Id { get; set; }
         public int PecaId { get; set; }
@@ -64,7 +64,7 @@
         public decimal PrecoVenda { get; set; }
     }
 
-    public class OrcamentoResponseDTO
+    public class OrcamentoResponseDto
     {
         public int Id { get; set; }
         public decimal PrecoTotal { get; set; }

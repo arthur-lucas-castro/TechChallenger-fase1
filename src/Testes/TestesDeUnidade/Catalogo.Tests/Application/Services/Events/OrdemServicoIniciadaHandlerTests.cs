@@ -1,4 +1,4 @@
-using Catalogo.Application.DTOs;
+﻿using Catalogo.Application.DTOs;
 using Catalogo.Application.Services.Events;
 using Catalogo.Application.Services.Interfaces;
 using Compartilhado.Domain.ValueObjects;
@@ -20,7 +20,7 @@ public class OrdemServicoIniciadaHandlerTests
         _handler = new OrdemServicoIniciadaHandler(_pecaServiceMock.Object, _loggerMock.Object);
     }
 
-    private static EstoqueResponseDTO CriarEstoqueDTO() => new()
+    private static EstoqueResponseDto CriarEstoqueDto() => new()
     {
         Id = 1, PecaId = 1, QuantidadeAtual = 7, QuantidadeMinima = 2, PrecoCustoMedio = 5.00m
     };
@@ -38,7 +38,7 @@ public class OrdemServicoIniciadaHandlerTests
 
         // Assert
         _pecaServiceMock.Verify(
-            s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDTO>()),
+            s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDto>()),
             Times.Never);
     }
 
@@ -47,8 +47,8 @@ public class OrdemServicoIniciadaHandlerTests
     {
         // Arrange
         _pecaServiceMock
-            .Setup(s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDTO>()))
-            .ReturnsAsync(CriarEstoqueDTO());
+            .Setup(s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDto>()))
+            .ReturnsAsync(CriarEstoqueDto());
 
         var evento = new OrdemServicoIniciadaEvent(
             OrdemServicoId: 1,
@@ -59,7 +59,7 @@ public class OrdemServicoIniciadaHandlerTests
 
         // Assert
         _pecaServiceMock.Verify(
-            s => s.DarBaixaAsync(It.Is<BaixaEstoqueRequestDTO>(dto =>
+            s => s.DarBaixaAsync(It.Is<BaixaEstoqueRequestDto>(dto =>
                 dto.PecaId == 10 && dto.Quantidade == 2)),
             Times.Once);
     }
@@ -69,8 +69,8 @@ public class OrdemServicoIniciadaHandlerTests
     {
         // Arrange
         _pecaServiceMock
-            .Setup(s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDTO>()))
-            .ReturnsAsync(CriarEstoqueDTO());
+            .Setup(s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDto>()))
+            .ReturnsAsync(CriarEstoqueDto());
 
         var pecas = new List<PecaOrdemServicoItem>
         {
@@ -85,7 +85,7 @@ public class OrdemServicoIniciadaHandlerTests
 
         // Assert — uma chamada por peça
         _pecaServiceMock.Verify(
-            s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDTO>()),
+            s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDto>()),
             Times.Exactly(3));
     }
 
@@ -98,7 +98,8 @@ public class OrdemServicoIniciadaHandlerTests
             Pecas: new List<PecaOrdemServicoItem>().AsReadOnly());
 
         // Act & Assert — lista vazia não deve quebrar
-        await _handler.HandleAsync(evento);
+        var excecao = await Record.ExceptionAsync(() => _handler.HandleAsync(evento));
+        Assert.Null(excecao);
     }
 
     [Fact]
@@ -106,8 +107,8 @@ public class OrdemServicoIniciadaHandlerTests
     {
         // Arrange
         _pecaServiceMock
-            .Setup(s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDTO>()))
-            .ReturnsAsync(CriarEstoqueDTO());
+            .Setup(s => s.DarBaixaAsync(It.IsAny<BaixaEstoqueRequestDto>()))
+            .ReturnsAsync(CriarEstoqueDto());
 
         var evento = new OrdemServicoIniciadaEvent(
             OrdemServicoId: 99,

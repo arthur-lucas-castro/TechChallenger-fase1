@@ -1,4 +1,4 @@
-using Atendimento.Application.DTOs;
+﻿using Atendimento.Application.DTOs;
 using Atendimento.Application.Services;
 using Atendimento.Domain.Entities;
 using Atendimento.Domain.Interfaces;
@@ -26,7 +26,7 @@ public class VeiculoServiceTests
     // --- Queries ---
 
     [Fact]
-    public async Task ObterPorIdAsync_VeiculoExiste_RetornaDTO()
+    public async Task ObterPorIdAsync_VeiculoExiste_RetornaDto()
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(CriarVeiculo(1));
@@ -88,7 +88,7 @@ public class VeiculoServiceTests
     }
 
     [Fact]
-    public async Task ObterPorPlacaAsync_PlacaExiste_RetornaDTO()
+    public async Task ObterPorPlacaAsync_PlacaExiste_RetornaDto()
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByPlacaAsync("ABC1234")).ReturnsAsync(CriarVeiculo(1));
@@ -121,7 +121,7 @@ public class VeiculoServiceTests
     public async Task CriarAsync_DeveChamarInsertComEntidadeCorreta()
     {
         // Arrange
-        var dto = new VeiculoRequestDTO
+        var dto = new VeiculoRequestDto
         {
             Modelo = "Civic", Placa = "XYZ9A87", Marca = "Honda", Ano = 2023
         };
@@ -141,7 +141,7 @@ public class VeiculoServiceTests
     public async Task AtualizarAsync_VeiculoExiste_RetornaTrue()
     {
         // Arrange
-        var dto = new VeiculoRequestDTO
+        var dto = new VeiculoRequestDto
         {
             Modelo = "Gol", Placa = "ABC1234", Marca = "Volkswagen", Ano = 2021
         };
@@ -158,7 +158,7 @@ public class VeiculoServiceTests
     public async Task AtualizarAsync_VeiculoNaoExiste_RetornaFalse()
     {
         // Arrange
-        var dto = new VeiculoRequestDTO
+        var dto = new VeiculoRequestDto
         {
             Modelo = "Gol", Placa = "ABC1234", Marca = "Volkswagen", Ano = 2021
         };

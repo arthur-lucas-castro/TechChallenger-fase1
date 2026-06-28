@@ -29,7 +29,6 @@ namespace Catalogo.Infrastructure.Repositories
         {
             await _produtoEstoqueSet.AddAsync(produtoEstoque);
             await _context.SaveChangesAsync();
-            return;
         }
 
         public async Task<bool> UpdateProdutoEstoqueAsync(ProdutoEstoque produtoEstoque)

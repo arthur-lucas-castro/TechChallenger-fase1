@@ -1,6 +1,6 @@
 ﻿namespace Catalogo.Application.DTOs
 {
-    public class EstoqueComPecaResponseDTO
+    public class EstoqueComPecaResponseDto
     {
         public int PecaId { get; set; }
         public string NomePeca { get; set; } = string.Empty;

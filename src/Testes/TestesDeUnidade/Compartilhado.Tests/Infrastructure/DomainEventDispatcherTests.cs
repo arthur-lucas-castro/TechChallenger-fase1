@@ -95,7 +95,8 @@ public class DomainEventDispatcherTests
         var dispatcher = CriarDispatcher(_ => { });
 
         // Act & Assert — não deve lançar exceção
-        await dispatcher.DispatchAsync([new TestEvent()]);
+        var excecao = await Record.ExceptionAsync(() => dispatcher.DispatchAsync([new TestEvent()]));
+        Assert.Null(excecao);
     }
 
     [Fact]

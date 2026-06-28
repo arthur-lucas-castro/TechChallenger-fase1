@@ -4,7 +4,7 @@ using Atendimento.Domain.ValueObjects;
 
 namespace Atendimento.Domain.Entities
 {
-    public class Cliente : EntidadeBase<Cliente>, IAggregateRoot
+    public class Cliente : EntidadeBase, IAggregateRoot
     {
         public string Nome { get; set; } = string.Empty;
         public string Sobrenome { get; set; } = string.Empty;

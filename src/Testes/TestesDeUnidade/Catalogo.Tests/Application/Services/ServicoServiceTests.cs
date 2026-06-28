@@ -1,4 +1,4 @@
-using Catalogo.Application.DTOs;
+﻿using Catalogo.Application.DTOs;
 using Catalogo.Application.Services;
 using Catalogo.Domain.Entities;
 using Catalogo.Domain.Interfaces;
@@ -27,7 +27,7 @@ public class ServicoServiceTests
     };
 
     [Fact]
-    public async Task ObterPorIdAsync_ServicoExiste_RetornaDTO()
+    public async Task ObterPorIdAsync_ServicoExiste_RetornaDto()
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(CriarServico(1));
@@ -91,7 +91,7 @@ public class ServicoServiceTests
     public async Task CriarAsync_ChamaInsertComEntidadeCorreta()
     {
         // Arrange
-        var dto = new ServicoRequestDTO
+        var dto = new ServicoRequestDto
         {
             Nome = "Alinhamento", PrecoVenda = 120.00m, TempoEstimadoEmMinutos = 60
         };
@@ -111,7 +111,7 @@ public class ServicoServiceTests
     public async Task AtualizarAsync_ServicoExiste_RetornaTrue()
     {
         // Arrange
-        var dto = new ServicoRequestDTO { Nome = "Troca de Óleo", PrecoVenda = 90m, TempoEstimadoEmMinutos = 30 };
+        var dto = new ServicoRequestDto { Nome = "Troca de Óleo", PrecoVenda = 90m, TempoEstimadoEmMinutos = 30 };
         _repositorioMock.Setup(r => r.UpdateAsync(It.IsAny<Servico>())).ReturnsAsync(true);
 
         // Act
@@ -125,7 +125,7 @@ public class ServicoServiceTests
     public async Task AtualizarAsync_ServicoNaoExiste_RetornaFalse()
     {
         // Arrange
-        var dto = new ServicoRequestDTO { Nome = "Troca de Óleo", PrecoVenda = 90m, TempoEstimadoEmMinutos = 30 };
+        var dto = new ServicoRequestDto { Nome = "Troca de Óleo", PrecoVenda = 90m, TempoEstimadoEmMinutos = 30 };
         _repositorioMock.Setup(r => r.UpdateAsync(It.IsAny<Servico>())).ReturnsAsync(false);
 
         // Act

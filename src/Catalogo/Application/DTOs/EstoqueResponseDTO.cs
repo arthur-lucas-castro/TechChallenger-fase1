@@ -1,6 +1,6 @@
 ﻿namespace Catalogo.Application.DTOs
 {
-    public class EstoqueResponseDTO
+    public class EstoqueResponseDto
     {
         public int Id { get; set; }
         public int PecaId { get; set; }

@@ -1,6 +1,6 @@
 ﻿namespace Operacao.Application.DTOs
 {
-    public class AlterarStatusOrdemServicoDTO
+    public class AlterarStatusOrdemServicoDto
     {
         public string Status { get; set; } = string.Empty;
     }

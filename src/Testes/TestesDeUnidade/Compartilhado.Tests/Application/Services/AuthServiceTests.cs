@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using Compartilhado.Application.DTOs;
 using Compartilhado.Application.Services;
 using Compartilhado.Domain.Entities;
@@ -40,7 +40,7 @@ public class AuthServiceTests
         Tipo = tipo
     };
 
-    private static LoginRequestDTO CriarRequest(string email = "admin@email.com", string senha = "senha123") =>
+    private static LoginRequestDto CriarRequest(string email = "admin@email.com", string senha = "senha123") =>
         new() { Email = email, Senha = senha };
 
     // ── Retorno null ─────────────────────────────────────────────────────────
@@ -199,7 +199,7 @@ public class AuthServiceTests
         Assert.InRange(resultado.Expiracao, antes.AddMinutes(59), antes.AddMinutes(61));
     }
 
-    // ── DTO de resposta ──────────────────────────────────────────────────────
+    // ── Dto de resposta ──────────────────────────────────────────────────────
 
     [Fact]
     public async Task LoginAsync_TipoNoResponseDTOCorrespondeAoUsuario()

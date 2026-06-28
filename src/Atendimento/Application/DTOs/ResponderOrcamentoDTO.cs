@@ -1,6 +1,6 @@
 ﻿namespace Atendimento.Application.DTOs
 {
-    public class ResponderOrcamentoDTO
+    public class ResponderOrcamentoDto
     {
         public bool Aprovado { get; set; }
     }

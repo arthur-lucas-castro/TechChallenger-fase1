@@ -1,4 +1,4 @@
-using Atendimento.Application.Services.Interfaces;
+﻿using Atendimento.Application.Services.Interfaces;
 using Catalogo.Application.DTOs;
 using Catalogo.Application.Services.Interfaces;
 using Compartilhado.Domain.Entities;
@@ -56,7 +56,7 @@ public class OrdemServicoServiceTests
     // ── ObterPorIdAsync ──────────────────────────────────────────────────────
 
     [Fact]
-    public async Task ObterPorIdAsync_Existe_RetornaDTO()
+    public async Task ObterPorIdAsync_Existe_RetornaDto()
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(CriarOrdemRecebida(1));
@@ -89,11 +89,11 @@ public class OrdemServicoServiceTests
     public async Task CriarAsync_ServicoNaoEncontrado_LancaKeyNotFoundException()
     {
         // Arrange
-        _servicoServiceMock.Setup(s => s.ObterPorIdAsync(99)).ReturnsAsync((ServicoResponseDTO?)null);
-        var dto = new OrdemServicoRequestDTO
+        _servicoServiceMock.Setup(s => s.ObterPorIdAsync(99)).ReturnsAsync((ServicoResponseDto?)null);
+        var dto = new OrdemServicoRequestDto
         {
             VeiculoId = 10, ClienteId = 20,
-            Servicos = [new ServicoSolicitadoRequestDTO { ServicoId = 99, Quantidade = 1 }],
+            Servicos = [new ServicoSolicitadoRequestDto { ServicoId = 99, Quantidade = 1 }],
             Pecas = []
         };
 
@@ -106,13 +106,13 @@ public class OrdemServicoServiceTests
     {
         // Arrange
         _servicoServiceMock.Setup(s => s.ObterPorIdAsync(1))
-            .ReturnsAsync(new ServicoResponseDTO { Id = 1, PrecoVenda = 100m, Nome = "Alinhamento", TempoEstimadoEmMinutos = 30 });
-        _pecaServiceMock.Setup(p => p.ObterPorIdAsync(99)).ReturnsAsync((Catalogo.Application.DTOs.PecaResponseDTO?)null);
-        var dto = new OrdemServicoRequestDTO
+            .ReturnsAsync(new ServicoResponseDto { Id = 1, PrecoVenda = 100m, Nome = "Alinhamento", TempoEstimadoEmMinutos = 30 });
+        _pecaServiceMock.Setup(p => p.ObterPorIdAsync(99)).ReturnsAsync((Catalogo.Application.DTOs.PecaResponseDto?)null);
+        var dto = new OrdemServicoRequestDto
         {
             VeiculoId = 10, ClienteId = 20,
-            Servicos = [new ServicoSolicitadoRequestDTO { ServicoId = 1, Quantidade = 1 }],
-            Pecas = [new PecaSolicitadaRequestDTO { PecaId = 99, Quantidade = 1 }]
+            Servicos = [new ServicoSolicitadoRequestDto { ServicoId = 1, Quantidade = 1 }],
+            Pecas = [new PecaSolicitadaRequestDto { PecaId = 99, Quantidade = 1 }]
         };
 
         // Act & Assert
@@ -124,12 +124,12 @@ public class OrdemServicoServiceTests
     {
         // Arrange
         _servicoServiceMock.Setup(s => s.ObterPorIdAsync(1))
-            .ReturnsAsync(new ServicoResponseDTO { Id = 1, PrecoVenda = 100m, Nome = "Alinhamento", TempoEstimadoEmMinutos = 30 });
+            .ReturnsAsync(new ServicoResponseDto { Id = 1, PrecoVenda = 100m, Nome = "Alinhamento", TempoEstimadoEmMinutos = 30 });
         _repositorioMock.Setup(r => r.InsertAsync(It.IsAny<OrdemServico>())).ReturnsAsync(5);
-        var dto = new OrdemServicoRequestDTO
+        var dto = new OrdemServicoRequestDto
         {
             VeiculoId = 10, ClienteId = 20,
-            Servicos = [new ServicoSolicitadoRequestDTO { ServicoId = 1, Quantidade = 2 }],
+            Servicos = [new ServicoSolicitadoRequestDto { ServicoId = 1, Quantidade = 2 }],
             Pecas = []
         };
 
@@ -146,14 +146,14 @@ public class OrdemServicoServiceTests
     {
         // Arrange
         _servicoServiceMock.Setup(s => s.ObterPorIdAsync(1))
-            .ReturnsAsync(new ServicoResponseDTO { Id = 1, PrecoVenda = 80m, Nome = "Revisão", TempoEstimadoEmMinutos = 60 });
+            .ReturnsAsync(new ServicoResponseDto { Id = 1, PrecoVenda = 80m, Nome = "Revisão", TempoEstimadoEmMinutos = 60 });
         _repositorioMock
             .Setup(r => r.InsertAsync(It.Is<OrdemServico>(os => os.Status == StatusOrdemServico.Recebida)))
             .ReturnsAsync(1);
-        var dto = new OrdemServicoRequestDTO
+        var dto = new OrdemServicoRequestDto
         {
             VeiculoId = 10, ClienteId = 20,
-            Servicos = [new ServicoSolicitadoRequestDTO { ServicoId = 1, Quantidade = 1 }],
+            Servicos = [new ServicoSolicitadoRequestDto { ServicoId = 1, Quantidade = 1 }],
             Pecas = []
         };
 
@@ -256,7 +256,7 @@ public class OrdemServicoServiceTests
         _repositorioMock.Setup(r => r.GetByIdComItensAsync(99)).ReturnsAsync((OrdemServico?)null);
 
         // Act
-        var resultado = await _service.AlterarStatusAsync(99, new AlterarStatusOrdemServicoDTO { Status = "EmDiagnostico" });
+        var resultado = await _service.AlterarStatusAsync(99, new AlterarStatusOrdemServicoDto { Status = "EmDiagnostico" });
 
         // Assert
         Assert.False(resultado);
@@ -273,7 +273,7 @@ public class OrdemServicoServiceTests
             .Returns(Task.CompletedTask);
 
         // Act
-        await _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDTO { Status = "EmDiagnostico" });
+        await _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDto { Status = "EmDiagnostico" });
 
         // Assert
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
@@ -289,7 +289,7 @@ public class OrdemServicoServiceTests
         _repositorioMock.Setup(r => r.GetByIdComServicosAsync(99)).ReturnsAsync((OrdemServico?)null);
 
         // Act
-        var resultado = await _service.AdicionarServicoAsync(99, new ServicoSolicitadoRequestDTO { ServicoId = 1, Quantidade = 1 });
+        var resultado = await _service.AdicionarServicoAsync(99, new ServicoSolicitadoRequestDto { ServicoId = 1, Quantidade = 1 });
 
         // Assert
         Assert.False(resultado);
@@ -301,11 +301,11 @@ public class OrdemServicoServiceTests
         // Arrange
         var os = CriarOrdemRecebida(1);
         _repositorioMock.Setup(r => r.GetByIdComServicosAsync(1)).ReturnsAsync(os);
-        _servicoServiceMock.Setup(s => s.ObterPorIdAsync(99)).ReturnsAsync((ServicoResponseDTO?)null);
+        _servicoServiceMock.Setup(s => s.ObterPorIdAsync(99)).ReturnsAsync((ServicoResponseDto?)null);
 
         // Act & Assert
         await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-            _service.AdicionarServicoAsync(1, new ServicoSolicitadoRequestDTO { ServicoId = 99, Quantidade = 1 }));
+            _service.AdicionarServicoAsync(1, new ServicoSolicitadoRequestDto { ServicoId = 99, Quantidade = 1 }));
     }
 
     [Fact]
@@ -315,11 +315,11 @@ public class OrdemServicoServiceTests
         var os = CriarOrdemRecebida(1);
         _repositorioMock.Setup(r => r.GetByIdComServicosAsync(1)).ReturnsAsync(os);
         _servicoServiceMock.Setup(s => s.ObterPorIdAsync(1))
-            .ReturnsAsync(new ServicoResponseDTO { Id = 1, PrecoVenda = 100m, Nome = "Revisão", TempoEstimadoEmMinutos = 30 });
+            .ReturnsAsync(new ServicoResponseDto { Id = 1, PrecoVenda = 100m, Nome = "Revisão", TempoEstimadoEmMinutos = 30 });
         _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
 
         // Act
-        var resultado = await _service.AdicionarServicoAsync(1, new ServicoSolicitadoRequestDTO { ServicoId = 1, Quantidade = 2 });
+        var resultado = await _service.AdicionarServicoAsync(1, new ServicoSolicitadoRequestDto { ServicoId = 1, Quantidade = 2 });
 
         // Assert
         Assert.True(resultado);
@@ -364,11 +364,11 @@ public class OrdemServicoServiceTests
         // Arrange
         var os = CriarOrdemRecebida(1);
         _repositorioMock.Setup(r => r.GetByIdComPecasAsync(1)).ReturnsAsync(os);
-        _pecaServiceMock.Setup(p => p.ObterPorIdAsync(99)).ReturnsAsync((Catalogo.Application.DTOs.PecaResponseDTO?)null);
+        _pecaServiceMock.Setup(p => p.ObterPorIdAsync(99)).ReturnsAsync((Catalogo.Application.DTOs.PecaResponseDto?)null);
 
         // Act & Assert
         await Assert.ThrowsAsync<KeyNotFoundException>(() =>
-            _service.AdicionarPecaAsync(1, new PecaSolicitadaRequestDTO { PecaId = 99, Quantidade = 1 }));
+            _service.AdicionarPecaAsync(1, new PecaSolicitadaRequestDto { PecaId = 99, Quantidade = 1 }));
     }
 
     // ── ExcluirAsync ─────────────────────────────────────────────────────────

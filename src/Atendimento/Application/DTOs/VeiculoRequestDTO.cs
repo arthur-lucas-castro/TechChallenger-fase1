@@ -1,6 +1,6 @@
 ﻿namespace Atendimento.Application.DTOs
 {
-    public class VeiculoRequestDTO
+    public class VeiculoRequestDto
     {
         public string Modelo { get; set; } = string.Empty;
         public string Placa { get; set; } = string.Empty;

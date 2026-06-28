@@ -4,12 +4,12 @@ namespace Atendimento.Application.Services.Interfaces
 {
     public interface IVeiculoService
     {
-        Task<VeiculoResponseDTO?> ObterPorIdAsync(int id);
-        Task<IEnumerable<VeiculoResponseDTO>> ObterTodosAsync();
-        Task<IEnumerable<VeiculoResponseDTO>> ObterPorIdsAsync(IEnumerable<int> ids);
-        Task<int> CriarAsync(VeiculoRequestDTO dto);
-        Task<bool> AtualizarAsync(int id, VeiculoRequestDTO dto);
+        Task<VeiculoResponseDto?> ObterPorIdAsync(int id);
+        Task<IEnumerable<VeiculoResponseDto>> ObterTodosAsync();
+        Task<IEnumerable<VeiculoResponseDto>> ObterPorIdsAsync(IEnumerable<int> ids);
+        Task<int> CriarAsync(VeiculoRequestDto dto);
+        Task<bool> AtualizarAsync(int id, VeiculoRequestDto dto);
         Task<bool> ExcluirAsync(int id);
-        Task<VeiculoResponseDTO?> ObterPorPlacaAsync(string placa);
+        Task<VeiculoResponseDto?> ObterPorPlacaAsync(string placa);
     }
 }

@@ -4,14 +4,14 @@ namespace Catalogo.Application.Services.Interfaces
 {
     public interface IPecaService
     {
-        Task<PecaResponseDTO?> ObterPorIdAsync(int id);
-        Task<IEnumerable<PecaResponseDTO>> ObterTodosAsync();
-        Task<int> CriarAsync(PecaRequestDTO dto);
-        Task<bool> AtualizarAsync(int id, PecaRequestDTO dto);
+        Task<PecaResponseDto?> ObterPorIdAsync(int id);
+        Task<IEnumerable<PecaResponseDto>> ObterTodosAsync();
+        Task<int> CriarAsync(PecaRequestDto dto);
+        Task<bool> AtualizarAsync(int id, PecaRequestDto dto);
         Task<bool> ExcluirAsync(int id);
 
-        Task<IEnumerable<EstoqueComPecaResponseDTO>> ObterEstoqueTodosAsync();
-        Task<EstoqueResponseDTO> AdicionarEstoqueAsync(EntradaEstoqueRequestDTO dto);
-        Task<EstoqueResponseDTO?> DarBaixaAsync(BaixaEstoqueRequestDTO dto);
+        Task<IEnumerable<EstoqueComPecaResponseDto>> ObterEstoqueTodosAsync();
+        Task<EstoqueResponseDto> AdicionarEstoqueAsync(EntradaEstoqueRequestDto dto);
+        Task<EstoqueResponseDto?> DarBaixaAsync(BaixaEstoqueRequestDto dto);
     }
 }

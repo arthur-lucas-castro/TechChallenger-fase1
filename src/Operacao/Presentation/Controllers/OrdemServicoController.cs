@@ -27,14 +27,14 @@ namespace Operacao.Presentation.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] OrdemServicoRequestDTO dto)
+        public async Task<IActionResult> Create([FromBody] OrdemServicoRequestDto dto)
         {
             var id = await _service.CriarAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
         }
 
         [HttpPost("{id:int}/servicos")]
-        public async Task<IActionResult> AdicionarServico(int id, [FromBody] ServicoSolicitadoRequestDTO dto)
+        public async Task<IActionResult> AdicionarServico(int id, [FromBody] ServicoSolicitadoRequestDto dto)
         {
             try
             {
@@ -55,7 +55,7 @@ namespace Operacao.Presentation.Controllers
         }
 
         [HttpPost("{id:int}/pecas")]
-        public async Task<IActionResult> AdicionarPeca(int id, [FromBody] PecaSolicitadaRequestDTO dto)
+        public async Task<IActionResult> AdicionarPeca(int id, [FromBody] PecaSolicitadaRequestDto dto)
         {
             try
             {

@@ -21,7 +21,7 @@ namespace Catalogo.Application.Services.Events
         {
             foreach (var peca in domainEvent.Pecas)
             {
-                await _pecaService.DarBaixaAsync(new BaixaEstoqueRequestDTO
+                await _pecaService.DarBaixaAsync(new BaixaEstoqueRequestDto
                 {
                     PecaId = peca.PecaId,
                     Quantidade = peca.Quantidade

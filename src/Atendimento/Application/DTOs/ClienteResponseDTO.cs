@@ -2,7 +2,7 @@
 
 namespace Atendimento.Application.DTOs
 {
-    public class ClienteResponseDTO
+    public class ClienteResponseDto
     {
         public int Id { get; set; }
         public string Nome { get; set; } = string.Empty;

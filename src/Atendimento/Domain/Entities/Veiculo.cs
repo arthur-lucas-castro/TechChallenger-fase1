@@ -3,7 +3,7 @@ using Compartilhado.Domain.Entities;
 
 namespace Atendimento.Domain.Entities
 {
-    public class Veiculo : EntidadeBase<Veiculo>, IAggregateRoot
+    public class Veiculo : EntidadeBase, IAggregateRoot
     {
         public string Modelo { get; set; } = string.Empty;
         public Placa Placa { get; set; } = null!;

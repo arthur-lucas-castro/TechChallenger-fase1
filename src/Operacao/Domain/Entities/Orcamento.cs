@@ -4,7 +4,7 @@ using Compartilhado.Domain.ValueObjects;
 
 namespace Operacao.Domain.Entities
 {
-    public class Orcamento : EntidadeBase<Orcamento>
+    public class Orcamento : EntidadeBase
     {
         public int OrdemServicoId { get; set; }
         public Dinheiro PrecoTotal { get; set; } = null!;

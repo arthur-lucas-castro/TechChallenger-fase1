@@ -1,4 +1,4 @@
-using Atendimento.Application.DTOs;
+﻿using Atendimento.Application.DTOs;
 using Atendimento.Application.Services;
 using Atendimento.Domain.Interfaces;
 using Atendimento.Domain.ValueObjects;
@@ -33,7 +33,7 @@ public class ClienteServiceTests
     // --- Queries ---
 
     [Fact]
-    public async Task ObterPorIdAsync_ClienteExiste_RetornaDTO()
+    public async Task ObterPorIdAsync_ClienteExiste_RetornaDto()
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(CriarCliente(1));
@@ -93,7 +93,7 @@ public class ClienteServiceTests
     }
 
     [Fact]
-    public async Task ObterPorNumeroDocumentoAsync_DocumentoExiste_RetornaDTO()
+    public async Task ObterPorNumeroDocumentoAsync_DocumentoExiste_RetornaDto()
     {
         // Arrange
         _repositorioMock
@@ -129,7 +129,7 @@ public class ClienteServiceTests
     public async Task CriarAsync_DeveChamarInsertComEntidadeCorreta()
     {
         // Arrange
-        var dto = new ClienteRequestDTO
+        var dto = new ClienteRequestDto
         {
             Nome = "Maria", Sobrenome = "Santos",
             Telefone = "11999998888", Email = "maria@email.com",
@@ -151,7 +151,7 @@ public class ClienteServiceTests
     public async Task AtualizarAsync_ClienteExiste_RetornaTrue()
     {
         // Arrange
-        var dto = new ClienteRequestDTO
+        var dto = new ClienteRequestDto
         {
             Nome = "João", Sobrenome = "Atualizado",
             Telefone = "11987654321", Email = "joao@email.com",
@@ -170,7 +170,7 @@ public class ClienteServiceTests
     public async Task AtualizarAsync_ClienteNaoExiste_RetornaFalse()
     {
         // Arrange
-        var dto = new ClienteRequestDTO
+        var dto = new ClienteRequestDto
         {
             Nome = "João", Sobrenome = "Silva",
             Telefone = "11987654321", Email = "joao@email.com",
@@ -206,7 +206,7 @@ public class ClienteServiceTests
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((ClienteEntity?)null);
-        var dto = new ResponderOrcamentoDTO { Aprovado = true };
+        var dto = new ResponderOrcamentoDto { Aprovado = true };
 
         // Act
         var resultado = await _service.ResponderOrcamentoAsync(clienteId: 99, ordemServicoId: 10, dto);
@@ -226,7 +226,7 @@ public class ClienteServiceTests
         _dispatcherMock
             .Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new ResponderOrcamentoDTO { Aprovado = true };
+        var dto = new ResponderOrcamentoDto { Aprovado = true };
 
         // Act
         await _service.ResponderOrcamentoAsync(clienteId: 1, ordemServicoId: 10, dto);
@@ -246,7 +246,7 @@ public class ClienteServiceTests
         _dispatcherMock
             .Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new ResponderOrcamentoDTO { Aprovado = true };
+        var dto = new ResponderOrcamentoDto { Aprovado = true };
 
         // Act
         await _service.ResponderOrcamentoAsync(clienteId: 1, ordemServicoId: 10, dto);
@@ -263,7 +263,7 @@ public class ClienteServiceTests
         _dispatcherMock
             .Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new ResponderOrcamentoDTO { Aprovado = false };
+        var dto = new ResponderOrcamentoDto { Aprovado = false };
 
         // Act
         var resultado = await _service.ResponderOrcamentoAsync(clienteId: 1, ordemServicoId: 10, dto);

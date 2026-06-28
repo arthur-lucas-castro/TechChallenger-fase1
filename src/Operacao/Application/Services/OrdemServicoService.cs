@@ -31,13 +31,13 @@ namespace Operacao.Application.Services
             _veiculoService = veiculoService;
         }
 
-        public async Task<OrdemServicoResponseDTO?> ObterPorIdAsync(int id)
+        public async Task<OrdemServicoResponseDto?> ObterPorIdAsync(int id)
         {
             var os = await _repositorio.GetByIdAsync(id);
-            return os is null ? null : MapearParaDTO(os);
+            return os is null ? null : MapearParaDto(os);
         }
 
-        public async Task<OrdemServicoDetalhadaResponseDTO?> ObterDetalhadoPorIdAsync(int id)
+        public async Task<OrdemServicoDetalhadaResponseDto?> ObterDetalhadoPorIdAsync(int id)
         {
             var os = await _repositorio.GetByIdDetalhadoAsync(id);
             if (os is null) return null;
@@ -54,7 +54,7 @@ namespace Operacao.Application.Services
                     nomesServico[sid] = servico.Nome;
             }
 
-            return new OrdemServicoDetalhadaResponseDTO
+            return new OrdemServicoDetalhadaResponseDto
             {
                 Id = os.Id,
                 Status = os.Status.ToString(),
@@ -75,7 +75,7 @@ namespace Operacao.Application.Services
                 AnoVeiculo = veiculo?.Ano,
                 PlacaVeiculo = veiculo?.Placa,
 
-                Servicos = os.ServicosSolicitados.Select(s => new ServicoSolicitadoResponseDTO
+                Servicos = os.ServicosSolicitados.Select(s => new ServicoSolicitadoResponseDto
                 {
                     Id = s.Id,
                     ServicoId = s.ServicoId,
@@ -87,7 +87,7 @@ namespace Operacao.Application.Services
                     DataFinalizacaoExecucao = s.ServicoExecucao?.DataFinalizacao
                 }).ToList(),
 
-                Pecas = os.PecasSolicitadas.Select(p => new PecaSolicitadaResponseDTO
+                Pecas = os.PecasSolicitadas.Select(p => new PecaSolicitadaResponseDto
                 {
                     Id = p.Id,
                     PecaId = p.PecaId,
@@ -96,7 +96,7 @@ namespace Operacao.Application.Services
                     PrecoVenda = p.PrecoVenda.Valor
                 }).ToList(),
 
-                Orcamento = os.Orcamento is null ? null : new OrcamentoResponseDTO
+                Orcamento = os.Orcamento is null ? null : new OrcamentoResponseDto
                 {
                     Id = os.Orcamento.Id,
                     PrecoTotal = os.Orcamento.PrecoTotal.Valor,
@@ -108,7 +108,7 @@ namespace Operacao.Application.Services
             };
         }
 
-        public async Task<IEnumerable<OrdemServicoResponseDTO>> ObterTodosAsync()
+        public async Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync()
         {
             var ordens = (await _repositorio.GetAllAsync()).ToList();
 
@@ -120,7 +120,7 @@ namespace Operacao.Application.Services
 
             return ordens.Select(o =>
             {
-                var dto = MapearParaDTO(o);
+                var dto = MapearParaDto(o);
                 if (clientes.TryGetValue(o.ClienteId, out var c))
                 {
                     dto.NomeCliente = c.Nome;
@@ -137,7 +137,7 @@ namespace Operacao.Application.Services
             });
         }
 
-        public async Task<int> CriarAsync(OrdemServicoRequestDTO dto)
+        public async Task<int> CriarAsync(OrdemServicoRequestDto dto)
         {
             var ordemServico = MapearParaEntidade(dto);
 
@@ -162,14 +162,14 @@ namespace Operacao.Application.Services
 
         public Task<bool> ExcluirAsync(int id) => _repositorio.DeleteAsync(id);
 
-        public async Task<IEnumerable<TempoExecucaoServicoResponseDTO>> ObterTemposExecucaoPorServicoAsync()
+        public async Task<IEnumerable<TempoExecucaoServicoResponseDto>> ObterTemposExecucaoPorServicoAsync()
         {
             var dados = (await _repositorio.ObterTemposExecucaoPorServicoAsync()).ToList();
 
             var ids = dados.Select(d => d.ServicoId);
             var nomes = (await _servicoService.ObterPorIdsAsync(ids)).ToDictionary(s => s.Id, s => s.Nome);
 
-            return dados.Select(d => new TempoExecucaoServicoResponseDTO
+            return dados.Select(d => new TempoExecucaoServicoResponseDto
             {
                 ServicoId           = d.ServicoId,
                 NomeServico         = nomes.GetValueOrDefault(d.ServicoId, string.Empty),
@@ -178,7 +178,7 @@ namespace Operacao.Application.Services
             });
         }
 
-        public async Task<bool> AdicionarServicoAsync(int ordemServicoId, ServicoSolicitadoRequestDTO dto)
+        public async Task<bool> AdicionarServicoAsync(int ordemServicoId, ServicoSolicitadoRequestDto dto)
         {
             var ordem = await _repositorio.GetByIdComServicosAsync(ordemServicoId);
             if (ordem is null) return false;
@@ -198,7 +198,7 @@ namespace Operacao.Application.Services
             return await _repositorio.CommitAsync();
         }
 
-        public async Task<bool> AdicionarPecaAsync(int ordemServicoId, PecaSolicitadaRequestDTO dto)
+        public async Task<bool> AdicionarPecaAsync(int ordemServicoId, PecaSolicitadaRequestDto dto)
         {
             var ordem = await _repositorio.GetByIdComPecasAsync(ordemServicoId);
             if (ordem is null) return false;
@@ -257,7 +257,7 @@ namespace Operacao.Application.Services
             return resultado;
         }
 
-        public async Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDTO dto)
+        public async Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDto dto)
         {
             var os = await _repositorio.GetByIdComItensAsync(id);
             if (os is null) return false;
@@ -294,7 +294,7 @@ namespace Operacao.Application.Services
             }
         }
 
-        private static OrdemServicoResponseDTO MapearParaDTO(OrdemServico os) => new()
+        private static OrdemServicoResponseDto MapearParaDto(OrdemServico os) => new()
         {
             Id = os.Id,
             VeiculoId = os.VeiculoId,
@@ -305,7 +305,7 @@ namespace Operacao.Application.Services
             DataFinalizacao = os.DataFinalizacao
         };
 
-        private static OrdemServico MapearParaEntidade(OrdemServicoRequestDTO dto) => new()
+        private static OrdemServico MapearParaEntidade(OrdemServicoRequestDto dto) => new()
         {
             VeiculoId = dto.VeiculoId,
             ClienteId = dto.ClienteId,

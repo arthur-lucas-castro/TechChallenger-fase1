@@ -4,13 +4,13 @@ namespace Atendimento.Application.Services.Interfaces
 {
     public interface IClienteService
     {
-        Task<ClienteResponseDTO?> ObterPorIdAsync(int id);
-        Task<ClienteResponseDTO?> ObterPorNumeroDocumentoAsync(string numeroDocumento);
-        Task<IEnumerable<ClienteResponseDTO>> ObterTodosAsync();
-        Task<IEnumerable<ClienteResponseDTO>> ObterPorIdsAsync(IEnumerable<int> ids);
-        Task<int> CriarAsync(ClienteRequestDTO dto);
-        Task<bool> AtualizarAsync(int id, ClienteRequestDTO dto);
+        Task<ClienteResponseDto?> ObterPorIdAsync(int id);
+        Task<ClienteResponseDto?> ObterPorNumeroDocumentoAsync(string numeroDocumento);
+        Task<IEnumerable<ClienteResponseDto>> ObterTodosAsync();
+        Task<IEnumerable<ClienteResponseDto>> ObterPorIdsAsync(IEnumerable<int> ids);
+        Task<int> CriarAsync(ClienteRequestDto dto);
+        Task<bool> AtualizarAsync(int id, ClienteRequestDto dto);
         Task<bool> ExcluirAsync(int id);
-        Task<bool> ResponderOrcamentoAsync(int clienteId, int ordemServicoId, ResponderOrcamentoDTO dto);
+        Task<bool> ResponderOrcamentoAsync(int clienteId, int ordemServicoId, ResponderOrcamentoDto dto);
     }
 }

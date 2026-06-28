@@ -31,7 +31,7 @@ namespace Catalogo.Presentation.Controllers
         [HttpPost]
         [Authorize(Roles = "Adm")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> Create([FromBody] PecaRequestDTO dto)
+        public async Task<IActionResult> Create([FromBody] PecaRequestDto dto)
         {
             var id = await _service.CriarAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
@@ -40,7 +40,7 @@ namespace Catalogo.Presentation.Controllers
         [HttpPut("{id:int}")]
         [Authorize(Roles = "Adm")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> Update(int id, [FromBody] PecaRequestDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] PecaRequestDto dto)
         {
             if (!await _service.AtualizarAsync(id, dto)) return NotFound();
             return Ok(dto);

@@ -1,6 +1,6 @@
 ﻿namespace Catalogo.Application.DTOs
 {
-    public class ServicoRequestDTO
+    public class ServicoRequestDto
     {
         public string Nome { get; set; } = string.Empty;
         public decimal PrecoVenda { get; set; }

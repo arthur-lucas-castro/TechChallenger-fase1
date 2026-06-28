@@ -37,7 +37,7 @@ namespace Atendimento.Presentation.Controllers
 
         [HttpPost]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> Create([FromBody] VeiculoRequestDTO dto)
+        public async Task<IActionResult> Create([FromBody] VeiculoRequestDto dto)
         {
             var id = await _service.CriarAsync(dto);
             return CreatedAtAction(nameof(GetById), new { id }, new { id });
@@ -45,7 +45,7 @@ namespace Atendimento.Presentation.Controllers
 
         [HttpPut("{id:int}")]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> Update(int id, [FromBody] VeiculoRequestDTO dto)
+        public async Task<IActionResult> Update(int id, [FromBody] VeiculoRequestDto dto)
         {
             if (!await _service.AtualizarAsync(id, dto)) return NotFound();
             return Ok(dto);

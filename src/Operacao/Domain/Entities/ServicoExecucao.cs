@@ -3,7 +3,7 @@ using Compartilhado.Domain.ValueObjects;
 
 namespace Operacao.Domain.Entities
 {
-    public class ServicoExecucao : EntidadeBase<ServicoExecucao>
+    public class ServicoExecucao : EntidadeBase
     {
         public int ServicoSolicitadoId { get; set; }
         public StatusServicoExecucao Status { get; set; }

@@ -1,4 +1,4 @@
-using Catalogo.Application.DTOs;
+﻿using Catalogo.Application.DTOs;
 using Catalogo.Application.Services;
 using Catalogo.Domain.Entities;
 using Catalogo.Domain.Interfaces;
@@ -44,7 +44,7 @@ public class PecaServiceTests
     // --- Queries CRUD ---
 
     [Fact]
-    public async Task ObterPorIdAsync_PecaExiste_RetornaDTO()
+    public async Task ObterPorIdAsync_PecaExiste_RetornaDto()
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(CriarPeca(1));
@@ -89,7 +89,7 @@ public class PecaServiceTests
     public async Task CriarAsync_ChamaInsertComEntidadeCorreta()
     {
         // Arrange
-        var dto = new PecaRequestDTO
+        var dto = new PecaRequestDto
         {
             Nome = "Vela de Ignição", Descricao = "Vela NGK",
             Custo = 12.00m, PrecoVenda = 25.00m
@@ -110,7 +110,7 @@ public class PecaServiceTests
     public async Task AtualizarAsync_PecaExiste_RetornaTrue()
     {
         // Arrange
-        var dto = new PecaRequestDTO { Nome = "Filtro", Descricao = "X", Custo = 5m, PrecoVenda = 10m };
+        var dto = new PecaRequestDto { Nome = "Filtro", Descricao = "X", Custo = 5m, PrecoVenda = 10m };
         _repositorioMock.Setup(r => r.UpdateAsync(It.IsAny<Peca>())).ReturnsAsync(true);
 
         // Act
@@ -124,7 +124,7 @@ public class PecaServiceTests
     public async Task AtualizarAsync_PecaNaoExiste_RetornaFalse()
     {
         // Arrange
-        var dto = new PecaRequestDTO { Nome = "Filtro", Descricao = "X", Custo = 5m, PrecoVenda = 10m };
+        var dto = new PecaRequestDto { Nome = "Filtro", Descricao = "X", Custo = 5m, PrecoVenda = 10m };
         _repositorioMock.Setup(r => r.UpdateAsync(It.IsAny<Peca>())).ReturnsAsync(false);
 
         // Act
@@ -151,7 +151,7 @@ public class PecaServiceTests
     // --- ObterEstoqueTodosAsync ---
 
     [Fact]
-    public async Task ObterEstoqueTodosAsync_PecaSemEstoque_RetornaNullsNoDTO()
+    public async Task ObterEstoqueTodosAsync_PecaSemEstoque_RetornaNullsNoDto()
     {
         // Arrange — peça sem ProdutoEstoque associado
         var pecas = new List<Peca> { CriarPeca(1, estoque: null) };
@@ -191,7 +191,7 @@ public class PecaServiceTests
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdComEstoqueAsync(99)).ReturnsAsync((Peca?)null);
-        var dto = new EntradaEstoqueRequestDTO { PecaId = 99, Quantidade = 5, PrecoCusto = 10m };
+        var dto = new EntradaEstoqueRequestDto { PecaId = 99, Quantidade = 5, PrecoCusto = 10m };
 
         // Act & Assert
         await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.AdicionarEstoqueAsync(dto));
@@ -205,7 +205,7 @@ public class PecaServiceTests
         _repositorioMock.Setup(r => r.GetByIdComEstoqueAsync(1)).ReturnsAsync(peca);
         _repositorioMock.Setup(r => r.InsertProdutoEstoqueAsync(It.IsAny<ProdutoEstoque>()))
             .Returns(Task.CompletedTask);
-        var dto = new EntradaEstoqueRequestDTO { PecaId = 1, Quantidade = 10, PrecoCusto = 5m };
+        var dto = new EntradaEstoqueRequestDto { PecaId = 1, Quantidade = 10, PrecoCusto = 5m };
 
         // Act
         await _service.AdicionarEstoqueAsync(dto);
@@ -224,7 +224,7 @@ public class PecaServiceTests
         _repositorioMock.Setup(r => r.GetByIdComEstoqueAsync(1)).ReturnsAsync(peca);
         _repositorioMock.Setup(r => r.UpdateProdutoEstoqueAsync(It.IsAny<ProdutoEstoque>()))
             .ReturnsAsync(true);
-        var dto = new EntradaEstoqueRequestDTO { PecaId = 1, Quantidade = 5, PrecoCusto = 8m };
+        var dto = new EntradaEstoqueRequestDto { PecaId = 1, Quantidade = 5, PrecoCusto = 8m };
 
         // Act
         await _service.AdicionarEstoqueAsync(dto);
@@ -242,7 +242,7 @@ public class PecaServiceTests
         _repositorioMock.Setup(r => r.GetByIdComEstoqueAsync(1)).ReturnsAsync(peca);
         _repositorioMock.Setup(r => r.InsertProdutoEstoqueAsync(It.IsAny<ProdutoEstoque>()))
             .Returns(Task.CompletedTask);
-        var dto = new EntradaEstoqueRequestDTO { PecaId = 1, Quantidade = 10, PrecoCusto = 5m };
+        var dto = new EntradaEstoqueRequestDto { PecaId = 1, Quantidade = 10, PrecoCusto = 5m };
 
         // Act
         var resultado = await _service.AdicionarEstoqueAsync(dto);
@@ -259,7 +259,7 @@ public class PecaServiceTests
     {
         // Arrange
         _repositorioMock.Setup(r => r.GetByIdComEstoqueAsync(99)).ReturnsAsync((Peca?)null);
-        var dto = new BaixaEstoqueRequestDTO { PecaId = 99, Quantidade = 1 };
+        var dto = new BaixaEstoqueRequestDto { PecaId = 99, Quantidade = 1 };
 
         // Act
         var resultado = await _service.DarBaixaAsync(dto);
@@ -282,7 +282,7 @@ public class PecaServiceTests
             .ReturnsAsync(true);
         _dispatcherMock.Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new BaixaEstoqueRequestDTO { PecaId = 1, Quantidade = 3 };
+        var dto = new BaixaEstoqueRequestDto { PecaId = 1, Quantidade = 3 };
 
         // Act
         await _service.DarBaixaAsync(dto);
@@ -301,7 +301,7 @@ public class PecaServiceTests
         _repositorioMock.Setup(r => r.UpdateProdutoEstoqueAsync(It.IsAny<ProdutoEstoque>())).ReturnsAsync(true);
         _dispatcherMock.Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new BaixaEstoqueRequestDTO { PecaId = 1, Quantidade = 3 };
+        var dto = new BaixaEstoqueRequestDto { PecaId = 1, Quantidade = 3 };
 
         // Act
         await _service.DarBaixaAsync(dto);
@@ -322,7 +322,7 @@ public class PecaServiceTests
         _repositorioMock.Setup(r => r.UpdateProdutoEstoqueAsync(It.IsAny<ProdutoEstoque>())).ReturnsAsync(true);
         _dispatcherMock.Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new BaixaEstoqueRequestDTO { PecaId = 1, Quantidade = 3 };
+        var dto = new BaixaEstoqueRequestDto { PecaId = 1, Quantidade = 3 };
 
         // Act
         await _service.DarBaixaAsync(dto);
@@ -341,7 +341,7 @@ public class PecaServiceTests
         _repositorioMock.Setup(r => r.UpdateProdutoEstoqueAsync(It.IsAny<ProdutoEstoque>())).ReturnsAsync(true);
         _dispatcherMock.Setup(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()))
             .Returns(Task.CompletedTask);
-        var dto = new BaixaEstoqueRequestDTO { PecaId = 1, Quantidade = 3 };
+        var dto = new BaixaEstoqueRequestDto { PecaId = 1, Quantidade = 3 };
 
         // Act
         var resultado = await _service.DarBaixaAsync(dto);

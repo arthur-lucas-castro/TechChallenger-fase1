@@ -11,6 +11,8 @@ namespace Compartilhado.Infrastructure.Repositories
 {
     public class AppDbContext : DbContext
     {
+        private const string NumericDecimal = "numeric(10,2)";
+
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Usuario> Usuario { get; set; }
@@ -62,17 +64,17 @@ namespace Compartilhado.Infrastructure.Repositories
             {
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
             });
 
             modelBuilder.Entity<Peca>(b =>
             {
                 b.Property(x => x.Custo)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
             });
 
             modelBuilder.Entity<OrdemServico>(b =>
@@ -92,7 +94,7 @@ namespace Compartilhado.Infrastructure.Repositories
             {
                 b.Property(x => x.PrecoTotal)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
                 b.Property(x => x.Status)
                     .HasConversion<string>()
                     .HasMaxLength(20);
@@ -102,7 +104,7 @@ namespace Compartilhado.Infrastructure.Repositories
             {
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
                 b.HasOne(x => x.ServicoExecucao)
                     .WithOne()
                     .HasForeignKey<ServicoExecucao>(e => e.ServicoSolicitadoId);
@@ -119,7 +121,7 @@ namespace Compartilhado.Infrastructure.Repositories
             {
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
             });
 
 
@@ -128,7 +130,7 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.ToTable("produtoestoque");
                 b.Property(x => x.PrecoCustoMedio)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
-                    .HasColumnType("numeric(10,2)");
+                    .HasColumnType(NumericDecimal);
             });
         }
     }

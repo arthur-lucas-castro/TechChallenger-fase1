@@ -1,6 +1,6 @@
 ﻿namespace Operacao.Application.DTOs
 {
-    public class TempoExecucaoServicoResponseDTO
+    public class TempoExecucaoServicoResponseDto
     {
         public int ServicoId { get; set; }
         public string NomeServico { get; set; } = string.Empty;

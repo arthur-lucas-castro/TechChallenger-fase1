@@ -1,4 +1,4 @@
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using Compartilhado.Application.DTOs;
@@ -20,7 +20,7 @@ namespace Compartilhado.Application.Services
             _config = config;
         }
 
-        public async Task<LoginResponseDTO?> LoginAsync(LoginRequestDTO dto)
+        public async Task<LoginResponseDto?> LoginAsync(LoginRequestDto dto)
         {
             var usuario = await _repositorio.ObterPorEmailAsync(dto.Email.ToLowerInvariant());
             if (usuario is null || !BCrypt.Net.BCrypt.Verify(dto.Senha, usuario.SenhaHash))
@@ -50,7 +50,7 @@ namespace Compartilhado.Application.Services
                 expires: expiracao,
                 signingCredentials: new SigningCredentials(chave, SecurityAlgorithms.HmacSha256));
 
-            return new LoginResponseDTO
+            return new LoginResponseDto
             {
                 Token = new JwtSecurityTokenHandler().WriteToken(token),
                 Expiracao = expiracao,
