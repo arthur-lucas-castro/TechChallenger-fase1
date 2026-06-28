@@ -1,5 +1,0 @@
-﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Atendimento\Application\DTOs\ClienteRequestDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Atendimento\Application\DTOs\ClienteResponseDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Atendimento\Application\DTOs\ResponderOrcamentoDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Atendimento\Application\DTOs\VeiculoRequestDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Atendimento\Application\DTOs\VeiculoResponseDTO.cs

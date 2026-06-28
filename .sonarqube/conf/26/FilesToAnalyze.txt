@@ -1,2 +1,0 @@
-﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Presentation\Controllers\OrdemServicoController.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Presentation\Controllers\StatusOrdemServicoController.cs

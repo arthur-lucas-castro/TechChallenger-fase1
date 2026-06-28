@@ -1,4 +1,0 @@
-﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Domain\Entities\Events\EstoqueAbaixoMinimoEvent.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Domain\Entities\Events\EstoqueBaixaRealizadaEvent.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Domain\Entities\Peca.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Domain\Entities\Servico.cs

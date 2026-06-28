@@ -1,4 +1,0 @@
-﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Application\DTOs\LoginRequestDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Application\DTOs\LoginResponseDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Application\Services\AuthService.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Application\Services\Interfaces\IAuthService.cs

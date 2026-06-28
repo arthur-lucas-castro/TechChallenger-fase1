@@ -1,8 +1,0 @@
-﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\Dinheiro.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\Email.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\StatusOrcamento.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\StatusOrdemServico.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\StatusServicoExecucao.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\Telefone.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\TipoPessoa.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\ValueObjects\TipoUsuario.cs

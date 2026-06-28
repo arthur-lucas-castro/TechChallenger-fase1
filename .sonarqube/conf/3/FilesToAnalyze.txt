@@ -1,7 +1,0 @@
-﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\AlterarStatusOrdemServicoDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\AlterarStatusServicoExecucaoDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\OrdemServicoRequestDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\OrdemServicoResponseDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\PecaSolicitadaRequestDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\ServicoSolicitadoRequestDTO.cs
-C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\DTOs\TempoExecucaoServicoResponseDTO.cs
