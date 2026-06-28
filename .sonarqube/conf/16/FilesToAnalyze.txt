@@ -1,0 +1,7 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\Events\EstoqueAbaixoMinimoHandler.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\Events\EstoqueBaixaRealizadaHandler.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\Events\OrdemServicoIniciadaHandler.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\Interfaces\IPecaService.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\Interfaces\IServicoService.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\PecaService.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\Services\ServicoService.cs

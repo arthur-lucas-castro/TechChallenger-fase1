@@ -1,0 +1,8 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\EntidadeBase.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\Exceptions\DomainException.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\IAggregateRoot.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\IDomainEvent.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\IDomainEventDispatcher.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\IDomainEventHandler.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\Interfaces\IUsuarioRepositorio.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Compartilhado\Domain\Entities\Usuario.cs

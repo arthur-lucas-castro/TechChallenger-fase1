@@ -1,0 +1,3 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\Services\Events\OrcamentoRespondidoHandler.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\Services\Interfaces\IOrdemServicoService.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Operacao\Application\Services\OrdemServicoService.cs

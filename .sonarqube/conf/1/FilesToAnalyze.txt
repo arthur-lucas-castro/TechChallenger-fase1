@@ -1,0 +1,8 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\BaixaEstoqueRequestDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\EntradaEstoqueRequestDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\EstoqueComPecaResponseDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\EstoqueResponseDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\PecaRequestDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\PecaResponseDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\ServicoRequestDTO.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Application\DTOs\ServicoResponseDTO.cs

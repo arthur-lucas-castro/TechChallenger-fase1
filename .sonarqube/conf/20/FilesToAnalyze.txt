@@ -1,0 +1,3 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Presentation\Controllers\EstoqueController.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Presentation\Controllers\PecaController.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Presentation\Controllers\ServicoController.cs

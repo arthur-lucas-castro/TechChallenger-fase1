@@ -1,0 +1,13 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\Application\Services\Events\OrdemServicoIniciadaHandlerTests.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\Application\Services\PecaServiceTests.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\Application\Services\ServicoServiceTests.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\Compartilhado\ValueObjects\DinheiroTests.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\Domain\Entities\PecaTests.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\Domain\ValueObjects\ProdutoEstoqueTests.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Testes\TestesDeUnidade\Catalogo.Tests\GlobalUsings.cs
+C:\Users\arthu\.nuget\packages\microsoft.net.test.sdk\17.12.0\build\netcoreapp3.1\Microsoft.NET.Test.Sdk.Program.cs
+C:\Users\arthu\.nuget\packages\microsoft.testplatform.testhost\17.12.0\build\netcoreapp3.1\x64\testhost.exe
+C:\Users\arthu\.nuget\packages\microsoft.testplatform.testhost\17.12.0\build\netcoreapp3.1\x64\testhost.dll
+C:\Users\arthu\.nuget\packages\xunit.runner.visualstudio\2.8.2\build\net6.0\xunit.runner.visualstudio.testadapter.dll
+C:\Users\arthu\.nuget\packages\xunit.runner.visualstudio\2.8.2\build\net6.0\xunit.runner.reporters.netcoreapp10.dll
+C:\Users\arthu\.nuget\packages\xunit.runner.visualstudio\2.8.2\build\net6.0\xunit.runner.utility.netcoreapp10.dll

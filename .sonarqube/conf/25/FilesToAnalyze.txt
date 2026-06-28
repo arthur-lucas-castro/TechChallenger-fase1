@@ -1,0 +1,2 @@
+﻿C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Infrastructure\Repositories\PecaRepositorio.cs
+C:\Users\arthu\source\repos\TechChallenger-fase1\src\Catalogo\Infrastructure\Repositories\ServicoRepositorio.cs

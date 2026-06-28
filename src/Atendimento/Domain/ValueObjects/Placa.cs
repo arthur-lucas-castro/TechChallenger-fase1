@@ -5,8 +5,8 @@ namespace Atendimento.Domain.ValueObjects
     public record Placa
     {
 
-        private static readonly Regex _padraoAntigo   = new(@"^[A-Z]{3}\d{4}$",       RegexOptions.Compiled);
-        private static readonly Regex _padraoMercosul = new(@"^[A-Z]{3}\d[A-Z]\d{2}$", RegexOptions.Compiled);
+        private static readonly Regex _padraoAntigo   = new(@"^[A-Z]{3}\d{4}$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
+        private static readonly Regex _padraoMercosul = new(@"^[A-Z]{3}\d[A-Z]\d{2}$", RegexOptions.Compiled, TimeSpan.FromMilliseconds(100));
 
         public string Valor { get; }
 
