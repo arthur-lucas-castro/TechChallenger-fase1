@@ -22,6 +22,7 @@
     <ProjectReference Include="..\..\Catalogo\Presentation\Controllers\Catalogo.Presentation.Controllers.csproj" />
     <ProjectReference Include="..\..\Catalogo\Infrastructure\Repositories\Catalogo.Infrastructure.Repositories.csproj" />
     <ProjectReference Include="..\..\Compartilhado\Application\Compartilhado.Application.csproj" />
+    <ProjectReference Include="..\..\Compartilhado\Presentation\Compartilhado.Presentation.csproj" />
   </ItemGroup>
 
 </Project>

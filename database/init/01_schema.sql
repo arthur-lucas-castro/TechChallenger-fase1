@@ -17,8 +17,8 @@ CREATE TABLE Veiculo (
 );
 
 CREATE TABLE ClienteVeiculo (
-    ClienteId  INTEGER NOT NULL REFERENCES Cliente(Id),
-    VeiculoId  INTEGER NOT NULL REFERENCES Veiculo(Id),
+    ClienteId  INTEGER NOT NULL REFERENCES Cliente(Id) ON DELETE CASCADE,
+    VeiculoId  INTEGER NOT NULL REFERENCES Veiculo(Id) ON DELETE CASCADE,
     PRIMARY KEY (ClienteId, VeiculoId)
 );
 
@@ -39,7 +39,7 @@ CREATE TABLE Peca (
 
 CREATE TABLE ProdutoEstoque (
     Id               SERIAL PRIMARY KEY,
-    PecaId           INTEGER        NOT NULL REFERENCES Peca(Id),
+    PecaId           INTEGER        NOT NULL REFERENCES Peca(Id) ON DELETE CASCADE,
     QuantidadeAtual  INTEGER        NOT NULL DEFAULT 0,
     QuantidadeMinima INTEGER        NOT NULL,
     PrecoCustoMedio  DECIMAL(10, 2) NOT NULL
@@ -56,8 +56,8 @@ CREATE TYPE status_ordem_servico AS ENUM (
 
 CREATE TABLE OrdemServico (
     Id                   SERIAL PRIMARY KEY,
-    VeiculoId            INTEGER     NOT NULL REFERENCES Veiculo(Id),
-    ClienteId            INTEGER     NOT NULL REFERENCES Cliente(Id),
+    VeiculoId            INTEGER     NOT NULL REFERENCES Veiculo(Id) ON DELETE CASCADE,
+    ClienteId            INTEGER     NOT NULL REFERENCES Cliente(Id) ON DELETE CASCADE,
     Status               status_ordem_servico NOT NULL,
     DataUltimaAlteracao  TIMESTAMP,
     DataCriacao          TIMESTAMP   NOT NULL,
@@ -66,8 +66,8 @@ CREATE TABLE OrdemServico (
 
 CREATE TABLE ServicoSolicitado (
     Id               SERIAL PRIMARY KEY,
-    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
-    ServicoId        INTEGER        NOT NULL REFERENCES Servico(Id),
+    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id) ON DELETE CASCADE,
+    ServicoId        INTEGER        NOT NULL REFERENCES Servico(Id) ON DELETE CASCADE,
     Quantidade       INTEGER        NOT NULL,
     PrecoVenda       DECIMAL(10, 2) NOT NULL
 );
@@ -75,8 +75,8 @@ CREATE TABLE ServicoSolicitado (
 
 CREATE TABLE PecaSolicitada (
     Id               SERIAL PRIMARY KEY,
-    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
-    PecaId           INTEGER        NOT NULL REFERENCES Peca(Id),
+    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id) ON DELETE CASCADE,
+    PecaId           INTEGER        NOT NULL REFERENCES Peca(Id) ON DELETE CASCADE,
     Quantidade       INTEGER        NOT NULL,
     Nome             VARCHAR(100)   NOT NULL,
     PrecoVenda       DECIMAL(10, 2) NOT NULL
@@ -84,7 +84,7 @@ CREATE TABLE PecaSolicitada (
 
 CREATE TABLE ServicoExecucao (
     Id                   SERIAL PRIMARY KEY,
-    ServicoSolicitadoId  INTEGER      NOT NULL REFERENCES ServicoSolicitado(Id),
+    ServicoSolicitadoId  INTEGER      NOT NULL REFERENCES ServicoSolicitado(Id) ON DELETE CASCADE,
     Status               VARCHAR(20)  NOT NULL,
     DataInicio           TIMESTAMP,
     DataFinalizacao      TIMESTAMP
@@ -92,7 +92,7 @@ CREATE TABLE ServicoExecucao (
 
 CREATE TABLE Orcamento (
     Id               SERIAL PRIMARY KEY,
-    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id),
+    OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id) ON DELETE CASCADE,
     PrecoTotal       DECIMAL(10, 2) NOT NULL,
     Status           VARCHAR(10)    NOT NULL,
     DataCriacao      TIMESTAMP      NOT NULL,

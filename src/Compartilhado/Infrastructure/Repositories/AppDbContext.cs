@@ -77,19 +77,26 @@ namespace Compartilhado.Infrastructure.Repositories
                 b.Property(x => x.PrecoVenda)
                     .HasConversion(v => v.Valor, v => new Dinheiro(v))
                     .HasColumnType(NumericDecimal);
+                b.HasOne(x => x.ProdutoEstoque)
+                    .WithOne()
+                    .HasForeignKey<ProdutoEstoque>(e => e.PecaId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<OrdemServico>(b =>
             {
                 b.HasMany(x => x.ServicosSolicitados)
                     .WithOne()
-                    .HasForeignKey(s => s.OrdemServicoId);
+                    .HasForeignKey(s => s.OrdemServicoId)
+                    .OnDelete(DeleteBehavior.Cascade);
                 b.HasMany(x => x.PecasSolicitadas)
                     .WithOne()
-                    .HasForeignKey(p => p.OrdemServicoId);
+                    .HasForeignKey(p => p.OrdemServicoId)
+                    .OnDelete(DeleteBehavior.Cascade);
                 b.HasOne(x => x.Orcamento)
                     .WithOne()
-                    .HasForeignKey<Orcamento>(o => o.OrdemServicoId);
+                    .HasForeignKey<Orcamento>(o => o.OrdemServicoId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Orcamento>(b =>
@@ -109,7 +116,8 @@ namespace Compartilhado.Infrastructure.Repositories
                     .HasColumnType(NumericDecimal);
                 b.HasOne(x => x.ServicoExecucao)
                     .WithOne()
-                    .HasForeignKey<ServicoExecucao>(e => e.ServicoSolicitadoId);
+                    .HasForeignKey<ServicoExecucao>(e => e.ServicoSolicitadoId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<ServicoExecucao>(b =>
