@@ -16,6 +16,7 @@ namespace Operacao.Application.Services.Interfaces
         Task<bool> RemoverPecaAsync(int ordemServicoId, int pecaId);
         Task<bool> IniciarDiagnosticoAsync(int id);
         Task<bool> FinalizarDiagnosticoAsync(int id);
+        Task<bool> ConfirmarPagamentoAsync(int id);
         Task<bool> IniciarServicoAsync(int ordemServicoId, int servicoSolicitadoId);
         Task<bool> FinalizarServicoAsync(int ordemServicoId, int servicoSolicitadoId);
         Task<IEnumerable<TempoExecucaoServicoResponseDto>> ObterTemposExecucaoPorServicoAsync();

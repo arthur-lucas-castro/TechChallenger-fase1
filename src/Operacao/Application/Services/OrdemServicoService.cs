@@ -236,6 +236,15 @@ namespace Operacao.Application.Services
             return await _repositorio.CommitAsync();
         }
 
+        public async Task<bool> ConfirmarPagamentoAsync(int id)
+        {
+            var os = await _repositorio.GetByIdAsync(id);
+            if (os is null) return false;
+
+            os.EntregarVeiculo();
+            return await _repositorio.CommitAsync();
+        }
+
         public async Task<bool> IniciarDiagnosticoAsync(int id)
         {
             var os = await _repositorio.GetByIdAsync(id);

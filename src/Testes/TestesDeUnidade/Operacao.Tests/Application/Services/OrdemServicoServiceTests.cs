@@ -844,6 +844,65 @@ public class OrdemServicoServiceTests
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
     }
 
+    // ── ConfirmarPagamentoAsync ──────────────────────────────────────────────
+
+    [Fact]
+    public async Task ConfirmarPagamentoAsync_OrdemNaoEncontrada_RetornaFalse()
+    {
+        // Arrange
+        _repositorioMock.Setup(r => r.GetByIdAsync(99)).ReturnsAsync((OrdemServico?)null);
+
+        // Act
+        var resultado = await _service.ConfirmarPagamentoAsync(99);
+
+        // Assert
+        Assert.False(resultado);
+        _repositorioMock.Verify(r => r.CommitAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task ConfirmarPagamentoAsync_OrdemFinalizada_AlteraStatusParaEntregue()
+    {
+        // Arrange — Finalizada → Entregue
+        var os = CriarOrdemFinalizada(1);
+        _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(os);
+        _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+
+        // Act
+        await _service.ConfirmarPagamentoAsync(1);
+
+        // Assert
+        Assert.Equal(StatusOrdemServico.Entregue, os.Status);
+    }
+
+    [Fact]
+    public async Task ConfirmarPagamentoAsync_Sucesso_ChamaCommit()
+    {
+        // Arrange
+        var os = CriarOrdemFinalizada(1);
+        _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(os);
+        _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+
+        // Act
+        var resultado = await _service.ConfirmarPagamentoAsync(1);
+
+        // Assert
+        Assert.True(resultado);
+        _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
+    }
+
+    [Fact]
+    public async Task ConfirmarPagamentoAsync_OrdemNaoFinalizada_LancaTransicaoStatusInvalidaException()
+    {
+        // Arrange — ordem em Recebida não pode ir para Entregue diretamente
+        var os = CriarOrdemRecebida(1);
+        _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(os);
+
+        // Act & Assert
+        await Assert.ThrowsAsync<Operacao.Domain.Excecoes.TransicaoStatusInvalidaException>(() =>
+            _service.ConfirmarPagamentoAsync(1));
+    }
+
     // ── AplicarTransicaoStatus — branches faltantes ──────────────────────────
 
     [Fact]

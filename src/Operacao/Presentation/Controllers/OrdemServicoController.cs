@@ -75,6 +75,13 @@ namespace Operacao.Presentation.Controllers
             return NoContent();
         }
 
+        [HttpPost("{id:int}/confirmar-pagamento")]
+        public async Task<IActionResult> ConfirmarPagamento(int id)
+        {
+            if (!await _service.ConfirmarPagamentoAsync(id)) return NotFound();
+            return NoContent();
+        }
+
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {
