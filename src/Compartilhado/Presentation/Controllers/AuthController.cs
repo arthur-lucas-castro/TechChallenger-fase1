@@ -12,6 +12,8 @@ namespace Compartilhado.Presentation.Controllers
 
         public AuthController(IAuthService service) => _service = service;
 
+        /// <summary>Autentica um usuário e retorna o token JWT.</summary>
+        /// <param name="dto">Credenciais de acesso: <c>email</c> e <c>senha</c>.</param>
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequestDto dto)
         {
