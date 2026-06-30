@@ -40,8 +40,11 @@ namespace Compartilhado.Application.Services
                 new Claim(ClaimTypes.Role, usuario.Tipo.ToString())
             };
 
+            var secretKey = _config["Jwt:SecretKey"]
+                ?? Environment.GetEnvironmentVariable("Jwt__SecretKey")
+                ?? string.Empty;
             var chave = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes(_config["Jwt:SecretKey"]!));
+                Encoding.UTF8.GetBytes(secretKey));
 
             var token = new JwtSecurityToken(
                 issuer: _config["Jwt:Issuer"],
