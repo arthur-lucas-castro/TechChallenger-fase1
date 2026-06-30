@@ -32,6 +32,14 @@ using Compartilhado.Domain.ValueObjects;
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
+string[] swaggerXmlFiles =
+[
+    "Compartilhado.Presentation.xml",
+    "Atendimento.Presentation.Controllers.xml",
+    "Catalogo.Presentation.Controllers.xml",
+    "Operacao.Presentation.Controllers.xml",
+];
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers()
@@ -47,14 +55,7 @@ builder.Services.AddSwaggerGen(options =>
         return groupName == docName;
     });
 
-    var xmlFiles = new[]
-    {
-        "Compartilhado.Presentation.xml",
-        "Atendimento.Presentation.Controllers.xml",
-        "Catalogo.Presentation.Controllers.xml",
-        "Operacao.Presentation.Controllers.xml",
-    };
-    foreach (var xmlFile in xmlFiles)
+    foreach (var xmlFile in swaggerXmlFiles)
     {
         var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
         if (File.Exists(xmlPath))
@@ -149,4 +150,4 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-app.Run();
+await app.RunAsync();

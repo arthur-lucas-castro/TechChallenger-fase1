@@ -967,6 +967,116 @@ public class OrdemServicoServiceTests
             _service.AlterarStatusAsync(1, new AlterarStatusOrdemServicoDto { Status = "Recebida" }));
     }
 
+    // ── ObterDetalhadoPorIdAsync — cliente/veiculo nulos e pecas ────────────
+
+    [Fact]
+    public async Task ObterDetalhadoPorIdAsync_ClienteNaoEncontrado_CamposClienteNulos()
+    {
+        // Arrange — cliente service retorna null; nullable access cliente?.Nome deve resultar em null
+        var os = CriarOrdemRecebida(1);
+        _repositorioMock.Setup(r => r.GetByIdDetalhadoAsync(1)).ReturnsAsync(os);
+        _clienteServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync((ClienteResponseDto?)null);
+        _veiculoServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new VeiculoResponseDto());
+
+        // Act
+        var resultado = await _service.ObterDetalhadoPorIdAsync(1);
+
+        // Assert
+        Assert.NotNull(resultado);
+        Assert.Null(resultado.NomeCliente);
+        Assert.Null(resultado.SobrenomeCliente);
+        Assert.Null(resultado.EmailCliente);
+        Assert.Null(resultado.TelefoneCliente);
+        Assert.Null(resultado.DocumentoCliente);
+    }
+
+    [Fact]
+    public async Task ObterDetalhadoPorIdAsync_VeiculoNaoEncontrado_CamposVeiculoNulos()
+    {
+        // Arrange — veiculo service retorna null; nullable access veiculo?.Modelo deve resultar em null
+        var os = CriarOrdemRecebida(1);
+        _repositorioMock.Setup(r => r.GetByIdDetalhadoAsync(1)).ReturnsAsync(os);
+        _clienteServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new ClienteResponseDto());
+        _veiculoServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync((VeiculoResponseDto?)null);
+
+        // Act
+        var resultado = await _service.ObterDetalhadoPorIdAsync(1);
+
+        // Assert
+        Assert.NotNull(resultado);
+        Assert.Null(resultado.ModeloVeiculo);
+        Assert.Null(resultado.MarcaVeiculo);
+        Assert.Null(resultado.AnoVeiculo);
+        Assert.Null(resultado.PlacaVeiculo);
+    }
+
+    [Fact]
+    public async Task ObterDetalhadoPorIdAsync_ComPecas_MapeiaListaDePecas()
+    {
+        // Arrange — ordem com peça adicionada; branch PecasSolicitadas.Select(...)
+        var os = CriarOrdemRecebida(1);
+        os.AdicionarPeca(pecaId: 7, "Filtro de Óleo", quantidade: 2, new Dinheiro(45m));
+        _repositorioMock.Setup(r => r.GetByIdDetalhadoAsync(1)).ReturnsAsync(os);
+        _clienteServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new ClienteResponseDto());
+        _veiculoServiceMock.Setup(s => s.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(new VeiculoResponseDto());
+
+        // Act
+        var resultado = await _service.ObterDetalhadoPorIdAsync(1);
+
+        // Assert
+        Assert.NotNull(resultado);
+        Assert.Single(resultado.Pecas);
+        Assert.Equal(7, resultado.Pecas[0].PecaId);
+        Assert.Equal("Filtro de Óleo", resultado.Pecas[0].Nome);
+        Assert.Equal(2, resultado.Pecas[0].Quantidade);
+        Assert.Equal(45m, resultado.Pecas[0].PrecoVenda);
+    }
+
+    // ── ObterTodosAsync — branches independentes de cliente e veiculo ────────
+
+    [Fact]
+    public async Task ObterTodosAsync_SoClienteEncontrado_MantemCamposVeiculoNulos()
+    {
+        // Arrange — TryGetValue para cliente retorna true, para veiculo retorna false
+        var ordens = new List<OrdemServico> { CriarOrdemRecebida(1) };
+        _repositorioMock.Setup(r => r.GetAllAsync()).ReturnsAsync(ordens);
+        _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
+            .ReturnsAsync([new ClienteResponseDto { Id = 20, Nome = "Ana", Sobrenome = "Lima" }]);
+        _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
+            .ReturnsAsync([]);
+
+        // Act
+        var resultado = (await _service.ObterTodosAsync()).ToList();
+
+        // Assert
+        Assert.Single(resultado);
+        Assert.Equal("Ana", resultado[0].NomeCliente);
+        Assert.Null(resultado[0].ModeloVeiculo);
+        Assert.Null(resultado[0].MarcaVeiculo);
+    }
+
+    [Fact]
+    public async Task ObterTodosAsync_SoVeiculoEncontrado_MantemCamposClienteNulos()
+    {
+        // Arrange — TryGetValue para veiculo retorna true, para cliente retorna false
+        var ordens = new List<OrdemServico> { CriarOrdemRecebida(1) };
+        _repositorioMock.Setup(r => r.GetAllAsync()).ReturnsAsync(ordens);
+        _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
+            .ReturnsAsync([]);
+        _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
+            .ReturnsAsync([new VeiculoResponseDto { Id = 10, Modelo = "Onix", Marca = "Chevrolet" }]);
+
+        // Act
+        var resultado = (await _service.ObterTodosAsync()).ToList();
+
+        // Assert
+        Assert.Single(resultado);
+        Assert.Null(resultado[0].NomeCliente);
+        Assert.Null(resultado[0].SobrenomeCliente);
+        Assert.Equal("Onix", resultado[0].ModeloVeiculo);
+        Assert.Equal("Chevrolet", resultado[0].MarcaVeiculo);
+    }
+
     // ── ObterDetalhadoPorIdAsync — branches faltantes ────────────────────────
 
     [Fact]

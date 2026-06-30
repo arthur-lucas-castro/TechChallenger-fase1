@@ -8,6 +8,11 @@ namespace Compartilhado.Presentation.Middlewares
 {
     public class ExceptionMiddleware
     {
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
         private readonly RequestDelegate _next;
         private readonly ILogger<ExceptionMiddleware> _logger;
 
@@ -61,10 +66,7 @@ namespace Compartilhado.Presentation.Middlewares
                 erro = mensagem
             };
 
-            var json = JsonSerializer.Serialize(resposta, new JsonSerializerOptions
-            {
-                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-            });
+            var json = JsonSerializer.Serialize(resposta, _jsonOptions);
 
             await context.Response.WriteAsync(json);
         }

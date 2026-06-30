@@ -26,6 +26,7 @@ services:
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Default: "Host=postgres;Port=5432;Database=techchallenger;Username=postgres;Password=postgres"
+      Jwt__SecretKey: "TechChallengerSecretKey@2024!MustBe32CharsMin"
     depends_on:
       postgres:
         condition: service_healthy
