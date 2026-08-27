@@ -1,0 +1,99 @@
+# Postgres local para o cluster Minikube/Kind. Usa a mesma imagem custom do
+# projeto (database/Dockerfile: postgres:16-alpine + scripts de
+# database/init/*.sql), então o schema é criado automaticamente no primeiro
+# start — igual ao `docker-compose up database`.
+#
+# Deployment (não StatefulSet): réplica única de banco local não precisa de
+# identidade de rede estável nem de volumeClaimTemplates por pod; um
+# Deployment com strategy Recreate + uma PVC comum já garante que o pod novo
+# reusa os mesmos dados do pod antigo ao reiniciar.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-pvc
+  labels:
+    app: postgres
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: techchallenger-postgres:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: techchallenger-api-config # fornece POSTGRES_DB
+            - secretRef:
+                name: techchallenger-api-secret # fornece POSTGRES_USER / POSTGRES_PASSWORD
+          env:
+            # Evita erro de inicialização em alguns provisioners cujo
+            # diretório raiz do volume já vem com arquivos (ex: lost+found).
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          livenessProbe:
+            exec:
+              command: ["pg_isready", "-U", "$(POSTGRES_USER)", "-d", "$(POSTGRES_DB)"]
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            exec:
+              command: ["pg_isready", "-U", "$(POSTGRES_USER)", "-d", "$(POSTGRES_DB)"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgres
+spec:
+  type: ClusterIP
+  selector:
+    app: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP

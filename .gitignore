@@ -369,6 +369,9 @@ FodyWeavers.xsd
 appsettings.Development.json
 coverage/
 
+# Segredos do Kubernetes (mesmo valores fictícios de teste local não devem ser commitados)
+k8s/secret.yaml
+
 # Terraform
 **/.terraform/*
 *.tfstate

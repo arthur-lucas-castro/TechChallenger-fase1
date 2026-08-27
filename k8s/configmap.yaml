@@ -1,0 +1,22 @@
+# Variáveis não sensíveis lidas pela aplicação (Program.cs / appsettings.json).
+# Host, porta e nome do banco NÃO aparecem aqui: o app lê uma única
+# ConnectionStrings__Default já montada (ex: "Host=postgres-service;Port=5432;
+# Database=techchallenger;Username=postgres;Password=..."), que contém a senha
+# e por isso fica inteira no Secret (k8s/secret.yaml), não neste ConfigMap.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: techchallenger-api-config
+  labels:
+    app: techchallenger-api
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:8080"
+  Jwt__Issuer: "TechChallenger"
+  Jwt__Audience: "TechChallenger"
+  Jwt__ExpirationMinutes: "60"
+  # Nome do banco: não é sensível por si só, e é usado tanto pelo Postgres
+  # (POSTGRES_DB, ver k8s/database.yaml) quanto embutido na connection string
+  # do app (ConnectionStrings__Default, no Secret) — mantido aqui para os
+  # dois consumirem o mesmo valor sem duplicar.
+  POSTGRES_DB: "techchallenger"
