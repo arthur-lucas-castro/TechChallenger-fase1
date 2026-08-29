@@ -46,6 +46,23 @@ output "rds_endpoint" {
   value       = aws_db_instance.this.endpoint
 }
 
+output "db_name" {
+  description = "Nome do banco de dados no RDS."
+  value       = aws_db_instance.this.db_name
+}
+
+output "db_username" {
+  description = "Usuário administrador do RDS (sensível). Usado por infra/scripts/init-rds-schema.sh para aplicar o schema inicial."
+  value       = var.db_username
+  sensitive   = true
+}
+
+output "db_password" {
+  description = "Senha do usuário administrador do RDS (sensível). Usado por infra/scripts/init-rds-schema.sh para aplicar o schema inicial."
+  value       = var.db_password
+  sensitive   = true
+}
+
 # --- ECR ---
 
 output "ecr_repository_url" {

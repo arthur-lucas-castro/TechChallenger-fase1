@@ -1,0 +1,66 @@
+# Versão para EKS: imagem vem do ECR (não do registry local do Minikube/Kind)
+# e imagePullPolicy é Always para garantir que uma tag reaproveitada (ex: "latest"
+# ou uma tag de CI) sempre puxe a imagem mais recente do repositório.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techchallenger-api
+  labels:
+    app: techchallenger-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: techchallenger-api
+  template:
+    metadata:
+      labels:
+        app: techchallenger-api
+    spec:
+      containers:
+        - name: techchallenger-api
+          image: 575496830577.dkr.ecr.us-east-1.amazonaws.com/techchallenger-fase1:1.0.0
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: techchallenger-api-config
+            - secretRef:
+                name: techchallenger-api-secret
+          # Requests/limits mantidos iguais ao ambiente local: já são enxutos e
+          # cabem confortavelmente em um node t3.micro (1 vCPU / 1GiB RAM).
+          # Contas de referência para t3.micro:
+          #   - Allocatable real fica em ~700-800Mi de memória e ~940m de CPU
+          #     depois do kube-reserved/system-reserved da AMI do EKS
+          #     (o restante é consumido por kubelet, kube-proxy, aws-node/VPC CNI, etc).
+          #   - 2 réplicas x 128Mi/100m de request = 256Mi/200m no total, o que cabe
+          #     em um único t3.micro junto com os daemonsets do sistema — mas para
+          #     ter HA de verdade (sobreviver à perda de 1 node) você precisa de
+          #     pelo menos 2 nodes no node group, não só 2 réplicas.
+          #   - Os limits (256Mi/250m) evitam que um pod estoure a memória do node
+          #     sozinho; se no futuro adicionar HPA ou mais pods no mesmo node,
+          #     revise esses números com `kubectl top nodes/pods`.
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3

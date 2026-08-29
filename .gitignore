@@ -371,6 +371,7 @@ coverage/
 
 # Segredos do Kubernetes (mesmo valores fictícios de teste local não devem ser commitados)
 k8s/secret.yaml
+k8s/aws/secret.yaml
 
 # Terraform
 **/.terraform/*

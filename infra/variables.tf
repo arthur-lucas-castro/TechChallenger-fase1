@@ -53,9 +53,9 @@ variable "node_instance_types" {
 }
 
 variable "node_disk_size" {
-  description = "Tamanho do disco (GB) dos nodes do EKS. Default reduzido (10GB) por conta do limite de volumes EBS abaixo de 100GB no AWS Academy Learner Lab."
+  description = "Tamanho do disco (GB) dos nodes do EKS. Default 20GB: é o mínimo exigido pela AMI AL2023_x86_64_STANDARD usada pelos managed node groups do EKS, e ainda fica bem abaixo do limite de 100GB por volume EBS no AWS Academy Learner Lab."
   type        = number
-  default     = 10
+  default     = 20
 }
 
 variable "db_engine" {
@@ -101,15 +101,15 @@ variable "db_password" {
 }
 
 variable "db_allocated_storage" {
-  description = "Armazenamento inicial (GB) alocado para o RDS."
+  description = "Armazenamento inicial (GB) alocado para o RDS. Mínimo 20GB: é o piso exigido pela AWS para storage gp3 em instâncias Postgres."
   type        = number
-  default     = 5
+  default     = 20
 }
 
 variable "db_max_allocated_storage" {
-  description = "Limite superior (GB) para o storage autoscaling do RDS."
+  description = "Limite superior (GB) para o storage autoscaling do RDS. Mantido bem abaixo do limite de 100GB por volume EBS no AWS Academy Learner Lab."
   type        = number
-  default     = 20
+  default     = 50
 }
 
 variable "db_backup_retention_period" {

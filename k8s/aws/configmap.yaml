@@ -1,0 +1,16 @@
+# Versão para EKS + RDS. POSTGRES_DB foi removido: essa chave só existia para
+# o container do Postgres local (k8s/database.yaml) se auto-configurar via
+# envFrom. Como o RDS substitui esse Deployment, nada mais consome POSTGRES_DB
+# neste ambiente — o app só lê ConnectionStrings__Default (ver secret.yaml).
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: techchallenger-api-config
+  labels:
+    app: techchallenger-api
+data:
+  ASPNETCORE_ENVIRONMENT: "Development"
+  ASPNETCORE_URLS: "http://+:8080"
+  Jwt__Issuer: "TechChallenger"
+  Jwt__Audience: "TechChallenger"
+  Jwt__ExpirationMinutes: "60"
