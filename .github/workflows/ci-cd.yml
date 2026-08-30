@@ -47,10 +47,6 @@ jobs:
           --logger "trx;LogFileName=test-results.trx"
           --collect:"XPlat Code Coverage"
           --results-directory ./TestResults
-        # Se algum teste falhar, "dotnet test" retorna código de saída != 0,
-        # o que faz este step e o job falharem automaticamente. Como os jobs
-        # seguintes dependem deste via "needs", o GitHub Actions os pula
-        # automaticamente — não é necessária nenhuma configuração extra.
 
       - name: Publicar resumo dos testes no Job Summary
         uses: dorny/test-reporter@v1
@@ -82,9 +78,6 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # Extrai a versão a partir do nome da branch (ex: release/1.4.2 -> "1.4.2")
-      # em vez de usar o SHA do commit, já que agora o deploy é sempre feito a
-      # partir de uma branch de release versionada.
       - name: Extrair versão da release a partir da branch
         id: vars
         run: |
@@ -95,8 +88,7 @@ jobs:
             exit 1
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
-
-      # Credenciais temporárias do AWS Academy Learner Lab — ver aviso no topo do arquivo.
+     
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -144,7 +136,7 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      # Credenciais temporárias do AWS Academy Learner Lab — ver aviso no topo do arquivo.
+      
       - name: Configurar credenciais AWS
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -171,9 +163,13 @@ jobs:
       - name: Aplicar ConfigMap
         run: kubectl apply -f k8s/aws/configmap.yaml
 
-      - name: Aplicar Secret (pular — já deve existir no cluster)
+      - name: Aplicar Secret (a partir de um único GitHub Actions Secret no formato .env)
         run: |
-          echo "Pulando k8s/aws/secret.yaml (arquivo não versionado via .gitignore); deve já estar aplicado no cluster."
+          printf '%s\n' "${{ secrets.K8S_SECRET_ENV }}" > techchallenger-secret.env
+          kubectl create secret generic techchallenger-api-secret \
+            --from-env-file=techchallenger-secret.env \
+            --dry-run=client -o yaml | kubectl apply -f -
+          rm -f techchallenger-secret.env
 
       - name: Aplicar Deployment
         run: kubectl apply -f k8s/aws/deployment.yaml
@@ -190,118 +186,8 @@ jobs:
       - name: Exibir URL do Load Balancer
         run: kubectl get service techchallenger-api -o wide
 
-  database-migration:
-    needs: deploy-k8s
-    if: >
-      github.event_name == 'workflow_dispatch' &&
-      github.event.inputs.confirm_deploy == 'yes' &&
-      startsWith(github.ref, 'refs/heads/release/')
-    runs-on: ubuntu-latest
-    environment: aws-deploy
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      # Credenciais temporárias do AWS Academy Learner Lab — ver aviso no topo do arquivo.
-      - name: Configurar credenciais AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          aws-region: us-east-1
-
-      - name: Instalar kubectl
-        uses: azure/setup-kubectl@v4
-        with:
-          version: 'v1.30.0'
-
-      - name: Configurar kubeconfig do cluster EKS
-        run: |
-          aws eks update-kubeconfig \
-            --name "${{ secrets.EKS_CLUSTER_NAME }}" \
-            --region us-east-1
-
-      - name: Publicar script de migração como ConfigMap
-        run: |
-          kubectl create configmap db-migration-script \
-            --from-file=migration.sql=database/init/01_schema.sql \
-            --dry-run=client -o yaml | kubectl apply -f -
-
-      - name: Remover execução anterior do Job de migração
-        run: kubectl delete job db-migration --ignore-not-found=true
-
-      - name: Reduzir réplicas temporariamente para liberar vaga no node
-        run: |
-          kubectl patch hpa techchallenger-api --type merge -p '{"spec":{"minReplicas":1}}'
-          kubectl scale deployment/techchallenger-api --replicas=1
-          kubectl wait --for=jsonpath='{.status.replicas}'=1 deployment/techchallenger-api --timeout=60s
-
-      - name: Rodar migração como Kubernetes Job no cluster EKS
-        run: |
-          cat <<'EOF' | kubectl apply -f -
-          apiVersion: batch/v1
-          kind: Job
-          metadata:
-            name: db-migration
-            labels:
-              app: techchallenger-db-migration
-          spec:
-            backoffLimit: 0
-            ttlSecondsAfterFinished: 300
-            template:
-              spec:
-                restartPolicy: Never
-                containers:
-                  - name: migrate
-                    image: postgres:16-alpine
-                    command: ["psql"]
-                    args:
-                      - "-h"
-                      - "$(DB_HOST)"
-                      - "-U"
-                      - "$(DB_USER)"
-                      - "-d"
-                      - "$(DB_NAME)"
-                      - "-v"
-                      - "ON_ERROR_STOP=1"
-                      - "-f"
-                      - "/migrations/migration.sql"
-                    env:
-                      - name: DB_HOST
-                        value: "${{ secrets.DB_HOST }}"
-                      - name: DB_USER
-                        value: "${{ secrets.DB_USER }}"
-                      - name: DB_NAME
-                        value: "${{ secrets.DB_NAME }}"
-                      - name: PGPASSWORD
-                        value: "${{ secrets.DB_PASSWORD }}"
-                    volumeMounts:
-                      - name: migration-script
-                        mountPath: /migrations
-                volumes:
-                  - name: migration-script
-                    configMap:
-                      name: db-migration-script
-          EOF
-
-      - name: Aguardar conclusão do Job de migração
-        run: |
-          if ! kubectl wait --for=condition=complete --timeout=120s job/db-migration; then
-            echo "Migração falhou ou não completou a tempo. Logs do Job:"
-            kubectl logs job/db-migration --all-containers
-            exit 1
-          fi
-          kubectl logs job/db-migration
-
-      - name: Restaurar réplicas originais
-        if: always()
-        run: |
-          kubectl patch hpa techchallenger-api --type merge -p '{"spec":{"minReplicas":2}}'
-          kubectl scale deployment/techchallenger-api --replicas=2
-
   merge-to-master:
-    needs: [build-and-test, build-and-push-image, deploy-k8s, database-migration]
+    needs: [build-and-test, build-and-push-image, deploy-k8s]
     if: success() && startsWith(github.ref, 'refs/heads/release/')
     runs-on: ubuntu-latest
     permissions:
