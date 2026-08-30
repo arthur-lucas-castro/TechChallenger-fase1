@@ -108,9 +108,11 @@ namespace Operacao.Application.Services
             };
         }
 
-        public async Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync()
+        public async Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync(List<StatusOrdemServico>? status = null)
         {
-            var ordens = (await _repositorio.GetAllAsync()).ToList();
+            var statusFiltro = status is null || status.Count == 0 ? OrdemServico.StatusParaListarDefault : status;
+
+            var ordens = (await _repositorio.GetAllAsync(statusFiltro)).ToList();
 
             var clienteIds = ordens.Select(o => o.ClienteId).Distinct();
             var clientes = (await _clienteService.ObterPorIdsAsync(clienteIds)).ToDictionary(c => c.Id);

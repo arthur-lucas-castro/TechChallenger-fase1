@@ -207,7 +207,7 @@ public class OrdemServicoServiceTests
     {
         // Arrange
         var ordens = new List<OrdemServico> { CriarOrdemRecebida(1) }; // ClienteId=20, VeiculoId=10
-        _repositorioMock.Setup(r => r.GetAllAsync()).ReturnsAsync(ordens);
+        _repositorioMock.Setup(r => r.GetAllAsync(OrdemServico.StatusParaListarDefault)).ReturnsAsync(ordens);
         _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
             .ReturnsAsync([new ClienteResponseDto { Id = 20, Nome = "Maria", Sobrenome = "Santos" }]);
         _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
@@ -228,7 +228,7 @@ public class OrdemServicoServiceTests
     {
         // Arrange — cliente não encontrado (lista vazia)
         var ordens = new List<OrdemServico> { CriarOrdemRecebida(1) };
-        _repositorioMock.Setup(r => r.GetAllAsync()).ReturnsAsync(ordens);
+        _repositorioMock.Setup(r => r.GetAllAsync(OrdemServico.StatusParaListarDefault)).ReturnsAsync(ordens);
         _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
             .ReturnsAsync([]);
         _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
@@ -241,6 +241,22 @@ public class OrdemServicoServiceTests
         Assert.Single(resultado);
         Assert.Null(resultado[0].NomeCliente);
         Assert.Null(resultado[0].ModeloVeiculo);
+    }
+
+    [Fact]
+    public async Task ObterTodosAsync_ComStatus_RepassaStatusAoRepositorio()
+    {
+        // Arrange
+        var statusFiltro = new List<StatusOrdemServico> { StatusOrdemServico.EmExecucao, StatusOrdemServico.Recebida };
+        _repositorioMock.Setup(r => r.GetAllAsync(statusFiltro)).ReturnsAsync([]);
+        _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>())).ReturnsAsync([]);
+        _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>())).ReturnsAsync([]);
+
+        // Act
+        await _service.ObterTodosAsync(statusFiltro);
+
+        // Assert
+        _repositorioMock.Verify(r => r.GetAllAsync(statusFiltro), Times.Once);
     }
 
     // ── ObterTemposExecucaoPorServicoAsync ───────────────────────────────────
@@ -1039,7 +1055,7 @@ public class OrdemServicoServiceTests
     {
         // Arrange — TryGetValue para cliente retorna true, para veiculo retorna false
         var ordens = new List<OrdemServico> { CriarOrdemRecebida(1) };
-        _repositorioMock.Setup(r => r.GetAllAsync()).ReturnsAsync(ordens);
+        _repositorioMock.Setup(r => r.GetAllAsync(OrdemServico.StatusParaListarDefault)).ReturnsAsync(ordens);
         _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
             .ReturnsAsync([new ClienteResponseDto { Id = 20, Nome = "Ana", Sobrenome = "Lima" }]);
         _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
@@ -1060,7 +1076,7 @@ public class OrdemServicoServiceTests
     {
         // Arrange — TryGetValue para veiculo retorna true, para cliente retorna false
         var ordens = new List<OrdemServico> { CriarOrdemRecebida(1) };
-        _repositorioMock.Setup(r => r.GetAllAsync()).ReturnsAsync(ordens);
+        _repositorioMock.Setup(r => r.GetAllAsync(OrdemServico.StatusParaListarDefault)).ReturnsAsync(ordens);
         _clienteServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))
             .ReturnsAsync([]);
         _veiculoServiceMock.Setup(s => s.ObterPorIdsAsync(It.IsAny<IEnumerable<int>>()))

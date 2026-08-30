@@ -6,6 +6,14 @@ namespace Operacao.Domain.Entities
 {
     public class OrdemServico : EntidadeBase, IAggregateRoot
     {
+        public static readonly IReadOnlyList<StatusOrdemServico> StatusParaListarDefault =
+        [
+            StatusOrdemServico.EmExecucao,
+            StatusOrdemServico.AguardandoAprovacao,
+            StatusOrdemServico.EmDiagnostico,
+            StatusOrdemServico.Recebida
+        ];
+
         public int VeiculoId { get; set; }
         public int ClienteId { get; set; }
         public StatusOrdemServico Status { get; set; }

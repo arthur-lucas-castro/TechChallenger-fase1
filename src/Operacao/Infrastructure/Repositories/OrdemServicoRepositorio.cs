@@ -10,6 +10,15 @@ namespace Operacao.Infrastructure.Repositories
     {
         public OrdemServicoRepositorio(AppDbContext context) : base(context) { }
 
+        public async Task<IEnumerable<OrdemServico>> GetAllAsync(IReadOnlyList<StatusOrdemServico> status)
+        {
+            return await _context.Set<OrdemServico>()
+                .Where(o => status.Contains(o.Status))
+                .OrderByDescending(o => o.Status)
+                .ThenBy(o => o.DataCriacao)
+                .ToListAsync();
+        }
+
         public async Task<OrdemServico?> GetByIdComServicosAsync(int id)
             => await _context.Set<OrdemServico>()
                 .Include(o => o.ServicosSolicitados)
