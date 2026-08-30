@@ -1,7 +1,7 @@
-# Repositório ECR para a imagem Docker da aplicação.
-
 resource "aws_ecr_repository" "app" {
   name = var.ecr_repository_name
+
+  force_delete = true
 
   image_scanning_configuration {
     scan_on_push = true
@@ -21,11 +21,11 @@ resource "aws_ecr_lifecycle_policy" "app" {
     rules = [
       {
         rulePriority = 1
-        description  = "Manter apenas as últimas 10 imagens"
+        description  = "Manter apenas as últimas 2 imagens"
         selection = {
           tagStatus   = "any"
           countType   = "imageCountMoreThan"
-          countNumber = 10
+          countNumber = 2
         }
         action = {
           type = "expire"

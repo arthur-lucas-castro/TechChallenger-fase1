@@ -1,34 +1,19 @@
-# Exemplo de arquivo de variáveis. Copie para "terraform.tfvars" (que é
-# ignorado pelo git) e ajuste os valores — principalmente db_username e
-# db_password, que não têm default e não devem ser commitados.
-#
-#   cp terraform.tfvars.example terraform.tfvars
-
-# --- Geral ---
 cluster_name = "techchallenger-fase1"
 environment  = "dev"
 
-# --- VPC ---
 vpc_cidr             = "10.0.0.0/16"
 availability_zones   = ["us-east-1a", "us-east-1b", "us-east-1c"]
 public_subnet_cidrs  = ["10.0.0.0/20", "10.0.16.0/20", "10.0.32.0/20"]
 private_subnet_cidrs = ["10.0.128.0/20", "10.0.144.0/20", "10.0.160.0/20"]
 single_nat_gateway   = true
 
-# --- EKS ---
-# kubernetes_version = "1.31"  # opcional: deixe comentado para usar a versão
-# padrão que a AWS está oferecendo no momento do apply (recomendado, evita
-# erro "unsupported Kubernetes version" quando uma versão antiga é descontinuada)
 node_instance_types     = ["t3.micro"]
 node_disk_size          = 10
 node_group_min_size     = 1
 node_group_max_size     = 3
 node_group_desired_size = 2
 
-# --- RDS ---
-db_engine = "postgres"
-# db_engine_version = "16.4"  # opcional: deixe comentado para usar a versão
-# padrão que a AWS está oferecendo no momento do apply (recomendado)
+db_engine                  = "postgres"
 db_port                    = 5432
 db_instance_class          = "db.t3.micro"
 db_name                    = "techchallenger"
@@ -38,5 +23,4 @@ db_allocated_storage       = 5
 db_max_allocated_storage   = 20
 db_backup_retention_period = 7
 
-# --- ECR ---
 ecr_repository_name = "techchallenger-fase1"

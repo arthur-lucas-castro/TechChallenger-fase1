@@ -1,11 +1,3 @@
-# VPC para o cluster EKS, subnets públicas/privadas, Internet Gateway e NAT Gateway.
-#
-# Usa o módulo oficial terraform-aws-modules/vpc/aws. As tags
-# "kubernetes.io/cluster/<nome>", "kubernetes.io/role/elb" e
-# "kubernetes.io/role/internal-elb" são exigidas pelo EKS/AWS Load Balancer
-# Controller para descobrir automaticamente as subnets onde criar os
-# load balancers públicos e internos.
-
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"

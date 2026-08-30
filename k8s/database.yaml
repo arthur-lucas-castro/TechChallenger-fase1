@@ -37,12 +37,10 @@ spec:
             - containerPort: 5432
           envFrom:
             - configMapRef:
-                name: techchallenger-api-config # fornece POSTGRES_DB
+                name: techchallenger-api-config
             - secretRef:
-                name: techchallenger-api-secret # fornece POSTGRES_USER / POSTGRES_PASSWORD
+                name: techchallenger-api-secret
           env:
-            # Evita erro de inicialização em alguns provisioners cujo
-            # diretório raiz do volume já vem com arquivos (ex: lost+found).
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
           volumeMounts:

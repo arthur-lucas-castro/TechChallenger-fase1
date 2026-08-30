@@ -1,9 +1,3 @@
-# Instância RDS (Postgres) na VPC definida em vpc.tf.
-#
-# Fica em subnets privadas, sem exposição pública, e só aceita conexões
-# vindas do security group primário do cluster EKS (o node group não usa
-# launch template customizado, então os nodes sobem com esse SG).
-
 resource "aws_db_subnet_group" "this" {
   name       = "${var.cluster_name}-db"
   subnet_ids = module.vpc.private_subnets
@@ -67,9 +61,6 @@ resource "aws_db_instance" "this" {
   backup_window           = "03:00-04:00"
   maintenance_window      = "mon:04:30-mon:05:30"
 
-  # Ambiente de estudo/challenge: evita reter snapshot final ao destruir.
-  # Em produção, trocar para skip_final_snapshot = false e informar
-  # final_snapshot_identifier.
   skip_final_snapshot = true
 
   tags = {

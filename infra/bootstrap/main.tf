@@ -1,8 +1,6 @@
 resource "aws_s3_bucket" "terraform_state" {
   bucket = "${var.project_name}-terraform-state-${var.environment}"
 
-  # Evita que um "terraform destroy" acidental apague o bucket que guarda
-  # o state de todo o restante do projeto.
   lifecycle {
     prevent_destroy = true
   }

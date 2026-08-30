@@ -1,22 +1,3 @@
-#!/usr/bin/env bash
-# Aplica database/init/01_schema.sql no RDS a partir de dentro do cluster EKS.
-#
-# Diferente do Postgres local (que roda o script de inicialização sozinho via
-# docker-entrypoint-initdb.d), o RDS sobe vazio. Rode este script uma vez
-# depois do primeiro "terraform apply" (ou sempre que o RDS for recriado do
-# zero) para criar as tabelas e os usuários seed.
-#
-# O RDS não é publicamente acessível (só aceita conexões vindas do security
-# group dos nodes do EKS), por isso o script sobe um pod temporário dentro do
-# cluster para aplicar o schema.
-#
-# Pré-requisitos:
-#   - kubectl configurado apontando para o cluster certo:
-#       aws eks update-kubeconfig --region us-east-1 --name $(terraform -chdir=infra output -raw eks_cluster_name)
-#   - infra/terraform.tfvars preenchido e "terraform apply" já rodado
-#
-# Uso: ./infra/scripts/init-rds-schema.sh
-
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

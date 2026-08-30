@@ -20,18 +20,7 @@ jobs:
     environment: aws-deploy
     permissions:
       contents: read
-    defaults:
-      run:
-        working-directory: infra
     steps:
-      - name: Verificar usuário autorizado
-        run: |
-          if [ "${{ github.actor }}" != "${{ vars.MEU_USUARIO_GITHUB }}" ]; then
-            echo "::error::Usuário '${{ github.actor }}' não autorizado a executar esta action (apenas '${{ vars.MEU_USUARIO_GITHUB }}' pode)."
-            exit 1
-          fi
-          echo "Usuário '${{ github.actor }}' autorizado a prosseguir."
-
       - name: Verificar confirmação de apply
         run: |
           if [ "${{ github.event.inputs.confirm_apply }}" != "yes" ]; then
@@ -57,9 +46,11 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
+        working-directory: infra
         run: terraform init -input=false
 
       - name: Terraform Plan
+        working-directory: infra
         env:
           TF_VAR_db_username: ${{ secrets.DB_USER }}
           TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
@@ -73,9 +64,11 @@ jobs:
           retention-days: 7
 
       - name: Terraform Apply
+        working-directory: infra
         run: terraform apply -input=false -auto-approve tfplan
 
       - name: Exibir outputs do Terraform
+        working-directory: infra
         run: |
           echo "===== Todos os outputs ====="
           terraform output

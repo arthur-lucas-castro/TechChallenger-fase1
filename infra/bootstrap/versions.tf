@@ -7,10 +7,6 @@ terraform {
       version = "~> 5.0"
     }
   }
-
-  # Esta pasta é intencionalmente a única do projeto SEM backend remoto:
-  # ela cria os próprios recursos que o backend remoto vai usar (bucket
-  # S3 e tabela DynamoDB), então o state dela fica local (terraform.tfstate).
 }
 
 provider "aws" {

@@ -1,27 +1,7 @@
-# Cluster EKS provisionado sobre a VPC definida em vpc.tf.
-#
-# Endpoint público habilitado para permitir kubectl local e acesso pela
-# pipeline de CI/CD; endpoint privado habilitado para que os nodes (nas
-# subnets privadas) alcancem a API sem sair pela internet.
-#
-# Conta AWS Academy Learner Lab: não é possível criar IAM roles novas, apenas
-# usar as já existentes "LabRole" (role) e "LabInstanceProfile" (instance
-# profile). Por isso a role do control plane e a do node group reutilizam a
-# LabRole via data source, em vez de criar roles próprias.
 data "aws_iam_role" "lab_role" {
   name = "LabRole"
 }
 
-# IMPORTANTE: este arquivo usa os recursos aws_eks_cluster/aws_eks_node_group
-# diretamente, em vez do módulo terraform-aws-modules/eks/aws. O módulo (em
-# qualquer versão, 19 a 21) declara internamente um data source
-# "aws_iam_session_context" incondicional, usado para resolver a role de
-# origem por trás da sessão STS assumida (para o bootstrap de admin do
-# cluster e o key administrator do KMS). Isso faz uma chamada iam:GetRole na
-# role "voclabs" — a role interna do AWS Academy usada para autenticar a
-# sessão do Learner Lab — que tem "deny" explícito nessa conta. Como esse
-# data source é criado sempre que o cluster existe (não dá para desabilitar
-# via variável), a única forma de evitar o erro é não depender do módulo.
 resource "aws_cloudwatch_log_group" "eks" {
   name              = "/aws/eks/${var.cluster_name}/cluster"
   retention_in_days = 7
@@ -55,20 +35,6 @@ resource "aws_eks_cluster" "this" {
   }
 }
 
-# Node group gerenciado dimensionado propositalmente enxuto para caber nas
-# cotas do AWS Academy Learner Lab (máx. 9 instâncias EC2 e 32 vCPUs por
-# região na conta toda). t3.micro = 2 vCPUs; com desired_size = 2 e
-# max_size = 3, o consumo fica entre 4 e 6 vCPUs e 2-3 instâncias EC2,
-# deixando folga para outros recursos da conta e ainda permitindo o HPA
-# demonstrar escala de nodes até o teto de 3.
-#
-# Sem launch template customizado: as instâncias sobem com o security group
-# primário do cluster (aws_eks_cluster.this.vpc_config[0].cluster_security_group_id),
-# que é o que o SG do RDS libera em rds.tf.
-#
-# A LabRole precisa já ter as policies de worker node do EKS (AmazonEKSWorkerNodePolicy,
-# AmazonEKS_CNI_Policy, AmazonEC2ContainerRegistryReadOnly ou equivalentes) —
-# não é possível anexar policies novas a ela nesta conta.
 resource "aws_eks_node_group" "default" {
   cluster_name    = aws_eks_cluster.this.name
   node_group_name = "default"
@@ -92,5 +58,47 @@ resource "aws_eks_node_group" "default" {
     Project     = var.cluster_name
     Environment = var.environment
     Terraform   = "true"
+  }
+}
+
+resource "null_resource" "cleanup_k8s_load_balancers" {
+  triggers = {
+    cluster_name = aws_eks_cluster.this.name
+    region       = "us-east-1"
+    vpc_id       = module.vpc.vpc_id
+    service_name = "techchallenger-api"
+  }
+
+  depends_on = [aws_eks_cluster.this, aws_eks_node_group.default, module.vpc]
+
+  provisioner "local-exec" {
+    when        = destroy
+    interpreter = ["bash", "-c"]
+    command     = <<-EOT
+      set -uo pipefail
+
+      echo "Configurando kubeconfig para o cluster ${self.triggers.cluster_name}..."
+      if ! aws eks update-kubeconfig --name "${self.triggers.cluster_name}" --region "${self.triggers.region}"; then
+        echo "Cluster indisponível ou já destruído, seguindo sem limpeza via kubectl."
+        exit 0
+      fi
+
+      echo "Removendo Service '${self.triggers.service_name}' (type=LoadBalancer), se existir..."
+      kubectl delete service "${self.triggers.service_name}" --ignore-not-found=true --timeout=60s || true
+
+      echo "Aguardando load balancers remanescentes na VPC ${self.triggers.vpc_id} serem removidos..."
+      for i in $(seq 1 30); do
+        count=$(aws elbv2 describe-load-balancers --region "${self.triggers.region}" \
+          --query "length(LoadBalancers[?VpcId=='${self.triggers.vpc_id}'])" --output text 2>/dev/null || echo 0)
+        if [ "$count" = "0" ]; then
+          echo "Nenhum load balancer remanescente na VPC."
+          exit 0
+        fi
+        echo "Tentativa $i/30: ainda há $count load balancer(es) na VPC, aguardando 10s..."
+        sleep 10
+      done
+
+      echo "AVISO: ainda há load balancer(es) na VPC após 5 minutos de espera; o destroy das subnets pode falhar."
+    EOT
   }
 }
