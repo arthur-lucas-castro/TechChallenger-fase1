@@ -116,13 +116,12 @@ jobs:
           cache: true
           cache-dependency-path: src/**/*.csproj
 
-      # O Dockerfile da raiz apenas copia o conteúdo de "publish/" (COPY publish/ .),
-      # então é preciso gerar essa pasta antes do "docker build".
       - name: Publish da aplicação (.NET)
         run: >
           dotnet publish src/Presentation/TechChallenger-fase1/TechChallenger-fase1.csproj
           --configuration Release
           --output ./publish
+          -p:Version=${{ steps.vars.outputs.version }}
 
       - name: Build da imagem Docker
         run: |
