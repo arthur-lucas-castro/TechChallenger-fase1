@@ -1,0 +1,378 @@
+# Ordem de execução / gatilhos:
+# 1. authorize             -> roda sempre primeiro. Bloqueia a pipeline inteira (nenhum step
+#                              sensível chega a rodar) se quem disparou não for o usuário
+#                              autorizado (repository variable vars.MEU_USUARIO_GITHUB).
+# 2. build-and-test        -> roda em qualquer Pull Request (para qualquer branch de destino)
+#                              e também como gate de qualidade quando o deploy é disparado
+#                              manualmente numa branch release/*.
+# 3. build-and-push-image,
+#    deploy-k8s,
+#    database-migration    -> só rodam via workflow_dispatch manual (nunca em push/schedule),
+#                              com confirm_deploy = "yes" e apenas se a branch atual seguir o
+#                              padrão release/x.y.z. A tag da imagem Docker é extraída do nome
+#                              dessa branch (ex: release/1.4.2 -> tag "1.4.2").
+# 4. merge-to-main         -> roda só se TODOS os jobs acima tiverem sucesso. Abre um Pull
+#                              Request de release/x.y.z para main e habilita auto-merge.
+#
+# ⚠️ ATENÇÃO — CREDENCIAIS TEMPORÁRIAS (AWS ACADEMY LEARNER LAB) ⚠️
+# Os secrets AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY e AWS_SESSION_TOKEN vêm de uma
+# sessão do AWS Academy Learner Lab e EXPIRAM em poucas horas. Não há suporte a
+# OIDC/IAM roles assumíveis neste ambiente, então a autenticação é feita via chaves
+# estáticas. Antes de disparar manualmente o deploy, atualize os três secrets em
+# Settings > Secrets and variables > Actions com os valores atuais do Learner Lab
+# (aba "AWS Details" > "AWS CLI"), senão os jobs falharão com erro de credenciais
+# expiradas/inválidas.
+#
+# ⚠️ RESTRIÇÃO DE USUÁRIO
+# Cadastre a repository variable "MEU_USUARIO_GITHUB" (Settings > Secrets and
+# variables > Actions > aba "Variables") com o seu username do GitHub. Qualquer
+# execução disparada por outro usuário (PR de terceiros ou workflow_dispatch de
+# outra pessoa) falha imediatamente no job "authorize", antes de qualquer step
+# sensível (credenciais AWS, build, deploy, merge) ser executado.
+#
+# ⚠️ APROVAÇÃO MANUAL VIA ENVIRONMENT "aws-deploy"
+# Os jobs que usam credenciais AWS (build-and-push-image, deploy-k8s,
+# database-migration) estão vinculados ao Environment "aws-deploy"
+# (Settings > Environments), protegido por "Required reviewers". Isso é uma
+# camada ADICIONAL à checagem de github.actor acima — não a substitui — e é
+# enforced pelo GitHub na plataforma: mesmo que alguém com acesso de escrita
+# edite ou remova a checagem de github.actor deste arquivo, o job continua
+# preso aguardando aprovação manual antes de rodar (e antes mesmo de acessar
+# os secrets, que agora vivem no escopo do Environment, não mais no
+# repositório). Configuração e detalhes de por que os secrets AWS foram
+# movidos para o Environment: ver instruções fornecidas junto com este workflow.
+name: CI/CD Pipeline
+
+on:
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      confirm_deploy:
+        description: "Confirma o deploy para produção (camada extra de confirmação)?"
+        required: true
+        type: choice
+        options:
+          - "no"
+          - "yes"
+        default: "no"
+
+jobs:
+  authorize:
+    name: Restringir quem pode disparar a pipeline
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar usuário autorizado
+        run: |
+          if [ "${{ github.actor }}" != "${{ vars.MEU_USUARIO_GITHUB }}" ]; then
+            echo "::error::Usuário '${{ github.actor }}' não autorizado a executar esta pipeline (apenas '${{ vars.MEU_USUARIO_GITHUB }}' pode)."
+            exit 1
+          fi
+          echo "Usuário '${{ github.actor }}' autorizado a prosseguir."
+
+  build-and-test:
+    needs: authorize
+    if: >
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'workflow_dispatch' && startsWith(github.ref, 'refs/heads/release/'))
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          cache: true
+          cache-dependency-path: src/**/*.csproj
+
+      - name: Restaurar dependências (NuGet)
+        run: dotnet restore src/TechChallenger-fase1.sln
+
+      - name: Build da aplicação
+        run: dotnet build src/TechChallenger-fase1.sln --no-restore --configuration Release
+
+      - name: Rodar testes automatizados
+        run: >
+          dotnet test src/TechChallenger-fase1.sln
+          --no-build --configuration Release
+          --filter "FullyQualifiedName~Tests"
+          --logger "trx;LogFileName=test-results.trx"
+          --collect:"XPlat Code Coverage"
+          --results-directory ./TestResults
+        # Se algum teste falhar, "dotnet test" retorna código de saída != 0,
+        # o que faz este step e o job falharem automaticamente. Como os jobs
+        # seguintes dependem deste via "needs", o GitHub Actions os pula
+        # automaticamente — não é necessária nenhuma configuração extra.
+
+      - name: Publicar resumo dos testes no Job Summary
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: Resultado dos Testes
+          path: 'TestResults/**/*.trx'
+          reporter: dotnet-trx
+
+      - name: Upload dos resultados de teste e cobertura como artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: TestResults/
+          retention-days: 15
+
+  build-and-push-image:
+    needs: [authorize, build-and-test]
+    if: >
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.confirm_deploy == 'yes' &&
+      startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    environment: aws-deploy
+    outputs:
+      image-tag: ${{ steps.vars.outputs.version }}
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Extrai a versão a partir do nome da branch (ex: release/1.4.2 -> "1.4.2")
+      # em vez de usar o SHA do commit, já que agora o deploy é sempre feito a
+      # partir de uma branch de release versionada.
+      - name: Extrair versão da release a partir da branch
+        id: vars
+        run: |
+          branch="${{ github.ref_name }}"
+          version="${branch#release/}"
+          if [[ ! "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::Branch '$branch' não segue o padrão release/X.Y.Z (ex: release/1.4.2)."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      # Credenciais temporárias do AWS Academy Learner Lab — ver aviso no topo do arquivo.
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Login no Amazon ECR
+        id: ecr-login
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+          cache: true
+          cache-dependency-path: src/**/*.csproj
+
+      # O Dockerfile da raiz apenas copia o conteúdo de "publish/" (COPY publish/ .),
+      # então é preciso gerar essa pasta antes do "docker build".
+      - name: Publish da aplicação (.NET)
+        run: >
+          dotnet publish src/Presentation/TechChallenger-fase1/TechChallenger-fase1.csproj
+          --configuration Release
+          --output ./publish
+
+      - name: Build da imagem Docker
+        run: |
+          docker build \
+            -t "${{ secrets.ECR_REPOSITORY_URL }}:${{ steps.vars.outputs.version }}" \
+            .
+
+      - name: Push da imagem para o Amazon ECR
+        run: docker push "${{ secrets.ECR_REPOSITORY_URL }}:${{ steps.vars.outputs.version }}"
+
+  deploy-k8s:
+    needs: [authorize, build-and-push-image]
+    if: >
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.confirm_deploy == 'yes' &&
+      startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    environment: aws-deploy
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Credenciais temporárias do AWS Academy Learner Lab — ver aviso no topo do arquivo.
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Instalar kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.30.0'
+
+      - name: Configurar kubeconfig do cluster EKS
+        run: |
+          aws eks update-kubeconfig \
+            --name "${{ secrets.EKS_CLUSTER_NAME }}" \
+            --region us-east-1
+      - name: Atualizar tag da imagem no deployment.yaml
+        run: |
+          sed -i "s#IMAGE_PLACEHOLDER#${{ secrets.ECR_REPOSITORY_URL }}:${{ needs.build-and-push-image.outputs.image-tag }}#" \
+            k8s/aws/deployment.yaml
+
+      - name: Aplicar ConfigMap
+        run: kubectl apply -f k8s/aws/configmap.yaml
+
+      - name: Aplicar Secret (pular — já deve existir no cluster)
+        run: |
+          echo "Pulando k8s/aws/secret.yaml (arquivo não versionado via .gitignore); deve já estar aplicado no cluster."
+
+      - name: Aplicar Deployment
+        run: kubectl apply -f k8s/aws/deployment.yaml
+
+      - name: Aplicar Service
+        run: kubectl apply -f k8s/aws/service.yaml
+
+      - name: Aplicar HPA
+        run: kubectl apply -f k8s/aws/hpa.yaml
+
+      - name: Aguardar rollout do Deployment
+        run: kubectl rollout status deployment/techchallenger-api --timeout=180s
+
+      - name: Exibir URL do Load Balancer
+        run: kubectl get service techchallenger-api -o wide
+
+  database-migration:
+    needs: [authorize, deploy-k8s]
+    if: >
+      github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.confirm_deploy == 'yes' &&
+      startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    environment: aws-deploy
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # Credenciais temporárias do AWS Academy Learner Lab — ver aviso no topo do arquivo.
+      - name: Configurar credenciais AWS
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: us-east-1
+
+      - name: Instalar kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.30.0'
+
+      - name: Configurar kubeconfig do cluster EKS
+        run: |
+          aws eks update-kubeconfig \
+            --name "${{ secrets.EKS_CLUSTER_NAME }}" \
+            --region us-east-1
+
+      - name: Publicar script de migração como ConfigMap
+        run: |
+          kubectl create configmap db-migration-script \
+            --from-file=migration.sql=database/init/01_schema.sql \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Remover execução anterior do Job de migração
+        run: kubectl delete job db-migration --ignore-not-found=true
+
+      - name: Rodar migração como Kubernetes Job no cluster EKS
+        run: |
+          cat <<'EOF' | kubectl apply -f -
+          apiVersion: batch/v1
+          kind: Job
+          metadata:
+            name: db-migration
+            labels:
+              app: techchallenger-db-migration
+          spec:
+            backoffLimit: 0
+            ttlSecondsAfterFinished: 300
+            template:
+              spec:
+                restartPolicy: Never
+                containers:
+                  - name: migrate
+                    image: postgres:16-alpine
+                    command: ["psql"]
+                    args:
+                      - "-h"
+                      - "$(DB_HOST)"
+                      - "-U"
+                      - "$(DB_USER)"
+                      - "-d"
+                      - "$(DB_NAME)"
+                      - "-v"
+                      - "ON_ERROR_STOP=1"
+                      - "-f"
+                      - "/migrations/migration.sql"
+                    env:
+                      - name: DB_HOST
+                        value: "${{ secrets.DB_HOST }}"
+                      - name: DB_USER
+                        value: "${{ secrets.DB_USER }}"
+                      - name: DB_NAME
+                        value: "${{ secrets.DB_NAME }}"
+                      - name: PGPASSWORD
+                        value: "${{ secrets.DB_PASSWORD }}"
+                    volumeMounts:
+                      - name: migration-script
+                        mountPath: /migrations
+                volumes:
+                  - name: migration-script
+                    configMap:
+                      name: db-migration-script
+          EOF
+
+      - name: Aguardar conclusão do Job de migração
+        run: |
+          if ! kubectl wait --for=condition=complete --timeout=120s job/db-migration; then
+            echo "Migração falhou ou não completou a tempo. Logs do Job:"
+            kubectl logs job/db-migration --all-containers
+            exit 1
+          fi
+          kubectl logs job/db-migration
+
+  merge-to-main:
+    needs: [authorize, build-and-test, build-and-push-image, deploy-k8s, database-migration]
+    if: success() && startsWith(github.ref, 'refs/heads/release/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Criar Pull Request de release para main
+        id: create-pr
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_MERGE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: |
+          existing=$(gh pr list --base main --head "${{ github.ref_name }}" --state open --json number --jq '.[0].number')
+          if [ -n "$existing" ]; then
+            echo "PR #$existing já existe para ${{ github.ref_name }} -> main."
+          else
+            gh pr create \
+              --base main \
+              --head "${{ github.ref_name }}" \
+              --title "Release ${{ needs.build-and-push-image.outputs.image-tag }}" \
+              --body "Merge automático gerado pela pipeline após deploy bem-sucedido da versão ${{ needs.build-and-push-image.outputs.image-tag }} no EKS."
+          fi
+
+      - name: Habilitar auto-merge no Pull Request
+        env:
+          GH_TOKEN: ${{ secrets.RELEASE_MERGE_TOKEN || secrets.GITHUB_TOKEN }}
+        run: gh pr merge "${{ github.ref_name }}" --auto --merge

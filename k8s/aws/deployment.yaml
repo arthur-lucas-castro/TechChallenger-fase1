@@ -1,6 +1,3 @@
-# Versão para EKS: imagem vem do ECR (não do registry local do Minikube/Kind)
-# e imagePullPolicy é Always para garantir que uma tag reaproveitada (ex: "latest"
-# ou uma tag de CI) sempre puxe a imagem mais recente do repositório.
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -19,7 +16,7 @@ spec:
     spec:
       containers:
         - name: techchallenger-api
-          image: 575496830577.dkr.ecr.us-east-1.amazonaws.com/techchallenger-fase1:1.0.0
+          image: IMAGE_PLACEHOLDER
           imagePullPolicy: Always
           ports:
             - containerPort: 8080

@@ -1,12 +1,3 @@
-# Postgres local para o cluster Minikube/Kind. Usa a mesma imagem custom do
-# projeto (database/Dockerfile: postgres:16-alpine + scripts de
-# database/init/*.sql), então o schema é criado automaticamente no primeiro
-# start — igual ao `docker-compose up database`.
-#
-# Deployment (não StatefulSet): réplica única de banco local não precisa de
-# identidade de rede estável nem de volumeClaimTemplates por pod; um
-# Deployment com strategy Recreate + uma PVC comum já garante que o pod novo
-# reusa os mesmos dados do pod antigo ao reiniciar.
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:

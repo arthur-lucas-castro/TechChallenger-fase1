@@ -1,8 +1,3 @@
-# Versão para EKS: expõe a API via um Network Load Balancer (NLB) da AWS em vez
-# do NodePort usado no Minikube/Kind. Requer o AWS Load Balancer Controller
-# instalado no cluster (ou o provisionamento in-tree do cloud-controller-manager,
-# dependendo da versão/configuração do EKS) para que a annotation seja honrada
-# e o LB seja criado de fato.
 apiVersion: v1
 kind: Service
 metadata:

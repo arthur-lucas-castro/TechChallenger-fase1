@@ -1,4 +1,4 @@
-CREATE TABLE Cliente (
+CREATE TABLE IF NOT EXISTS Cliente (
     Id               SERIAL PRIMARY KEY,
     Nome             VARCHAR(50)  NOT NULL,
     Sobrenome        VARCHAR(50)  NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE Cliente (
     TipoPessoa       VARCHAR(1)   NOT NULL
 );
 
-CREATE TABLE Veiculo (
+CREATE TABLE IF NOT EXISTS Veiculo (
     Id      SERIAL PRIMARY KEY,
     Modelo  VARCHAR(50) NOT NULL,
     Placa   VARCHAR(7)  NOT NULL UNIQUE,
@@ -16,20 +16,20 @@ CREATE TABLE Veiculo (
     Ano     INTEGER     NOT NULL
 );
 
-CREATE TABLE ClienteVeiculo (
+CREATE TABLE IF NOT EXISTS ClienteVeiculo (
     ClienteId  INTEGER NOT NULL REFERENCES Cliente(Id) ON DELETE CASCADE,
     VeiculoId  INTEGER NOT NULL REFERENCES Veiculo(Id) ON DELETE CASCADE,
     PRIMARY KEY (ClienteId, VeiculoId)
 );
 
-CREATE TABLE Servico (
+CREATE TABLE IF NOT EXISTS Servico (
     Id                       SERIAL PRIMARY KEY,
     Nome                     VARCHAR(50)    NOT NULL,
     PrecoVenda               DECIMAL(10, 2) NOT NULL,
     TempoEstimadoEmMinutos   INTEGER        NOT NULL
 );
 
-CREATE TABLE Peca (
+CREATE TABLE IF NOT EXISTS Peca (
     Id          SERIAL PRIMARY KEY,
     Nome        VARCHAR(50)    NOT NULL,
     Descricao   VARCHAR(50)    NOT NULL,
@@ -37,7 +37,7 @@ CREATE TABLE Peca (
     PrecoVenda  DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE ProdutoEstoque (
+CREATE TABLE IF NOT EXISTS ProdutoEstoque (
     Id               SERIAL PRIMARY KEY,
     PecaId           INTEGER        NOT NULL REFERENCES Peca(Id) ON DELETE CASCADE,
     QuantidadeAtual  INTEGER        NOT NULL DEFAULT 0,
@@ -45,16 +45,22 @@ CREATE TABLE ProdutoEstoque (
     PrecoCustoMedio  DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TYPE status_ordem_servico AS ENUM (
-    'recebida',
-    'em_diagnostico',
-    'aguardando_aprovacao',
-    'em_execucao',
-    'finalizada',
-    'entregue'
-);
+-- Postgres não suporta "CREATE TYPE IF NOT EXISTS"; o bloco DO abaixo captura
+-- o erro "duplicate_object" e ignora, para o script poder rodar mais de uma vez.
+DO $$ BEGIN
+    CREATE TYPE status_ordem_servico AS ENUM (
+        'recebida',
+        'em_diagnostico',
+        'aguardando_aprovacao',
+        'em_execucao',
+        'finalizada',
+        'entregue'
+    );
+EXCEPTION
+    WHEN duplicate_object THEN NULL;
+END $$;
 
-CREATE TABLE OrdemServico (
+CREATE TABLE IF NOT EXISTS OrdemServico (
     Id                   SERIAL PRIMARY KEY,
     VeiculoId            INTEGER     NOT NULL REFERENCES Veiculo(Id) ON DELETE CASCADE,
     ClienteId            INTEGER     NOT NULL REFERENCES Cliente(Id) ON DELETE CASCADE,
@@ -64,7 +70,7 @@ CREATE TABLE OrdemServico (
     DataFinalizacao      TIMESTAMP
 );
 
-CREATE TABLE ServicoSolicitado (
+CREATE TABLE IF NOT EXISTS ServicoSolicitado (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id) ON DELETE CASCADE,
     ServicoId        INTEGER        NOT NULL REFERENCES Servico(Id) ON DELETE CASCADE,
@@ -73,7 +79,7 @@ CREATE TABLE ServicoSolicitado (
 );
 
 
-CREATE TABLE PecaSolicitada (
+CREATE TABLE IF NOT EXISTS PecaSolicitada (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id) ON DELETE CASCADE,
     PecaId           INTEGER        NOT NULL REFERENCES Peca(Id) ON DELETE CASCADE,
@@ -82,7 +88,7 @@ CREATE TABLE PecaSolicitada (
     PrecoVenda       DECIMAL(10, 2) NOT NULL
 );
 
-CREATE TABLE ServicoExecucao (
+CREATE TABLE IF NOT EXISTS ServicoExecucao (
     Id                   SERIAL PRIMARY KEY,
     ServicoSolicitadoId  INTEGER      NOT NULL REFERENCES ServicoSolicitado(Id) ON DELETE CASCADE,
     Status               VARCHAR(20)  NOT NULL,
@@ -90,7 +96,7 @@ CREATE TABLE ServicoExecucao (
     DataFinalizacao      TIMESTAMP
 );
 
-CREATE TABLE Orcamento (
+CREATE TABLE IF NOT EXISTS Orcamento (
     Id               SERIAL PRIMARY KEY,
     OrdemServicoId   INTEGER        NOT NULL REFERENCES OrdemServico(Id) ON DELETE CASCADE,
     PrecoTotal       DECIMAL(10, 2) NOT NULL,
@@ -100,7 +106,7 @@ CREATE TABLE Orcamento (
     DataAprovacao    TIMESTAMP
 );
 
-CREATE TABLE usuario (
+CREATE TABLE IF NOT EXISTS usuario (
     id         SERIAL PRIMARY KEY,
     email      VARCHAR(100) NOT NULL UNIQUE,
     senhahash  VARCHAR(72)  NOT NULL,
@@ -109,4 +115,5 @@ CREATE TABLE usuario (
 
 INSERT INTO usuario (email, senhahash, tipo) VALUES
     ('adm@oficina.com',         '$2a$12$.r/874bZqjmBZNPkYf7el.6c9e6apb39cOUypaELCiKPw78.BSNIK', 'Adm'),
-    ('funcionario@oficina.com', '$2a$12$Rs8rAOD6Edl9DDwliF15f.k2HnHGSjEZGJ8RYLce69cEVNNWI4bwe', 'Funcionario');
+    ('funcionario@oficina.com', '$2a$12$Rs8rAOD6Edl9DDwliF15f.k2HnHGSjEZGJ8RYLce69cEVNNWI4bwe', 'Funcionario')
+ON CONFLICT (email) DO NOTHING;
