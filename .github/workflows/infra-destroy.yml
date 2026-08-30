@@ -23,9 +23,6 @@ jobs:
     environment: aws-deploy
     permissions:
       contents: read
-    defaults:
-      run:
-        working-directory: infra
     steps:
       - name: Verificar usuário autorizado
         run: |
@@ -69,9 +66,11 @@ jobs:
           aws-region: us-east-1
 
       - name: Terraform Init
+        working-directory: infra
         run: terraform init -input=false
 
       - name: Terraform Plan (destroy)
+        working-directory: infra
         env:
           TF_VAR_db_username: ${{ secrets.DB_USER }}
           TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
@@ -85,6 +84,7 @@ jobs:
           retention-days: 7
 
       - name: Exibir resumo do que será destruído
+        working-directory: infra
         run: |
           echo "===== Recursos que serão DESTRUÍDOS (terraform plan -destroy) ====="
           terraform show -no-color tfplan-destroy
@@ -102,9 +102,6 @@ jobs:
     permissions:
       contents: read
       actions: read
-    defaults:
-      run:
-        working-directory: infra
     steps:
       - name: Checkout do código
         uses: actions/checkout@v4
@@ -122,7 +119,17 @@ jobs:
           aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
           aws-region: us-east-1
 
+      # Necessário para o provisioner "when = destroy" de
+      # null_resource.cleanup_k8s_load_balancers (infra/eks.tf), que roda
+      # "kubectl delete service" para remover o Network Load Balancer criado
+      # pelo Kubernetes antes de apagar as subnets.
+      - name: Instalar kubectl
+        uses: azure/setup-kubectl@v4
+        with:
+          version: 'v1.30.0'
+
       - name: Terraform Init
+        working-directory: infra
         run: terraform init -input=false
 
       - name: Download do plano de destroy
@@ -132,6 +139,7 @@ jobs:
           path: infra
 
       - name: Terraform Destroy
+        working-directory: infra
         run: terraform apply -input=false -auto-approve tfplan-destroy
 
       - name: Confirmar conclusão da destruição
