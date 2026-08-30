@@ -12,6 +12,14 @@ on:
           - "no"
           - "yes"
         default: "no"
+      node_instance_type:
+        description: "Tipo de instância EC2 para os nodes do EKS (sobrescreve o default t3.micro definido em variables.tf)"
+        required: true
+        type: choice
+        options:
+          - "t3.micro"
+          - "t3.small"
+        default: "t3.micro"
 
 jobs:
   terraform-apply:
@@ -54,6 +62,7 @@ jobs:
         env:
           TF_VAR_db_username: ${{ secrets.DB_USER }}
           TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
+          TF_VAR_node_instance_types: '["${{ github.event.inputs.node_instance_type }}"]'
         run: terraform plan -input=false -out=tfplan
 
       - name: Upload do plano como artifact
