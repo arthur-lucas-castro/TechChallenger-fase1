@@ -50,12 +50,6 @@ jobs:
       - name: Remover execução anterior do Job de migração
         run: kubectl delete job db-migration --ignore-not-found=true
 
-      - name: Reduzir réplicas temporariamente para liberar vaga no node
-        run: |
-          kubectl patch hpa techchallenger-api --type merge -p '{"spec":{"minReplicas":1}}'
-          kubectl scale deployment/techchallenger-api --replicas=1
-          kubectl wait --for=jsonpath='{.status.replicas}'=1 deployment/techchallenger-api --timeout=60s
-
       - name: Rodar migração como Kubernetes Job no cluster EKS
         run: |
           cat <<'EOF' | kubectl apply -f -
@@ -112,9 +106,3 @@ jobs:
             exit 1
           fi
           kubectl logs job/db-migration
-
-      - name: Restaurar réplicas originais
-        if: always()
-        run: |
-          kubectl patch hpa techchallenger-api --type merge -p '{"spec":{"minReplicas":2}}'
-          kubectl scale deployment/techchallenger-api --replicas=2
