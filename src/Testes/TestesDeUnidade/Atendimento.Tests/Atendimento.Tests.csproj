@@ -27,6 +27,7 @@
     <ProjectReference Include="..\..\..\Atendimento\Domain\Interfaces\Atendimento.Domain.Interfaces.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\Entities\Compartilhado.Domain.Entities.csproj" />
     <ProjectReference Include="..\..\..\Compartilhado\Domain\ValueObjects\Compartilhado.Domain.ValueObjects.csproj" />
+    <ProjectReference Include="..\..\..\Compartilhado\Application\Compartilhado.Application.csproj" />
     <ProjectReference Include="..\..\..\Operacao\Domain\Entities\Operacao.Domain.Entities.csproj" />
   </ItemGroup>
 </Project>

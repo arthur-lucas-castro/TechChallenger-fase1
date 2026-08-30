@@ -1,4 +1,5 @@
 using Atendimento.Domain.Entities.Events;
+using Compartilhado.Domain.Entities;
 using Compartilhado.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using Operacao.Application.Services.Events;
@@ -10,14 +11,16 @@ namespace Operacao.Tests.Application.Services.Events;
 public class OrcamentoRespondidoHandlerTests
 {
     private readonly Mock<IOrdemServicoRepositorio> _repositorioMock;
+    private readonly Mock<IDomainEventDispatcher> _dispatcherMock;
     private readonly Mock<ILogger<OrcamentoRespondidoHandler>> _loggerMock;
     private readonly OrcamentoRespondidoHandler _handler;
 
     public OrcamentoRespondidoHandlerTests()
     {
         _repositorioMock = new Mock<IOrdemServicoRepositorio>();
+        _dispatcherMock = new Mock<IDomainEventDispatcher>();
         _loggerMock = new Mock<ILogger<OrcamentoRespondidoHandler>>();
-        _handler = new OrcamentoRespondidoHandler(_repositorioMock.Object, _loggerMock.Object);
+        _handler = new OrcamentoRespondidoHandler(_repositorioMock.Object, _dispatcherMock.Object, _loggerMock.Object);
     }
 
     private static OrdemServico CriarOrdemAguardandoAprovacao(int id = 1)
@@ -87,6 +90,8 @@ public class OrcamentoRespondidoHandlerTests
         // Assert — AprovarOrcamento() transitiona para EmExecucao
         Assert.Equal(StatusOrdemServico.EmExecucao, os.Status);
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
+        _dispatcherMock.Verify(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()), Times.Once);
+        Assert.Empty(os.GetDomainEvents());
     }
 
     // ── Orçamento recusado ───────────────────────────────────────────────────
@@ -106,6 +111,7 @@ public class OrcamentoRespondidoHandlerTests
         Assert.Equal(StatusOrcamento.Recusado, os.Orcamento!.Status);
         Assert.Equal(StatusOrdemServico.AguardandoAprovacao, os.Status);
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
+        _dispatcherMock.Verify(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

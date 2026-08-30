@@ -244,7 +244,10 @@ namespace Operacao.Application.Services
             if (os is null) return false;
 
             os.EntregarVeiculo();
-            return await _repositorio.CommitAsync();
+            var resultado = await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(os.GetDomainEvents());
+            os.ClearDomainEvents();
+            return resultado;
         }
 
         public async Task<bool> IniciarDiagnosticoAsync(int id)
@@ -253,7 +256,10 @@ namespace Operacao.Application.Services
             if (os is null) return false;
 
             os.IniciarDiagnostico();
-            return await _repositorio.CommitAsync();
+            var resultado = await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(os.GetDomainEvents());
+            os.ClearDomainEvents();
+            return resultado;
         }
 
         public async Task<bool> FinalizarDiagnosticoAsync(int id)

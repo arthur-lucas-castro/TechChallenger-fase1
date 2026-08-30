@@ -493,6 +493,7 @@ public class OrdemServicoServiceTests
         var os = CriarOrdemRecebida(1);
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(os);
         _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+        ConfigurarDispatcherOk();
 
         // Act
         var resultado = await _service.IniciarDiagnosticoAsync(1);
@@ -500,6 +501,7 @@ public class OrdemServicoServiceTests
         // Assert
         Assert.True(resultado);
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
+        _dispatcherMock.Verify(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     // ── FinalizarDiagnosticoAsync ────────────────────────────────────────────
@@ -883,6 +885,7 @@ public class OrdemServicoServiceTests
         var os = CriarOrdemFinalizada(1);
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(os);
         _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+        ConfigurarDispatcherOk();
 
         // Act
         await _service.ConfirmarPagamentoAsync(1);
@@ -898,6 +901,7 @@ public class OrdemServicoServiceTests
         var os = CriarOrdemFinalizada(1);
         _repositorioMock.Setup(r => r.GetByIdAsync(1)).ReturnsAsync(os);
         _repositorioMock.Setup(r => r.CommitAsync()).ReturnsAsync(true);
+        ConfigurarDispatcherOk();
 
         // Act
         var resultado = await _service.ConfirmarPagamentoAsync(1);
@@ -905,6 +909,7 @@ public class OrdemServicoServiceTests
         // Assert
         Assert.True(resultado);
         _repositorioMock.Verify(r => r.CommitAsync(), Times.Once);
+        _dispatcherMock.Verify(d => d.DispatchAsync(It.IsAny<IEnumerable<IDomainEvent>>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 
     [Fact]

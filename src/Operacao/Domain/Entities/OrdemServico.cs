@@ -29,8 +29,12 @@ namespace Operacao.Domain.Entities
 
         private void TransicionarPara(StatusOrdemServico novoStatus)
         {
+            var statusAnterior = Status;
             Status = novoStatus;
             DataUltimaAlteracao = DateTime.UtcNow;
+
+            AddDomainEvent(new Events.OrdemServicoStatusAlteradoEvent(
+                Id, ClienteId, statusAnterior, novoStatus, DataUltimaAlteracao.Value));
         }
 
         public void IniciarDiagnostico()
