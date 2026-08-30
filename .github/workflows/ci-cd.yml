@@ -300,7 +300,7 @@ jobs:
           kubectl patch hpa techchallenger-api --type merge -p '{"spec":{"minReplicas":2}}'
           kubectl scale deployment/techchallenger-api --replicas=2
 
-  merge-to-main:
+  merge-to-master:
     needs: [build-and-test, build-and-push-image, deploy-k8s, database-migration]
     if: success() && startsWith(github.ref, 'refs/heads/release/')
     runs-on: ubuntu-latest
@@ -311,29 +311,29 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Verificar se há commits novos em relação à main
+      - name: Verificar se há commits novos em relação à master
         id: diff-check
         env:
           GH_TOKEN: ${{ secrets.RELEASE_MERGE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          ahead=$(gh api "repos/${{ github.repository }}/compare/main...${{ github.ref_name }}" --jq '.ahead_by')
+          ahead=$(gh api "repos/${{ github.repository }}/compare/master...${{ github.ref_name }}" --jq '.ahead_by')
           echo "ahead=$ahead" >> "$GITHUB_OUTPUT"
           if [ "$ahead" = "0" ]; then
-            echo "Branch ${{ github.ref_name }} já está totalmente mesclada na main — nada para mesclar."
+            echo "Branch ${{ github.ref_name }} já está totalmente mesclada na master — nada para mesclar."
           fi
 
-      - name: Criar Pull Request de release para main
+      - name: Criar Pull Request de release para master
         id: create-pr
         if: steps.diff-check.outputs.ahead != '0'
         env:
           GH_TOKEN: ${{ secrets.RELEASE_MERGE_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          existing=$(gh pr list --base main --head "${{ github.ref_name }}" --state open --json number --jq '.[0].number')
+          existing=$(gh pr list --base master --head "${{ github.ref_name }}" --state open --json number --jq '.[0].number')
           if [ -n "$existing" ]; then
-            echo "PR #$existing já existe para ${{ github.ref_name }} -> main."
+            echo "PR #$existing já existe para ${{ github.ref_name }} -> master."
           else
             gh pr create \
-              --base main \
+              --base master \
               --head "${{ github.ref_name }}" \
               --title "Release ${{ needs.build-and-push-image.outputs.image-tag }}" \
               --body "Merge automático gerado pela pipeline após deploy bem-sucedido da versão ${{ needs.build-and-push-image.outputs.image-tag }} no EKS."
