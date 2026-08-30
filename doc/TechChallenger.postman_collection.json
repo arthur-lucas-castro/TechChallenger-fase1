@@ -1137,6 +1137,27 @@
           }
         },
         {
+          "name": "02b - Listar OSs filtrando por status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status 200', () => pm.response.to.have.status(200));",
+                  "const json = pm.response.json();",
+                  "pm.test('Retorna array', () => pm.expect(json).to.be.an('array'));",
+                  "pm.test('Todas as OSs retornadas estao no status filtrado', () => json.forEach(os => pm.expect(['Recebida', 'EmDiagnostico']).to.include(os.status)));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/OrdemServico?status=Recebida&status=EmDiagnostico"
+          }
+        },
+        {
           "name": "03 - Buscar OS por ID (status Recebida)",
           "event": [
             {

@@ -17,6 +17,13 @@ services:
       timeout: 5s
       retries: 5
 
+  mailpit:
+    image: axllent/mailpit:latest
+    container_name: techchallenger-mailpit
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+
   api:
     build:
       context: .
@@ -27,6 +34,10 @@ services:
       ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__Default: "Host=postgres;Port=5432;Database=techchallenger;Username=postgres;Password=postgres"
       Jwt__SecretKey: "TechChallengerSecretKey@2024!MustBe32CharsMin"
+      Email__Habilitado: "true"
+      Email__Host: "mailpit"
+      Email__Port: "1025"
+      Email__UseSsl: "false"
     depends_on:
       postgres:
         condition: service_healthy

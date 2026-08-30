@@ -108,9 +108,11 @@ namespace Operacao.Application.Services
             };
         }
 
-        public async Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync()
+        public async Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync(List<StatusOrdemServico>? status = null)
         {
-            var ordens = (await _repositorio.GetAllAsync()).ToList();
+            var statusFiltro = status is null || status.Count == 0 ? OrdemServico.StatusParaListarDefault : status;
+
+            var ordens = (await _repositorio.GetAllAsync(statusFiltro)).ToList();
 
             var clienteIds = ordens.Select(o => o.ClienteId).Distinct();
             var clientes = (await _clienteService.ObterPorIdsAsync(clienteIds)).ToDictionary(c => c.Id);
@@ -242,7 +244,10 @@ namespace Operacao.Application.Services
             if (os is null) return false;
 
             os.EntregarVeiculo();
-            return await _repositorio.CommitAsync();
+            var resultado = await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(os.GetDomainEvents());
+            os.ClearDomainEvents();
+            return resultado;
         }
 
         public async Task<bool> IniciarDiagnosticoAsync(int id)
@@ -251,7 +256,10 @@ namespace Operacao.Application.Services
             if (os is null) return false;
 
             os.IniciarDiagnostico();
-            return await _repositorio.CommitAsync();
+            var resultado = await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(os.GetDomainEvents());
+            os.ClearDomainEvents();
+            return resultado;
         }
 
         public async Task<bool> FinalizarDiagnosticoAsync(int id)
