@@ -177,6 +177,9 @@ jobs:
       - name: Aplicar Service
         run: kubectl apply -f k8s/aws/service.yaml
 
+      - name: Aplicar metrics-server (pré-requisito do HPA)
+        run: kubectl apply -f k8s/aws/metrics-server.yaml
+
       - name: Aplicar HPA
         run: kubectl apply -f k8s/aws/hpa.yaml
 
