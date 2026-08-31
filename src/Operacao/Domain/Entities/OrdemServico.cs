@@ -6,6 +6,14 @@ namespace Operacao.Domain.Entities
 {
     public class OrdemServico : EntidadeBase, IAggregateRoot
     {
+        public static readonly IReadOnlyList<StatusOrdemServico> StatusParaListarDefault =
+        [
+            StatusOrdemServico.EmExecucao,
+            StatusOrdemServico.AguardandoAprovacao,
+            StatusOrdemServico.EmDiagnostico,
+            StatusOrdemServico.Recebida
+        ];
+
         public int VeiculoId { get; set; }
         public int ClienteId { get; set; }
         public StatusOrdemServico Status { get; set; }
@@ -21,8 +29,12 @@ namespace Operacao.Domain.Entities
 
         private void TransicionarPara(StatusOrdemServico novoStatus)
         {
+            var statusAnterior = Status;
             Status = novoStatus;
             DataUltimaAlteracao = DateTime.UtcNow;
+
+            AddDomainEvent(new Events.OrdemServicoStatusAlteradoEvent(
+                Id, ClienteId, statusAnterior, novoStatus, DataUltimaAlteracao.Value));
         }
 
         public void IniciarDiagnostico()

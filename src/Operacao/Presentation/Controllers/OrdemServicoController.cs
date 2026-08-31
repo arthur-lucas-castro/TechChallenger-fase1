@@ -1,3 +1,4 @@
+using Compartilhado.Domain.ValueObjects;
 using Operacao.Application.DTOs;
 using Operacao.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +14,15 @@ namespace Operacao.Presentation.Controllers
         private readonly IOrdemServicoService _service;
         public OrdemServicoController(IOrdemServicoService service) => _service = service;
 
-        /// <summary>Lista todas as ordens de serviço com dados resumidos do cliente e do veículo.</summary>
+        /// <summary>
+        /// Lista as ordens de serviço em andamento (exclui Finalizada e Entregue), ordenadas por prioridade
+        /// de status (Em Execução > Aguardando Aprovação > Diagnóstico > Recebida) e, dentro do mesmo status,
+        /// pelas mais antigas primeiro.
+        /// </summary>
+        /// <param name="status">Filtra por uma lista de status (opcional, repetir o parâmetro para múltiplos valores, ex.: <c>?status=EmExecucao&amp;status=Recebida</c>). Se omitido, lista Em Execução, Aguardando Aprovação, Diagnóstico e Recebida.</param>
         [HttpGet]
         [ApiExplorerSettings(GroupName = "GestaoAdministrativa")]
-        public async Task<IActionResult> GetAll() => Ok(await _service.ObterTodosAsync());
+        public async Task<IActionResult> GetAll([FromQuery] List<StatusOrdemServico>? status = null) => Ok(await _service.ObterTodosAsync(status));
 
         /// <summary>Retorna os detalhes completos de uma ordem de serviço, incluindo serviços, peças e orçamento.</summary>
         /// <param name="id">ID da ordem de serviço.</param>

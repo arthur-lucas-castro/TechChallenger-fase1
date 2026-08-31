@@ -28,6 +28,7 @@ using Atendimento.Domain.Entities.Events;
 using Operacao.Infrastructure.Repositories;
 using Npgsql;
 using Compartilhado.Domain.ValueObjects;
+using Compartilhado.Infrastructure.Email;
 
 
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -138,6 +139,11 @@ builder.Services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 builder.Services.AddScoped<IDomainEventHandler<OrdemServicoDiagnosticoFinalizadoEvent>, DiagnosticoFinalizadoHandler>();
 builder.Services.AddScoped<IDomainEventHandler<OrcamentoRespondidoEvent>, OrcamentoRespondidoHandler>();
 builder.Services.AddScoped<IDomainEventHandler<OrdemServicoIniciadaEvent>, OrdemServicoIniciadaHandler>();
+
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("Email"));
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+builder.Services.AddScoped<IDomainEventHandler<OrdemServicoStatusAlteradoEvent>, NotificacaoStatusOrdemServicoHandler>();
+builder.Services.AddScoped<IDomainEventHandler<OrcamentoRecusadoEvent>, NotificacaoStatusOrdemServicoHandler>();
 
 var app = builder.Build();
 
