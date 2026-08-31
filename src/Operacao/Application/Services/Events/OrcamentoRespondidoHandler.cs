@@ -8,11 +8,13 @@ namespace Operacao.Application.Services.Events
     public class OrcamentoRespondidoHandler : IDomainEventHandler<OrcamentoRespondidoEvent>
     {
         private readonly IOrdemServicoRepositorio _repositorio;
+        private readonly IDomainEventDispatcher _dispatcher;
         private readonly ILogger<OrcamentoRespondidoHandler> _logger;
 
-        public OrcamentoRespondidoHandler(IOrdemServicoRepositorio repositorio, ILogger<OrcamentoRespondidoHandler> logger)
+        public OrcamentoRespondidoHandler(IOrdemServicoRepositorio repositorio, IDomainEventDispatcher dispatcher, ILogger<OrcamentoRespondidoHandler> logger)
         {
             _repositorio = repositorio;
+            _dispatcher = dispatcher;
             _logger = logger;
         }
 
@@ -34,6 +36,8 @@ namespace Operacao.Application.Services.Events
                 ordem.RecusarOrcamento();
 
             await _repositorio.CommitAsync();
+            await _dispatcher.DispatchAsync(ordem.GetDomainEvents());
+            ordem.ClearDomainEvents();
 
             _logger.LogInformation(
                 "Orçamento da ordem {OrdemServicoId} {Decisao} pelo cliente {ClienteId}.",

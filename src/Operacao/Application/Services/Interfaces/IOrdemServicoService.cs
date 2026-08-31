@@ -1,4 +1,5 @@
-﻿using Operacao.Application.DTOs;
+﻿using Compartilhado.Domain.ValueObjects;
+using Operacao.Application.DTOs;
 
 namespace Operacao.Application.Services.Interfaces
 {
@@ -6,7 +7,7 @@ namespace Operacao.Application.Services.Interfaces
     {
         Task<OrdemServicoResponseDto?> ObterPorIdAsync(int id);
         Task<OrdemServicoDetalhadaResponseDto?> ObterDetalhadoPorIdAsync(int id);
-        Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync();
+        Task<IEnumerable<OrdemServicoResponseDto>> ObterTodosAsync(List<StatusOrdemServico>? status = null);
         Task<int> CriarAsync(OrdemServicoRequestDto dto);
         Task<bool> ExcluirAsync(int id);
         Task<bool> AlterarStatusAsync(int id, AlterarStatusOrdemServicoDto dto);

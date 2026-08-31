@@ -74,6 +74,21 @@ public class OrdemServicoTests
         Assert.Throws<TransicaoStatusInvalidaException>(() => os.IniciarDiagnostico());
     }
 
+    [Fact]
+    public void IniciarDiagnostico_PublicaOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange
+        var os = CriarOrdem(StatusOrdemServico.Recebida);
+
+        // Act
+        os.IniciarDiagnostico();
+
+        // Assert
+        var evento = os.GetDomainEvents().OfType<OrdemServicoStatusAlteradoEvent>().Single();
+        Assert.Equal(StatusOrdemServico.Recebida, evento.StatusAnterior);
+        Assert.Equal(StatusOrdemServico.EmDiagnostico, evento.NovoStatus);
+    }
+
     // ── FinalizarDiagnostico ─────────────────────────────────────────────────
 
     [Fact]
@@ -157,6 +172,21 @@ public class OrdemServicoTests
         Assert.Contains(os.GetDomainEvents(), e => e is OrdemServicoDiagnosticoFinalizadoEvent);
     }
 
+    [Fact]
+    public void FinalizarDiagnostico_PublicaOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange
+        var os = CriarOrdem(StatusOrdemServico.Recebida);
+
+        // Act
+        os.FinalizarDiagnostico();
+
+        // Assert
+        var evento = os.GetDomainEvents().OfType<OrdemServicoStatusAlteradoEvent>().Single();
+        Assert.Equal(StatusOrdemServico.Recebida, evento.StatusAnterior);
+        Assert.Equal(StatusOrdemServico.AguardandoAprovacao, evento.NovoStatus);
+    }
+
     // ── IniciarExecucao ──────────────────────────────────────────────────────
 
     [Fact]
@@ -207,6 +237,23 @@ public class OrdemServicoTests
         Assert.Equal(2, evento.Pecas.Count);
         Assert.Contains(evento.Pecas, p => p.PecaId == 5 && p.Quantidade == 2);
         Assert.Contains(evento.Pecas, p => p.PecaId == 8 && p.Quantidade == 4);
+    }
+
+    [Fact]
+    public void IniciarExecucao_OrcamentoAprovado_PublicaOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange
+        var os = CriarOrdemAguardandoAprovacao();
+        os.Orcamento!.Aprovar();
+        os.ClearDomainEvents();
+
+        // Act
+        os.IniciarExecucao();
+
+        // Assert
+        var evento = os.GetDomainEvents().OfType<OrdemServicoStatusAlteradoEvent>().Single();
+        Assert.Equal(StatusOrdemServico.AguardandoAprovacao, evento.StatusAnterior);
+        Assert.Equal(StatusOrdemServico.EmExecucao, evento.NovoStatus);
     }
 
     [Fact]
@@ -273,6 +320,21 @@ public class OrdemServicoTests
     }
 
     [Fact]
+    public void FinalizarOrdem_PublicaOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange
+        var os = CriarOrdemEmExecucao();
+
+        // Act
+        os.FinalizarOrdem();
+
+        // Assert
+        var evento = os.GetDomainEvents().OfType<OrdemServicoStatusAlteradoEvent>().Single();
+        Assert.Equal(StatusOrdemServico.EmExecucao, evento.StatusAnterior);
+        Assert.Equal(StatusOrdemServico.Finalizada, evento.NovoStatus);
+    }
+
+    [Fact]
     public void FinalizarOrdem_StatusErrado_LancaTransicaoStatusInvalidaException()
     {
         // Arrange
@@ -307,6 +369,21 @@ public class OrdemServicoTests
         Assert.Throws<TransicaoStatusInvalidaException>(() => os.EntregarVeiculo());
     }
 
+    [Fact]
+    public void EntregarVeiculo_PublicaOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange
+        var os = CriarOrdemFinalizada();
+
+        // Act
+        os.EntregarVeiculo();
+
+        // Assert
+        var evento = os.GetDomainEvents().OfType<OrdemServicoStatusAlteradoEvent>().Single();
+        Assert.Equal(StatusOrdemServico.Finalizada, evento.StatusAnterior);
+        Assert.Equal(StatusOrdemServico.Entregue, evento.NovoStatus);
+    }
+
     // ── AprovarOrcamento ─────────────────────────────────────────────────────
 
     [Fact]
@@ -334,6 +411,23 @@ public class OrdemServicoTests
 
         // Assert
         Assert.Contains(os.GetDomainEvents(), e => e is OrcamentoAprovadoEvent);
+    }
+
+    [Fact]
+    public void AprovarOrcamento_PublicaOrcamentoAprovadoEvent_EOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange — garante que a transição via AprovarOrcamento não perde nem duplica eventos
+        var os = CriarOrdemAguardandoAprovacao();
+        os.ClearDomainEvents();
+
+        // Act
+        os.AprovarOrcamento();
+
+        // Assert
+        Assert.Single(os.GetDomainEvents().OfType<OrcamentoAprovadoEvent>());
+        var statusEvento = os.GetDomainEvents().OfType<OrdemServicoStatusAlteradoEvent>().Single();
+        Assert.Equal(StatusOrdemServico.AguardandoAprovacao, statusEvento.StatusAnterior);
+        Assert.Equal(StatusOrdemServico.EmExecucao, statusEvento.NovoStatus);
     }
 
     [Fact]
@@ -388,6 +482,20 @@ public class OrdemServicoTests
 
         // Assert
         Assert.Contains(os.GetDomainEvents(), e => e is OrcamentoRecusadoEvent);
+    }
+
+    [Fact]
+    public void RecusarOrcamento_NaoPublicaOrdemServicoStatusAlteradoEvent()
+    {
+        // Arrange — status da OS não muda ao recusar, então TransicionarPara não é chamado
+        var os = CriarOrdemAguardandoAprovacao();
+        os.ClearDomainEvents();
+
+        // Act
+        os.RecusarOrcamento();
+
+        // Assert
+        Assert.DoesNotContain(os.GetDomainEvents(), e => e is OrdemServicoStatusAlteradoEvent);
     }
 
     [Fact]

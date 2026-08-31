@@ -1,11 +1,12 @@
-﻿using Operacao.Domain.Entities;
+﻿using Compartilhado.Domain.ValueObjects;
+using Operacao.Domain.Entities;
 
 namespace Operacao.Domain.Interfaces
 {
     public interface IOrdemServicoRepositorio
     {
         Task<OrdemServico?> GetByIdAsync(int id);
-        Task<IEnumerable<OrdemServico>> GetAllAsync();
+        Task<IEnumerable<OrdemServico>> GetAllAsync(IReadOnlyList<StatusOrdemServico> status);
         Task<int> InsertAsync(OrdemServico ordemServico);
         Task<bool> UpdateAsync(OrdemServico ordemServico);
         Task<bool> DeleteAsync(int id);
