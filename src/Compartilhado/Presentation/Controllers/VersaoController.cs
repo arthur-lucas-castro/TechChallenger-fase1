@@ -19,6 +19,7 @@ namespace Compartilhado.Presentation.Controllers
         {
             var versao = Assembly.GetEntryAssembly()?.GetName().Version?.ToString() ?? "1.0.0.0";
             return Ok(new VersaoResponseDto { Versao = versao, Ambiente = _ambiente.EnvironmentName });
+            
         }
     }
 }

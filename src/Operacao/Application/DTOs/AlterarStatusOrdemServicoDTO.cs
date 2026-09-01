@@ -3,5 +3,6 @@
     public class AlterarStatusOrdemServicoDto
     {
         public string Status { get; set; } = string.Empty;
+        
     }
 }
